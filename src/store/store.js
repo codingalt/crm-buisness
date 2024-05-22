@@ -5,11 +5,15 @@ import { authApi } from "../services/api/authApi/authApi";
 import { servicesApi } from "../services/api/servicesApi/servicesApi";
 import { employeesApi } from "../services/api/employeesApi/employeesApi";
 import { profileApi } from "../services/api/profileApi/profileApi";
+import { chatApi } from "@/services/api/chat/chatApi";
 
 export const store = configureStore({
   reducer: {
     // Auth Api
     [authApi.reducerPath]: authApi.reducer,
+
+    // Chat Api
+    [chatApi.reducerPath]: chatApi.reducer,
 
     // Services Api
     [servicesApi.reducerPath]: servicesApi.reducer,
@@ -28,6 +32,7 @@ export const store = configureStore({
       servicesApi.middleware,
       employeesApi.middleware,
       profileApi.middleware,
+      chatApi.middleware,
     ]),
 });
 

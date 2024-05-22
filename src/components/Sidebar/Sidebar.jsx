@@ -13,6 +13,8 @@ import { FaUserFriends } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { AiFillHome } from "react-icons/ai";
 import useClickOutside from "../../hooks/useClickOutside";
+import { IoChatboxEllipses } from "react-icons/io5";
+import { MdChat } from "react-icons/md";
 
 const Sidebar = ({ activeSidebar, setActiveSidebar }) => {
   let pathname = window.location.pathname;
@@ -93,6 +95,18 @@ const Sidebar = ({ activeSidebar, setActiveSidebar }) => {
                     }
                   >
                     <FaUserFriends />
+                  </NavLink>
+                </li>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Messages" placement="right-end">
+                <li className="sidebar-li">
+                  <NavLink
+                    to={`/chat`}
+                    className={pathname.match("/chat") ? css.activeMenuLi : ""}
+                  >
+                    <IoChatboxEllipses />
                   </NavLink>
                 </li>
               </Tooltip>

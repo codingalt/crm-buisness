@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import Sidebar from '../Sidebar/Sidebar';
-import Header from '../Header/Header';
+import React, { useState } from "react";
+import Sidebar from "../Sidebar/Sidebar";
+import Header from "../Header/Header";
 import css from "./Layout.module.scss";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, options }) => {
   const [activeSidebar, setActiveSidebar] = useState(false);
-
   return (
     <div className={css.wrapper}>
       <div className={css.wrapperInner}>
@@ -13,7 +12,10 @@ const Layout = ({ children }) => {
           activeSidebar={activeSidebar}
           setActiveSidebar={setActiveSidebar}
         />
-        <div className={css.container}>
+        <div
+          className={css.container}
+          style={options?.overflow ? {} : { maxHeight: "79.5vh" }}
+        >
           <Sidebar
             activeSidebar={activeSidebar}
             setActiveSidebar={setActiveSidebar}
@@ -29,4 +31,4 @@ const Layout = ({ children }) => {
   );
 };
 
-export default Layout
+export default Layout;
