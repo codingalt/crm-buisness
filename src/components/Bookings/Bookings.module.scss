@@ -8,8 +8,8 @@
     display: flex;
     align-items: center;
     gap: 1.4rem;
-    width: calc(100% - 70px);
-    max-width: 86%;
+    width: calc(100% - 90px);
+    max-width: 85%;
     margin: 0 auto;
 
     h1 {
@@ -26,8 +26,8 @@
   // Cards
   .cards {
     width: 100%;
-    width: calc(100% - 70px);
-    max-width: 86%;
+    width: calc(100% - 90px);
+    max-width: 85%;
     display: flex;
     align-items: center;
     gap: 4rem;
@@ -146,21 +146,25 @@
         display: flex;
         flex-direction: column;
         gap: 0.9rem;
-        width: 70px;
+        width: 90px;
 
         .item {
-          font-size: 16px;
-          font-weight: 400;
+          font-size: 15px;
+          font-weight: 500;
           color: #a1aebf;
           color: $primary;
           flex: 1;
           margin-bottom: 1.55rem;
-          padding: 9px 16px;
+          padding: 9px 0px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       }
 
       .tableData {
-        width: calc(100% - 70px);
+        width: calc(100% - 90px);
         max-width: 86.5%;
 
         .employeesTable {
@@ -274,15 +278,18 @@
           gap: 0rem;
 
           .hoursCol{
-            width: 65px;
+            width: 80px;
             gap: 0.7rem;
 
             .item{
               color: $primary;
+              font-size: 13px;
+              font-weight: 400;
             }
           }
 
           .tableData{
+            width: calc(100% - 80px);
 
             .employeesTable{
               overflow-x: auto;
@@ -336,3 +343,5 @@
     }
   }
 }
+
+

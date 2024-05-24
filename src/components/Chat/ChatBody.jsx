@@ -38,7 +38,7 @@ const ChatBody = ({
 
   return (
     <>
-      <div className={css.chatBody}>
+      <div className={`${css.chatBody}`}>
         <ScrollableFeed>
           {isLoadingMessages ? (
             <MessageSkeleton />

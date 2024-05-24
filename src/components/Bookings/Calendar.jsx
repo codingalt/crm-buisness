@@ -51,7 +51,6 @@ const Calendar = () => {
           ) {
             setActiveDay(i);
             getActiveDay(i);
-            // updateEvents(i);
             if (event) {
               days += `<div class="day today active event">${i}</div>`;
             } else {
@@ -80,7 +79,6 @@ const Calendar = () => {
         days.forEach((day) => {
           day.addEventListener("click", (e) => {
             getActiveDay(e.target.innerHTML);
-            // updateEvents(Number(e.target.innerHTML));
             setActiveDay(Number(e.target.innerHTML));
             days.forEach((day) => {
               day.classList.remove("active");
@@ -121,10 +119,6 @@ const Calendar = () => {
       const getActiveDay = (date) => {
         const day = new Date(year, month, date);
         const dayName = day.toString().split(" ")[0];
-        // const eventDay = document.querySelector(".event-day");
-        // const eventDate = document.querySelector(".event-date");
-        // eventDay.innerHTML = dayName;
-        // eventDate.innerHTML = date + " " + months[month] + " " + year;
       };
 
     useEffect(() => {

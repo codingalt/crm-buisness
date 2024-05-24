@@ -1,0 +1,51 @@
+@import "../../styles/constants.scss";
+
+     .card {
+        width: 100%;
+        background-color: #fdf3f1;
+        border-radius: 8px;
+        padding: 16px 16px;
+
+        .details {
+          display: flex;
+          align-items: center;
+          gap: 11px;
+
+          img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+          }
+
+          .name {
+            display: flex;
+            flex-direction: column;
+            margin-top: 14px;
+
+            p {
+              font-size: 17px;
+              font-weight: 500;
+              margin-bottom: 0;
+            }
+
+            span {
+              font-size: 15px;
+              font-weight: 600;
+            }
+          }
+        }
+
+        .footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-top: 1.3rem;
+
+          p {
+            font-size: 15px;
+            font-weight: 400;
+            color: #a1aebf;
+          }
+        }
+      }

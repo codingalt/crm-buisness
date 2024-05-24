@@ -4,6 +4,7 @@ import useClickOutside from "../../hooks/useClickOutside";
 import css from "./FilterModal.module.scss";
 import { RxCross2 } from "react-icons/rx";
 import Calendar from "./Calendar";
+import Calendar2 from "./Calendar2";
 
 const FilterByDateModal = ({ isModal, setIsModal }) => {
   const modalRef = useRef(null);
@@ -41,7 +42,7 @@ const FilterByDateModal = ({ isModal, setIsModal }) => {
               </div>
               
               <div className={`${css.calendarWrapper} max-w-5xl`}>
-                <Calendar />
+                <Calendar2 />
               </div>
 
               <div className={`${css.button} max-w-5xl mx-auto flex justify-end items-center`}>

@@ -108,6 +108,7 @@ const Chat = () => {
 
       if (!data.success) {
         // If message failed to be sent
+        console.log("Message failed to be sent");
         setMessages((prevMessages) =>
           prevMessages.filter((msg) => msg.id !== tempId)
         );
