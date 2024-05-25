@@ -16,3 +16,29 @@ $background-color_3: #f5f7fb;
   border-radius: 2rem !important;
   padding-left: 1rem;
 }
+
+@media screen and (max-width: 430px) {
+  .react-emoji {
+    max-width: 84% !important;
+  }
+
+  .react-input-emoji--input {
+    padding: 11.1px 10px 11px !important;
+  }
+  
+  .react-input-emoji--wrapper {
+    height: 2.6rem;
+  }
+
+  .react-input-emoji--container {
+    border-radius: 2rem !important;
+    padding-left: .6rem;
+  }
+
+  .react-input-emoji--placeholder{
+    font-size: .8rem;
+    left: 10px;
+  }
+
+
+}

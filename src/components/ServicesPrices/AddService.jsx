@@ -481,7 +481,7 @@ const AddService = () => {
               </div>
             </div>
 
-            <div className="w-full flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
+            <div className="w-full mt-4 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
               <div className={css.inputContainer}>
                 <Switch
                   onValueChange={(e) => {
@@ -498,15 +498,10 @@ const AddService = () => {
                   Has the service associated with parking?
                 </Switch>
               </div>
-              <div className={css.inputContainer}>
-                <Switch size="sm" color="success" aria-label="Has Parking">
-                  Discount on service?
-                </Switch>
-              </div>
+
             </div>
 
             <div className={css.buttons}>
-              <button type="button">Draft</button>
               <Button isLoading={isLoading} type="submit">
                 Add Service
               </Button>

@@ -138,6 +138,7 @@ export const Profile = () => {
     <div className={`${css.wrapper}`}>
       <div className={css.headingTop}>
         <h1>Business Details</h1>
+
         {(editState === "hours" || editState === "profile") && (
           <div className={css.buttons}>
             <Button
@@ -162,6 +163,7 @@ export const Profile = () => {
           </div>
         )}
       </div>
+      <p className="text-default-600 mt-1 text-center md:text-start">{data?.email}</p>
 
       {isLoading ? (
         <div className="h-[75%] w-full flex items-center justify-center">
@@ -203,7 +205,7 @@ export const Profile = () => {
                     </div>
                   </div>
 
-                  <div className="w-full mb-8 flex justify-between items-center">
+                  {/* <div className="w-full mb-8 flex justify-between items-center">
                     <div className={css.inputContainer}>
                       <label htmlFor="email">Business Email</label>
                       <div className={css.input}>
@@ -226,7 +228,7 @@ export const Profile = () => {
                         className={css.errorSpan}
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="w-full mb-8 flex justify-between items-center">
                     <div className={css.inputContainer}>
@@ -336,9 +338,7 @@ export const Profile = () => {
                   </div>
                   <div className="w-full md:w-[55%] 2xl:w-[43%]">
                     {item.close === 1 ? (
-                      <div
-                        className="flex items-center justify-between w-full px-3 bg-green-50 h-10 rounded-md"
-                      >
+                      <div className="flex items-center justify-between w-full px-3 bg-green-50 h-10 rounded-md">
                         <IoMoonOutline />
                         <Typography
                           sx={{

@@ -68,11 +68,7 @@ const BookingsTable = ({
                   Approval
                 </div>
               </div>
-              <div className={css.item}>
-                <div className="text-[#454B4A]">
-                  <RxCross2 fontSize={22} />
-                </div>
-              </div>
+             
             </div>
 
             {/* Table Body  */}
@@ -141,7 +137,6 @@ const BookingsTable = ({
                         </Button>
                       )}
                     </p>
-                    <p>Details</p>
                   </div>
                 ))
               )}

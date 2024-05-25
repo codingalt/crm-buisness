@@ -187,7 +187,12 @@ $background-color_7: #5cbfa1;
     letter-spacing: 0.45px;
     color: $color_5;
     text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
   }
+
   .preview {
     color: $color_2;
     font-size: 0.8rem;
@@ -229,6 +234,10 @@ $background-color_7: #5cbfa1;
       font-weight: 500 !important;
       letter-spacing: 0.6px;
       text-transform: capitalize;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 160px;
     }
     .onlineStatus {
       color: $color_2;
@@ -267,12 +276,11 @@ $background-color_7: #5cbfa1;
   margin-bottom: 16px;
   width: 97%;
   overflow: hidden;
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 
-  &:nth-child(1){
+  &:nth-child(1) {
     margin-top: 1.1rem;
   }
-
 }
 .message {
   background: #f5f7fb;
@@ -286,15 +294,15 @@ $background-color_7: #5cbfa1;
   margin-top: 4px;
   letter-spacing: 0.2px;
   color: $color_6;
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 
-  &:nth-child(1){
+  &:nth-child(1) {
     margin-top: 1.1rem;
   }
 
   > span {
-    &:nth-child(1){
-      line-break:anywhere;
+    &:nth-child(1) {
+      line-break: anywhere;
     }
 
     &:nth-child(2) {
@@ -380,9 +388,11 @@ $background-color_7: #5cbfa1;
     letter-spacing: 1.4px;
   }
 }
+
 .active_chat_section {
   display: block !important;
 }
+
 @media screen and (max-width: 1300px) {
   .chatSender {
     .sendButton {
@@ -402,7 +412,6 @@ $background-color_7: #5cbfa1;
     width: 70%;
     display: flex;
     flex-direction: column;
-    // gap: 0.5rem;
   }
 }
 @media screen and (max-width: 970px) {
@@ -457,10 +466,12 @@ $background-color_7: #5cbfa1;
       li {
         padding: 1rem 0.4rem;
         .image {
-          img {
-            width: 65px;
-            height: 65px;
-          }
+          width: 53px;
+          height: 53px;
+        }
+
+        .cDetail {
+          width: calc(100% - 53px);
         }
       }
     }
@@ -480,14 +491,22 @@ $background-color_7: #5cbfa1;
     display: none;
   }
 }
+
 @media screen and (max-width: 430px) {
   .conversation {
     ul {
       li {
-        .image {
-          img {
-            width: 57px;
-            height: 57px;
+        align-items: flex-start;
+        gap: 0.7rem;
+        padding-left: 0.8rem;
+
+        .cDetail {
+          .name {
+            font-size: 1.02rem;
+          }
+
+          .preview {
+            font-size: 0.75rem;
           }
         }
       }
@@ -496,25 +515,24 @@ $background-color_7: #5cbfa1;
   .chatBody {
     height: 97%;
     padding-bottom: 1.7rem;
+
+    & > div {
+      scrollbar-width: none;
+    }
   }
-  .react-input-emoji--input {
-    padding: 11.1px 10px 11px !important;
+
+  .chatRight {
+    height: 84vh !important;
   }
-  .react-emoji {
-    max-width: 84% !important;
+  .chatLeft {
+    max-height: 74.9vh;
   }
-  .react-input-emoji--wrapper {
-    height: 2.6rem;
-  }
-  .react-input-emoji--container {
-    border-radius: 2rem !important;
-    padding-left: 1.2rem;
-  }
+
   .chatSender {
     .sendButton {
-      width: 37px;
-      height: 37px;
-      right: 3.1%;
+      width: 34px;
+      height: 34px;
+      top: 65%;
     }
   }
   .sendButton {
@@ -522,10 +540,42 @@ $background-color_7: #5cbfa1;
       font-size: 1.1rem;
     }
   }
-  .chatRight {
-    height: 84vh !important;
+
+  .messageContainer {
+    .image {
+      width: 44px;
+      height: 44px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .message {
+      max-width: calc(100% - 44px);
+      font-size: 0.9rem;
+    }
   }
-  .chatLeft {
-    max-height: 74.9vh;
+
+  .myMessage {
+    gap: 0.8rem;
+  }
+
+  .chatHeader {
+    gap: 0.5rem !important;
+    .image {
+      width: 40px;
+      height: 40px;
+    }
+    .chatProfile {
+      .name {
+        font-size: 1.04rem;
+      }
+
+      .onlineStatus {
+        display: none;
+      }
+    }
   }
 }

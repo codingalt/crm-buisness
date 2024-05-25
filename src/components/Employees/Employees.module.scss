@@ -227,6 +227,10 @@
 
   @media (max-width: 768px) {
     & {
+      .heading {
+        font-size: 28px;
+      }
+
       form {
         max-width: 95%;
         margin-left: auto;

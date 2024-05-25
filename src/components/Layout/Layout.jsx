@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import Header from "../Header/Header";
 import css from "./Layout.module.scss";
 
 const Layout = ({ children, options }) => {
   const [activeSidebar, setActiveSidebar] = useState(false);
+  const buttonRef = useRef();
+
   return (
     <div className={css.wrapper}>
       <div className={css.wrapperInner}>
         <Header
           activeSidebar={activeSidebar}
           setActiveSidebar={setActiveSidebar}
+          buttonRef={buttonRef}
         />
         <div
           className={css.container}
@@ -19,6 +22,7 @@ const Layout = ({ children, options }) => {
           <Sidebar
             activeSidebar={activeSidebar}
             setActiveSidebar={setActiveSidebar}
+            buttonRef={buttonRef}
           />
 
           <div className={css.mainContent}>

@@ -3,13 +3,13 @@ $md: 768px;
 $lg: 1024px;
 $xl: 1280px;
 $xxl: 1536px;
-$primary: #01AB8E;
-$primaryLight: #13D3B3;
+$primary: #01ab8e;
+$primaryLight: #13d3b3;
 $white: #fff;
-$textSecondary: #6A6C6D;
-$error: #FF0000;
+$textSecondary: #6a6c6d;
+$error: #ff0000;
 
-.inputBottomBorder{
+.inputBottomBorder {
   border-bottom: 1px solid $error !important;
 }
 
@@ -33,6 +33,13 @@ $error: #FF0000;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
+@mixin limitText($maxWidth: 200px) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: $maxWidth;
+}
+
 @mixin button($width: 12rem, $height: 3rem, $background: $primary) {
   width: $width;
   height: $height;
@@ -52,7 +59,7 @@ $error: #FF0000;
   z-index: 10;
   gap: 8px;
 
-  &:hover{
+  &:hover {
     background-color: $primaryLight;
     transition: all 0.2s;
   }

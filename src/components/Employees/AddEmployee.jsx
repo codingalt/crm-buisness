@@ -23,7 +23,6 @@ const AddEmployee = () => {
   const initialValues = {
     name: "",
     contact: "",
-    role: "",
     email: "",
   };
 
@@ -44,7 +43,6 @@ const AddEmployee = () => {
     await addEmployee({
       name: values.name,
       contact: values.contact,
-      role: values.role,
       email: values.email,
     });
 
@@ -131,33 +129,6 @@ const AddEmployee = () => {
             </div>
 
             <div className="w-full mb-8 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
-              <div className={css.inputContainer}>
-                <label htmlFor="role">Role</label>
-                <div className={css.input}>
-                  <Input
-                    type="text"
-                    isRequired
-                    variant="underlined"
-                    placeholder="Manager"
-                    name="role"
-                    id="role"
-                    value={values.role}
-                    startContent={
-                      <FaUser className="text-[21px] text-[#01AB8E] mr-2 pointer-events-none flex-shrink-0" />
-                    }
-                    className={
-                      errors.role && touched.role && "inputBottomBorder"
-                    }
-                    onChange={(e) => handleChange(e, setFieldValue)}
-                  />
-                </div>
-                <ErrorMessage
-                  component="div"
-                  name="role"
-                  className={css.errorSpan}
-                />
-              </div>
-
               <div className={css.inputContainer}>
                 <label htmlFor="name">Email</label>
                 <div className={css.input}>

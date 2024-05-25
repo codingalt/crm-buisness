@@ -8,7 +8,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 
 const Card = ({item}) => {
   return (
-    <div className={`${css.card} shadow-lg border`}>
+    <div className={`${css.card} shadow-md border`}>
       <header>
         <div className={css.left}>
           <p>{item.name}</p>

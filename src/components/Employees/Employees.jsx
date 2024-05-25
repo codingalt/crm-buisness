@@ -26,12 +26,14 @@ const Employees = () => {
       </div>
 
       {/* Employees  */}
-      <div className={`${css.employeesTable} w-full mx-auto my-6 md:my-5 overflow-x-auto scrollbar-hide`}>
+      <div
+        className={`${css.employeesTable} max-w-screen-2xl w-full my-6 md:my-5 overflow-x-auto scrollbar-hide`}
+      >
         {/* Table Header  */}
         <div className={css.tableHeader}>
           <div className={css.item}>Employee Name</div>
+          <div className={css.item}>Employee Email</div>
           <div className={css.item}>Employee Contact</div>
-          <div className={css.item}>Role</div>
           <div className={css.item}>Action</div>
         </div>
 
@@ -43,14 +45,12 @@ const Employees = () => {
         )}
 
         {/* No Data Message  */}
-        {
-         !isLoading && data?.employees?.length === 0 && (
-            <div className="w-full h-[400px] flex flex-col gap-0 items-center justify-center">
-              <Image src={empty} alt="" width={170} />
-              <p className="font-medium text-blue-600">No Record Found!</p>
-            </div>
-          )
-        }
+        {!isLoading && data?.employees?.length === 0 && (
+          <div className="w-full h-[400px] flex flex-col gap-0 items-center justify-center">
+            <Image src={empty} alt="" width={170} />
+            <p className="font-medium text-blue-600">No Record Found!</p>
+          </div>
+        )}
 
         {/* Table Body  */}
         <div className={css.tableBody}>
@@ -58,8 +58,8 @@ const Employees = () => {
             data?.employees?.map((item) => (
               <div className={css.tableRow} key={item.id}>
                 <p>{item.name}</p>
-                <p>{item.contact}03156765542</p>
-                <p>{item.role}Manager</p>
+                <p>{item.email}</p>
+                <p>{item.contact}</p>
                 <div className={css.action}>
                   <div
                     className={`${css.stats} shadow-lg border cursor-pointer`}

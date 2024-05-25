@@ -251,19 +251,13 @@
       justify-content: flex-end;
       align-items: center;
       gap: 1rem;
-      margin-top: 2.6rem;
+      margin-top: 1.8rem;
 
       button {
-        @include button($width: 9.5rem, $height: 2.6rem);
+        @include button($width: 10.5rem, $height: 2.7rem);
         font-size: 16px;
         gap: 10px;
 
-        &:nth-child(1) {
-          width: 8.5rem;
-          background-color: transparent;
-          border: 2px solid $primary;
-          color: $primary;
-        }
       }
     }
   }

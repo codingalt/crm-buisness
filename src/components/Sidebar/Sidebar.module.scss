@@ -33,7 +33,7 @@ ul li {
   left: 0 !important;
   top: 0 !important;
   z-index: 999;
-  transition: width 300ms;
+  transition: width 0ms;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -167,7 +167,7 @@ ul li {
   left: 8rem;
   z-index: 100;
   background: transparent;
-  transition: width 300ms;
+  transition: width 0ms;
   box-sizing: border-box;
 }
 
@@ -233,7 +233,7 @@ header h3 span:first-child {
 }
 
 .main-content {
-  transition: margin-left 300ms;
+  transition: margin-left 0ms;
   position: relative;
 }
 
@@ -510,7 +510,7 @@ header label span {
     left: 0 !important;
     top: 4.25rem !important;
     z-index: 999;
-    transition: width 300ms;
+    transition: width 0ms;
   }
 }
 

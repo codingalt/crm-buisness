@@ -90,7 +90,6 @@ const Bookings = () => {
       <div className={css.dashboardDetails}>
         <div className={css.top}>
           <h1>Your Queues</h1>
-          <FaChevronDown />
         </div>
 
         {/* Active Bookings  */}

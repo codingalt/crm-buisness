@@ -20,6 +20,7 @@
     "@uidotdev/usehooks": "^2.4.1",
     "antd": "^5.17.0",
     "apexcharts": "^3.49.0",
+    "avvvatars-react": "^0.4.2",
     "blurhash": "^2.0.5",
     "dayjs": "^1.11.11",
     "formik": "^2.4.6",

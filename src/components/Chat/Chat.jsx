@@ -15,13 +15,22 @@ import ConversationSkeleton from "./ConversationSkeleton";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TbMessage } from "react-icons/tb";
 import { useGetBusinessProfileQuery } from "@/services/api/profileApi/profileApi";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const chatId = searchParams.get("chatId");
+  const [activeChatMob, setActiveChatMob] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
+
+   const handleChatMob = () => {
+    if (isSmallDevice) {
+      setActiveChatMob(true);
+    }
+  };
 
   const [selectedChat, setSelectedChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -44,22 +53,24 @@ const Chat = () => {
   // Get oneOone Communication | Messages
   const {
     data: messagesData,
-    isLoading: isLoadingMessages,
+    isFetching: isLoadingMessages,
     refetch,
-  } = useOneOoneCommunicationQuery(props, { skip: !selectedChat });
+  } = useOneOoneCommunicationQuery(props, {refetchOnMountOrArgChange:true, skip: !selectedChat });
 
   // Send Message
   const [sendMessage, res] = useSendMessageMutation();
 
   useEffect(() => {
-    setMessages(messagesData?.communications?.messages);
+    if (messagesData){
+      setMessages(messagesData?.communications?.messages);
+    } 
   }, [messagesData]);
 
-  useEffect(() => {
-    if (selectedChat) {
-      refetch();
-    }
-  }, [selectedChat]);
+  // useEffect(() => {
+  //   if (selectedChat) {
+  //     refetch();
+  //   }
+  // }, [selectedChat]);
 
   // Check If ChatId is present in the Url
   useEffect(() => {
@@ -136,15 +147,12 @@ const Chat = () => {
   );
 
   return (
-    <Container
-      maxWidth="xl"
-      sx={{ width: "100%", pt: 2, pb: 0, maxHeight: "79.5vh" }}
-    >
+    <div className="w-full xl:max-w-screen-xl md:max-w-screen-2xl mx-auto px-0 md:px-4 pt-1 md:pt-5 pb-0 max-h-[79.5vh]">
       <div className={css.chatWrapper}>
         <div className={css.chatContainer}>
           <div
             className={`${css.chatLeft} shadow-sm border`}
-            // style={activeChatMob ? { display: "none" } : { display: "block" }}
+            style={activeChatMob ? { display: "none" } : { display: "block" }}
           >
             <div className={css.cLeftHeading}>
               <span>Chats</span>
@@ -169,7 +177,11 @@ const Chat = () => {
                 ) : (
                   filteredConversations?.map((chat, index) => (
                     <div key={chat.id} onClick={() => handleChatClick(chat)}>
-                      <Conversation chat={chat} chatId={chatId} />
+                      <Conversation
+                        chat={chat}
+                        chatId={chatId}
+                        handleChatMob={handleChatMob}
+                      />
                     </div>
                   ))
                 )}
@@ -192,12 +204,18 @@ const Chat = () => {
 
           {
             <div
-              // className={
-              //   activeChatMob ? "chat-right active_chat_section" : "chat-right"
-              // }
-              className={css.chatRight}
+              className={
+                activeChatMob
+                  ? `${css.chatRight} ${css.active_chat_section}`
+                  : css.chatRight
+              }
+              // className={css.chatRight}
             >
-              <ChatHeader selectedChat={selectedChat} />
+              <ChatHeader
+                selectedChat={selectedChat}
+                activeChatMob={activeChatMob}
+                handleChatMob={setActiveChatMob}
+              />
 
               <div className={`${css.messageContainer} shadow-sm border`}>
                 <ChatBody
@@ -216,7 +234,7 @@ const Chat = () => {
           }
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

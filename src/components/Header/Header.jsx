@@ -6,23 +6,22 @@ import user from "../../assets/user.jpg";
 import { FaChevronDown } from "react-icons/fa6";
 import logo from "../../assets/logo.svg";
 import { useMediaQuery } from "@uidotdev/usehooks";
-import { MdMenuOpen } from "react-icons/md";
 import { MdMenu } from "react-icons/md";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
+import Avvvatars from "avvvatars-react";
+import { useSelector } from "react-redux";
+import { MdClose } from "react-icons/md";
 
-const Header = ({ activeSidebar, setActiveSidebar }) => {
+const Header = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
   const navigate = useNavigate();
+  const { user } = useSelector((store) => store.auth);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
-
   const handleChange = () => {};
 
   return (
     <header className={`${css.Header}`}>
       <div className={`${css.header_left} flex items-center gap-2`}>
-        <div
-          className={css.logo}
-          // onClick={() => isSmallDevice && setActiveSidebar(!activeSidebar)}
-        >
+        <div className={css.logo}>
           <img src={logo} alt="" />
         </div>
         <div className={css.searchBox}>
@@ -35,14 +34,15 @@ const Header = ({ activeSidebar, setActiveSidebar }) => {
       </div>
       <div className={css.header_right}>
         <div
+          ref={buttonRef}
           onClick={() => isSmallDevice && setActiveSidebar(!activeSidebar)}
           className="md:hidden text-[29px] text-[#01AB8E]"
         >
-          <HiOutlineMenuAlt2 />
+          {activeSidebar ? <MdClose /> : <HiOutlineMenuAlt2 />}
         </div>
         <div className={`${css.profile}`}>
-          <img src={user} alt="" />
-          <span>Faheem</span>
+          <Avvvatars value={user?.name} size={isSmallDevice ? 30 : 35} />
+          <span>{user?.name}</span>
           <FaChevronDown />
         </div>
       </div>

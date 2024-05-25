@@ -16,7 +16,7 @@ import useClickOutside from "../../hooks/useClickOutside";
 import { IoChatboxEllipses } from "react-icons/io5";
 import { MdChat } from "react-icons/md";
 
-const Sidebar = ({ activeSidebar, setActiveSidebar }) => {
+const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
   let pathname = window.location.pathname;
   const sidebarRef = useRef();
 
@@ -24,7 +24,7 @@ const Sidebar = ({ activeSidebar, setActiveSidebar }) => {
     pathname = window.location.pathname;
   }, [window.location.pathname]);
 
-  useClickOutside(sidebarRef, () => setActiveSidebar(false));
+  useClickOutside(sidebarRef, () => setActiveSidebar(false), buttonRef);
 
   return (
     <>

@@ -11,7 +11,4 @@ export const addEmployeeSchema = Yup.object({
   contact: Yup.string()
     .max(255, "Maximun characters are 255")
     .required("Employee Contact is Required"),
-  role: Yup.string()
-    .max(255, "Maximun characters are 255")
-    .required("Employee role is Required"),
 });

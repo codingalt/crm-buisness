@@ -41,7 +41,7 @@ const Services = () => {
 
       {/* Services Cards  */}
       <div
-        className={`${css.cards} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5`}
+        className={`${css.cards} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 gap-y-7`}
       >
         {!isLoading &&
           data?.services?.map((item) => <Card key={item.id} item={item} />)}
