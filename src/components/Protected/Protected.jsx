@@ -27,11 +27,11 @@ const Protected = ({ Component }) => {
         const user = {...token?.user, phoneVerified: token?.phone_verified}
         dispatch(setAuth(user));
 
-        if (user?.phoneVerified === 0){
-          navigate("/verificationCode");
-          setShow(true);
-          return;
-        }
+        // if (user?.phoneVerified === 0){
+        //   navigate("/verificationCode");
+        //   setShow(true);
+        //   return;
+        // }
 
           if (!isLoading && isSuccess) {
             setShow(true);

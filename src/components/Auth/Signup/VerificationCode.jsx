@@ -21,13 +21,13 @@ const VerificationCode = () => {
   const { user } = useSelector((store) => store.auth);
   useEffect(()=>{
     if(user){
-
-      if(user.phoneVerified === 0){
-        setShow(true);
-      }
-      else if(user.phoneVerified === 1){
-        navigate(-1);
-      }
+      setShow(true)
+      // if(user.phoneVerified === 0){
+      //   setShow(true);
+      // }
+      // else if(user.phoneVerified === 1){
+      //   navigate(-1);
+      // }
     }
   },[user]);
 
