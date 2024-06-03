@@ -18,6 +18,9 @@ export default defineConfig({
       input: "./index.html",
     },
   },
+  // optimizeDeps: {
+  //   exclude: ["react-big-calendar"],
+  // },
   css: {
     preprocessorOptions: {
       scss: {

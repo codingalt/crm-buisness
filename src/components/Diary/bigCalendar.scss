@@ -1,0 +1,109 @@
+@import "../../styles/constants.scss";
+
+.rbc-event {
+  background-color: $primaryLight;
+  color: white;
+  border: none;
+}
+
+.rbc-today{
+  background-color: rgb(215, 250, 227,0.8);
+}  
+
+.rbc-event:hover {
+  background-color: $primary;
+}
+
+.rbc-toolbar {
+  background-color: #ffffff;
+  padding: 10px;
+}
+
+.rbc-toolbar button {
+  color: $primary;
+  border: none;
+  padding: 9px 15px;
+  cursor: pointer;
+  border: 1px solid $primaryLight;
+  transition: all 0.2s;
+  outline: none;
+  background-color: transparent;
+}
+
+.rbc-toolbar button:nth-child(1) {
+  border-top-left-radius: 2rem;
+  border-bottom-left-radius: 2rem;
+}
+
+.rbc-toolbar button:last-child {
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+
+.rbc-toolbar button:hover {
+  background-color: $primaryLight;
+  color: white;
+  transition: all 0.2s;
+}
+
+.rbc-toolbar button.rbc-active {
+  background-color: $primaryLight;
+  color: white;
+}
+
+.rbc-toolbar .rbc-btn-group button.rbc-active {
+  background-color: $primaryLight;
+  color: white;
+}
+
+.rbc-toolbar button:active:hover,
+.rbc-toolbar button:active:focus,
+.rbc-toolbar button.rbc-active:hover,
+.rbc-toolbar button.rbc-active:focus {
+  color: #fff;
+  background-color: $primaryLight;
+  border-color: $primaryLight;
+  transition: all 0.2s;
+}
+
+.rbc-off-range-bg {
+  // background-color: rgba($color: #eee, $alpha: 0.1);
+  background-color: transparent;
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: $primaryLight;
+}
+
+.rbc-event.rbc-selected,
+.rbc-day-slot .rbc-selected.rbc-background-event {
+  background-color: $primaryLight;
+}
+
+.rbc-show-more{
+  color: #555;
+}
+
+.rbc-event:focus, .rbc-day-slot .rbc-background-event:focus{
+  outline: none;
+}
+
+.rbc-day-slot .rbc-event, .rbc-day-slot .rbc-background-event{
+  min-height: 25px;
+}
+
+@media (max-width: 768px) {
+  .rbc-toolbar button {
+    padding: 5px 14px;
+  }
+
+  .rbc-toolbar {
+    gap: 1.1rem;
+  }
+
+  .rbc-toolbar .rbc-toolbar-label {
+    font-size: 1.5rem;
+  }
+}

@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import css from "./Sidebar.module.scss";
 import { NavLink, useNavigate } from "react-router-dom";
-import { BiHomeAlt2 } from "react-icons/bi";
-import { IoSettingsOutline } from "react-icons/io5";
-import InsertChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
 import { Grid, Tooltip } from "@mui/material";
 import { FaLightbulb } from "react-icons/fa";
 import { LuClock4 } from "react-icons/lu";
@@ -14,7 +11,9 @@ import { FaUserCircle } from "react-icons/fa";
 import { AiFillHome } from "react-icons/ai";
 import useClickOutside from "../../hooks/useClickOutside";
 import { IoChatboxEllipses } from "react-icons/io5";
-import { MdChat } from "react-icons/md";
+import { IoCalendarNumber } from "react-icons/io5";
+import { FaCalendar } from "react-icons/fa";
+import { FaCalendarCheck } from "react-icons/fa6";
 
 const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
   let pathname = window.location.pathname;
@@ -107,6 +106,18 @@ const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
                     className={pathname.match("/chat") ? css.activeMenuLi : ""}
                   >
                     <IoChatboxEllipses />
+                  </NavLink>
+                </li>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Diary" placement="right-end">
+                <li className="sidebar-li">
+                  <NavLink
+                    to={`/diary`}
+                    className={pathname.match("/diary") ? css.activeMenuLi : ""}
+                  >
+                    <FaCalendarCheck />
                   </NavLink>
                 </li>
               </Tooltip>

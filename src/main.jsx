@@ -6,13 +6,16 @@ import { NextUIProvider } from "@nextui-org/react";
 import "./styles/global.scss";
 import { Provider } from "react-redux";
 import { store } from "./store/store.js";
+import { PusherProvider } from './context/PusherContext.jsx';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode> 
     <Provider store={store}>
-      <NextUIProvider>
-        <RouterProvider router={router} />
-      </NextUIProvider>
+      <PusherProvider>
+        <NextUIProvider>
+          <RouterProvider router={router} />
+        </NextUIProvider>
+      </PusherProvider>
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode> 
 );

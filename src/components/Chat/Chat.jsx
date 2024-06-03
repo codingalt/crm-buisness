@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import css from "./chat.module.scss";
 import Conversation from "./Conversation";
 import * as bi from "react-icons/bi";
@@ -16,6 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { TbMessage } from "react-icons/tb";
 import { useGetBusinessProfileQuery } from "@/services/api/profileApi/profileApi";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import { usePusher } from "@/context/PusherContext";
 
 const Chat = () => {
   const location = useLocation();
@@ -25,17 +26,18 @@ const Chat = () => {
   const [activeChatMob, setActiveChatMob] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
+  const pusher = usePusher();
+  const channelsRef = useRef({});
+  const [messages, setMessages] = useState([]);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [newMessage, setNewMessage] = useState("");
 
-   const handleChatMob = () => {
+  const handleChatMob = () => {
     if (isSmallDevice) {
       setActiveChatMob(true);
     }
   };
 
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-
-  const [newMessage, setNewMessage] = useState("");
   const { user } = useSelector((state) => state.auth);
 
   const props = {
@@ -48,29 +50,56 @@ const Chat = () => {
 
   // Get Conversations
   const { data: conversations, isLoading: isLoadingConversations } =
-    useGetConversationsQuery(props, { skip: !user });
+    useGetConversationsQuery(props, { skip: !user || selectedChat });
+
+ useEffect(() => {
+   if (conversations && pusher) {
+     const handleNewMessage = (data) => {
+       setMessages((prevMessages) => [...prevMessages, data.message]);
+     };
+
+     // Subscribe to Pusher channels for each communication
+     conversations.communications.forEach((item) => {
+       const channelName = `channel.${item.id}`;
+
+       // Check if the channel is already subscribed
+       if (!channelsRef.current[channelName]) {
+         const channel = pusher.subscribe(channelName);
+         channel.bind("NewMessage", handleNewMessage);
+         channelsRef.current[channelName] = channel; // Store the channel in the ref
+       }
+     });
+
+     // Cleanup function to unsubscribe from all channels
+     return () => {
+       Object.keys(channelsRef.current).forEach((channelName) => {
+         const channel = channelsRef.current[channelName];
+         channel.unbind("NewMessage", handleNewMessage);
+         pusher.unsubscribe(channelName);
+         delete channelsRef.current[channelName]; // Remove the channel from the ref
+       });
+     };
+   }
+ }, [conversations, pusher]);
 
   // Get oneOone Communication | Messages
   const {
     data: messagesData,
     isFetching: isLoadingMessages,
     refetch,
-  } = useOneOoneCommunicationQuery(props, {refetchOnMountOrArgChange:true, skip: !selectedChat });
+  } = useOneOoneCommunicationQuery(props, {
+    refetchOnMountOrArgChange: true,
+    skip: !selectedChat,
+  });
 
   // Send Message
   const [sendMessage, res] = useSendMessageMutation();
 
   useEffect(() => {
-    if (messagesData){
+    if (messagesData) {
       setMessages(messagesData?.communications?.messages);
-    } 
+    }
   }, [messagesData]);
-
-  // useEffect(() => {
-  //   if (selectedChat) {
-  //     refetch();
-  //   }
-  // }, [selectedChat]);
 
   // Check If ChatId is present in the Url
   useEffect(() => {

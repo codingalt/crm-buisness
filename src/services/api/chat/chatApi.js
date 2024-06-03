@@ -16,7 +16,7 @@ export const chatApi = createApi({
   endpoints: (builder) => ({
     getConversations: builder.query({
       query: ({ user_type }) => `fetchCommunications?user_type=${user_type}`,
-      providesTags: ["chatApi"],
+      // providesTags: ["chatApi"],
     }),
 
     oneOoneCommunication: builder.query({

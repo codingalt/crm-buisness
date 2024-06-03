@@ -28,6 +28,7 @@ const BookingsTable = ({
       setHours(hoursTemp);
     }
   }, [data]);
+  
   return (
     <div className={css.bookingsTable}>
       <div className={css.hoursHeading}>Hours</div>

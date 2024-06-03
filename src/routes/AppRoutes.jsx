@@ -17,6 +17,7 @@ import Protected from "../components/Protected/Protected";
 import BusinessProfilePage from "../pages/BusinessProfilePage";
 import ChatPage from "@/pages/ChatPage";
 import NotFound from "@/components/NotFound/NotFound";
+import DiaryPage from "@/pages/DiaryPage";
 
 export const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ export const router = createBrowserRouter([
       {
         path: "/chat",
         element: <Protected Component={ChatPage} />,
+      },
+      {
+        path: "/diary",
+        element: <Protected Component={DiaryPage} />,
       },
       {
         path: "*",
