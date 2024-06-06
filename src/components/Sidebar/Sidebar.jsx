@@ -1,145 +1,124 @@
 import React, { useEffect, useRef, useState } from "react";
 import css from "./Sidebar.module.scss";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Grid, Tooltip } from "@mui/material";
-import { FaLightbulb } from "react-icons/fa";
+import {
+  FaLightbulb,
+  FaUserFriends,
+  FaUserCircle,
+  FaCalendarCheck,
+} from "react-icons/fa";
 import { LuClock4 } from "react-icons/lu";
 import { MdMedicalServices } from "react-icons/md";
-import { IoStatsChart } from "react-icons/io5";
-import { FaUserFriends } from "react-icons/fa";
-import { FaUserCircle } from "react-icons/fa";
+import { IoStatsChart, IoChatboxEllipses } from "react-icons/io5";
 import { AiFillHome } from "react-icons/ai";
 import useClickOutside from "../../hooks/useClickOutside";
-import { IoChatboxEllipses } from "react-icons/io5";
-import { IoCalendarNumber } from "react-icons/io5";
-import { FaCalendar } from "react-icons/fa";
-import { FaCalendarCheck } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
-  let pathname = window.location.pathname;
   const sidebarRef = useRef();
+  const { user } = useSelector((store) => store.auth);
+  const [roles, setRoles] = useState([]);
+  const [pathname, setPathname] = useState(window.location.pathname);
 
   useEffect(() => {
-    pathname = window.location.pathname;
-  }, [window.location.pathname]);
+    if (user) {
+      const rolesTemp = user?.flags?.roles?.map((role) => role.name) || [];
+      setRoles(rolesTemp);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const handlePathnameChange = () => setPathname(window.location.pathname);
+    window.addEventListener("popstate", handlePathnameChange);
+    return () => window.removeEventListener("popstate", handlePathnameChange);
+  }, []);
 
   useClickOutside(sidebarRef, () => setActiveSidebar(false), buttonRef);
 
+  const menuItems = [
+    {
+      to: "/dashboard",
+      icon: <AiFillHome />,
+      title: "Dashboard",
+      role: "can_dashboard",
+    },
+    {
+      to: "/statistics",
+      icon: <IoStatsChart />,
+      title: "Statistics",
+      role: "can_view_statistics",
+    },
+    {
+      to: "/services",
+      icon: <MdMedicalServices />,
+      title: "Services",
+      role: "can_services",
+    },
+    {
+      to: "/employees",
+      icon: <FaUserFriends />,
+      title: "Employees",
+      role: "can_employees",
+    },
+    {
+      to: "/chat",
+      icon: <IoChatboxEllipses />,
+      title: "Messages",
+      role: "can_chat",
+    },
+    {
+      to: "/diary",
+      icon: <FaCalendarCheck />,
+      title: "Diary",
+      role: "can_business_diary",
+    },
+    {
+      to: "/profile",
+      icon: <FaUserCircle />,
+      title: "Profile",
+      role: "can_profile",
+    },
+  ];
+
+  const isBusinessOwner = user?.owner;
+
+  const accessibleMenuItems = isBusinessOwner
+    ? menuItems
+    : menuItems.filter((item) => roles.includes(item.role));
+
   return (
-    <>
-      <input type="checkbox" id="nav-toggle" hidden />
-      <div
-        className={
-          activeSidebar ? `${css.sidebar} ${css.sidebarActive}` : css.sidebar
-        }
-        id="sidebar"
-        ref={sidebarRef}
-      >
-        <div className={css.sidebarProfile}>
-          <FaLightbulb />
-          <LuClock4 />
-        </div>
-        <div className={css.sidebarMenu}>
-          <ul style={{ paddingLeft: "0" }}>
-            <Grid item>
-              <Tooltip title="Dashboard" placement="right-end">
+    <div
+      className={
+        activeSidebar ? `${css.sidebar} ${css.sidebarActive}` : css.sidebar
+      }
+      ref={sidebarRef}
+    >
+      <div className={css.sidebarProfile}>
+        <FaLightbulb />
+        <LuClock4 />
+      </div>
+      <div className={css.sidebarMenu}>
+        <ul style={{ paddingLeft: "0" }}>
+          {accessibleMenuItems.map((item) => (
+            <Grid item key={item.to}>
+              <Tooltip title={item.title} placement="right-end">
                 <li className={css.sidebarli}>
                   <NavLink
-                    to={"/dashboard"}
+                    to={item.to}
                     className={
-                      pathname.match("/dashboard") ? css.activeMenuLi : ""
+                      pathname.startsWith(item.to) ? css.activeMenuLi : ""
                     }
                   >
-                    <AiFillHome />
+                    {item.icon}
                   </NavLink>
                 </li>
               </Tooltip>
             </Grid>
-            <Grid item>
-              <Tooltip title="Statistics" placement="right-end">
-                <li className="sidebar-li">
-                  <NavLink
-                    to={"/statistics"}
-                    className={
-                      pathname.match("/statistics") ? css.activeMenuLi : ""
-                    }
-                  >
-                    <IoStatsChart />
-                  </NavLink>
-                </li>
-              </Tooltip>
-            </Grid>
-
-            <Grid item>
-              <Tooltip title="Services" placement="right-end">
-                <li className="sidebar-li">
-                  <NavLink
-                    to={"/services"}
-                    className={
-                      pathname.match("/services") ? css.activeMenuLi : ""
-                    }
-                  >
-                    <MdMedicalServices />
-                  </NavLink>
-                </li>
-              </Tooltip>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Employees" placement="right-end">
-                <li className="sidebar-li">
-                  <NavLink
-                    to={"/employees"}
-                    className={
-                      pathname.match("/employees") ? css.activeMenuLi : ""
-                    }
-                  >
-                    <FaUserFriends />
-                  </NavLink>
-                </li>
-              </Tooltip>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Messages" placement="right-end">
-                <li className="sidebar-li">
-                  <NavLink
-                    to={`/chat`}
-                    className={pathname.match("/chat") ? css.activeMenuLi : ""}
-                  >
-                    <IoChatboxEllipses />
-                  </NavLink>
-                </li>
-              </Tooltip>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Diary" placement="right-end">
-                <li className="sidebar-li">
-                  <NavLink
-                    to={`/diary`}
-                    className={pathname.match("/diary") ? css.activeMenuLi : ""}
-                  >
-                    <FaCalendarCheck />
-                  </NavLink>
-                </li>
-              </Tooltip>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Profile" placement="right-end">
-                <li className="sidebar-li">
-                  <NavLink
-                    to={"/profile"}
-                    className={
-                      pathname.match("/profile") ? css.activeMenuLi : ""
-                    }
-                  >
-                    <FaUserCircle />
-                  </NavLink>
-                </li>
-              </Tooltip>
-            </Grid>
-          </ul>
-        </div>
+          ))}
+        </ul>
       </div>
-    </>
+    </div>
   );
 };
 

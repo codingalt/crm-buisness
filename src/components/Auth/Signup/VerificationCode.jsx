@@ -19,15 +19,19 @@ const VerificationCode = () => {
   const [show, setShow] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const { user } = useSelector((store) => store.auth);
+  
   useEffect(()=>{
-    if(user){
+  
+    if(user && !user?.employee){
       setShow(true)
-      // if(user.phoneVerified === 0){
-      //   setShow(true);
-      // }
-      // else if(user.phoneVerified === 1){
-      //   navigate(-1);
-      // }
+      if(user.phoneVerified === 0){
+        setShow(true);
+      }
+      else if(user.phoneVerified === 1){
+        navigate(-1);
+      }
+    }else{
+      navigate(-1);
     }
   },[user]);
 

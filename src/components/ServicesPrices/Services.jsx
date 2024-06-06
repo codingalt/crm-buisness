@@ -11,7 +11,7 @@ import { Image } from "@nextui-org/react";
 const Services = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useGetServicesQuery();
-  console.log(data);
+
   return (
     <div className={css.services}>
       <div className={css.headingTop}>

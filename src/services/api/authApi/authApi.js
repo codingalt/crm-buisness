@@ -15,7 +15,7 @@ export const authApi = createApi({
   tagTypes: ["Users"],
   endpoints: (builder) => ({
     validateToken: builder.query({
-      query: () => `validateToken`,
+      query: () => `validateToken?type=business`,
       providesTags: ["Users"],
     }),
 

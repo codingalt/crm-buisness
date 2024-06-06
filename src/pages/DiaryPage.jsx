@@ -1,9 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from "../components/Layout/Layout";
 import Diary from '@/components/Diary/Diary';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const DiaryPage = () => {
-  return <Layout children={<Diary />} />;
+   const navigate = useNavigate();
+   const { user } = useSelector((store) => store.auth);
+   const [show, setShow] = useState(false);
+
+   useEffect(() => {
+     if (user) {
+       const canSee =
+         user.employee &&
+         user.flags.roles.some((role) => role.name === "can_business_diary");
+       if (user.owner || canSee) {
+         setShow(true);
+       } else {
+         navigate(-1);
+       }
+     }
+   }, [user, navigate]);
+
+  return <Layout children={show && <Diary />} />;
 }
 
 export default DiaryPage

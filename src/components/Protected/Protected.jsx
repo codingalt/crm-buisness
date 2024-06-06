@@ -24,21 +24,37 @@ const Protected = ({ Component }) => {
     } else {
       // Check for token validity
       if (!isLoading) {
-        const user = {...token?.user, phoneVerified: token?.phone_verified}
+        const user = {
+          ...token?.user,
+          phoneVerified: token?.phone_verified,
+          flags: token?.flags,
+          employee: token?.employee,
+          owner: token?.business_owner,
+        };
         dispatch(setAuth(user));
+        console.log(user);
 
-        // if (user?.phoneVerified === 0){
-        //   navigate("/verificationCode");
-        //   setShow(true);
-        //   return;
-        // }
+        const isEmployee = token?.employee;
+        const isProfileSetup = token?.profile_setup;
 
-          if (!isLoading && isSuccess) {
-            setShow(true);
-          } else if (!isLoading && error) {
-            setShow(false);
-            navigate("/login");
-          }
+        if (token && !isEmployee && user?.phoneVerified === 0) {
+          navigate("/verificationCode");
+          setShow(true);
+          return;
+        }
+
+        if (token && !isEmployee && !isProfileSetup) {
+          navigate("/personalInformation");
+          setShow(true);
+          return;
+        }
+
+        if (!isLoading && isSuccess) {
+          setShow(true);
+        } else if (!isLoading && error) {
+          setShow(false);
+          navigate("/login");
+        }
       }
     }
   }, [token, isSuccess, error, isLoading]);

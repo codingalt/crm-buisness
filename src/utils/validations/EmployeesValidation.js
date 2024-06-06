@@ -12,3 +12,13 @@ export const addEmployeeSchema = Yup.object({
     .max(255, "Maximun characters are 255")
     .required("Employee Contact is Required"),
 });
+
+export const setEmployeePasswordSchema = Yup.object({
+  password: Yup.string()
+    .min(8)
+    .max(255, "Maximun characters are 255")
+    .required("Password is Required"),
+  confirmPass: Yup.string()
+    .required("Confirm Password is required")
+    .oneOf([Yup.ref("password")], "Password not matched"),
+});

@@ -32,7 +32,7 @@ const Card = ({item}) => {
 
       <div className={css.user}>
         <FaUser />
-            <p>{item.employees[0].name}</p>
+            <p>{item.employees[0] && item.employees[0].name}</p>
       </div>
 
       <div className={css.timeInfo}>

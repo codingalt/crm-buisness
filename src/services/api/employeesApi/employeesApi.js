@@ -16,7 +16,27 @@ export const employeesApi = createApi({
   endpoints: (builder) => ({
     getEmployees: builder.query({
       query: () => `business/employees`,
-      providesTags: ["Employees"], 
+      providesTags: ["Employees"],
+    }),
+
+    getEmployeeRoles: builder.query({
+      query: () => `business/roles`,
+    }),
+
+    validateInvitation: builder.mutation({
+      query: (data) => ({
+        url: "business/validateInvitation",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    acceptInvitation: builder.mutation({
+      query: (data) => ({
+        url: "business/acceptInvitation",
+        method: "POST",
+        body: data,
+      }),
     }),
 
     addEmployee: builder.mutation({
@@ -32,5 +52,8 @@ export const employeesApi = createApi({
 
 export const {
   useGetEmployeesQuery,
-  useAddEmployeeMutation
+  useAddEmployeeMutation,
+  useGetEmployeeRolesQuery,
+  useValidateInvitationMutation,
+  useAcceptInvitationMutation
 } = employeesApi;

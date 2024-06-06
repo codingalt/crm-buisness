@@ -57,9 +57,9 @@ const Employees = () => {
           {!isLoading &&
             data?.employees?.map((item) => (
               <div className={css.tableRow} key={item.id}>
-                <p>{item.name}</p>
-                <p>{item.email}</p>
-                <p>{item.contact}</p>
+                <p>{item.user.name}</p>
+                <p>{item.user.email}</p>
+                <p>{item.user.phone_number}</p>
                 <div className={css.action}>
                   <div
                     className={`${css.stats} shadow-lg border cursor-pointer`}
