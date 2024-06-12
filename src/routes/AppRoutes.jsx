@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
         element: <Protected Component={DiaryPage} />,
       },
       {
-        path: "/employee/setup-password",
+        path: "/setup-password",
         element: <EmployeeSetPasswordPage />,
       },
       {
