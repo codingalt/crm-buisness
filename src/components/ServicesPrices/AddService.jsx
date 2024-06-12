@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import css from "./Services.module.scss";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
@@ -29,6 +29,7 @@ import {
 import ApiErrorDisplay from "../../hooks/ApiErrorDisplay";
 import { toastSuccess } from "../Toast/Toast";
 import { useApiErrorHandling } from "../../hooks/useApiErrors";
+import { DirectionContext } from "@/context/DirectionContext";
 
 const genderData = [
   { id: 0, name: "General" },
@@ -123,6 +124,8 @@ const AddService = () => {
     setSelectedTags(selectedValues);
   };
 
+  const { direction } = useContext(DirectionContext);
+
   return (
     <div className={`${css.addService} max-w-screen-lg`}>
       <div className={css.heading}>
@@ -151,6 +154,7 @@ const AddService = () => {
                     isRequired
                     variant="underlined"
                     placeholder="Enter Queue name"
+                    dir={direction}
                     startContent={
                       <BiSolidPencil className="text-[25px] text-[#01AB8E] mr-2 pointer-events-none flex-shrink-0" />
                     }
@@ -182,6 +186,7 @@ const AddService = () => {
                       name="employeeName"
                       id="employeeName"
                       placeholder="Select Employee"
+                      dir={direction}
                       labelPlacement="outside"
                       selectedKeys={selectedEmployees}
                       classNames={{
@@ -200,8 +205,9 @@ const AddService = () => {
                                   marginBottom: "10px",
                                 }}
                                 key={item.key}
+                                dir={direction}
                               >
-                                {item.data.name}
+                                {item.data.user.name}
                               </Chip>
                             ))}
                           </div>
@@ -214,12 +220,13 @@ const AddService = () => {
                         <SelectItem
                           className="bg-white"
                           key={item.id}
-                          textValue={item.name}
+                          textValue={item.user.name}
                           value={item.id}
+                          dir={direction}
                         >
                           <div className="flex gap-2 items-center">
                             <div className="flex flex-col">
-                              <span className="text-small">{item?.name}</span>
+                              <span className="text-small">{item?.user.name}</span>
                             </div>
                           </div>
                         </SelectItem>
@@ -249,6 +256,7 @@ const AddService = () => {
                       name="category"
                       id="category"
                       selectedKeys={[selectedCategory]}
+                      dir={direction}
                       classNames={{
                         base: "max-w-xxl",
                         trigger: "min-h-unit-12 py-2",
@@ -267,6 +275,7 @@ const AddService = () => {
                           className="bg-white"
                           key={item.id}
                           value={item.id}
+                          dir={direction}
                         >
                           {item.name}
                         </SelectItem>
@@ -294,6 +303,7 @@ const AddService = () => {
                       name="subCategory"
                       id="subCategory"
                       selectedKeys={[values.subCategory]}
+                      dir={direction}
                       classNames={{
                         base: "max-w-xxl",
                         trigger: "min-h-unit-12 py-2",
@@ -305,7 +315,11 @@ const AddService = () => {
                       onChange={(e) => handleChange(e, setFieldValue)}
                     >
                       {subCategories?.category?.sub_categories.map((item) => (
-                        <SelectItem key={item.id} value={item.id}>
+                        <SelectItem
+                          dir={direction}
+                          key={item.id}
+                          value={item.id}
+                        >
                           {item.name}
                         </SelectItem>
                       ))}
@@ -338,6 +352,7 @@ const AddService = () => {
                       placeholder="Select tags"
                       labelPlacement="outside"
                       selectedKeys={selectedTags}
+                      dir={direction}
                       classNames={{
                         base: "max-w-xxl",
                         trigger: "min-h-unit-12 py-2",
@@ -354,6 +369,7 @@ const AddService = () => {
                                   marginBottom: "10px",
                                 }}
                                 key={item.key}
+                                dir={direction}
                               >
                                 {item.data.name}
                               </Chip>
@@ -370,6 +386,7 @@ const AddService = () => {
                           key={tag.id}
                           textValue={tag.name}
                           value={tag.id}
+                          dir={direction}
                         >
                           <div className="flex gap-2 items-center">
                             <div className="flex flex-col">
@@ -406,10 +423,15 @@ const AddService = () => {
                       trigger: "min-h-unit-12 py-2",
                     }}
                     aria-label="gender"
+                    dir={direction}
                     onChange={(e) => handleChange(e, setFieldValue)}
                   >
                     {genderData?.map((item) => (
-                      <SelectItem key={item.name} value={item.name}>
+                      <SelectItem
+                        dir={direction}
+                        key={item.name}
+                        value={item.name}
+                      >
                         {item.name}
                       </SelectItem>
                     ))}
@@ -436,6 +458,7 @@ const AddService = () => {
                     value={values.time}
                     variant="underlined"
                     placeholder="Enter service time in minutes Eg: 30"
+                    dir={direction}
                     startContent={
                       <MdOutlineAccessTimeFilled className="text-[21px] text-[#01AB8E] mr-2 pointer-events-none flex-shrink-0" />
                     }
@@ -464,6 +487,7 @@ const AddService = () => {
                     min={0}
                     variant="underlined"
                     placeholder="Enter service price"
+                    dir={direction}
                     startContent={
                       <IoWallet className="text-[21px] text-[#01AB8E] mr-2 pointer-events-none flex-shrink-0" />
                     }
@@ -494,15 +518,15 @@ const AddService = () => {
                   aria-label="Has Parking"
                   name="has_parking"
                   id="has_parking"
+                  dir={direction}
                 >
                   Has the service associated with parking?
                 </Switch>
               </div>
-
             </div>
 
             <div className={css.buttons}>
-              <Button isLoading={isLoading} type="submit">
+              <Button isLoading={isLoading} type="submit" dir={direction}>
                 Add Service
               </Button>
             </div>

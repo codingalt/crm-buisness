@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import InputEmoji from "react-input-emoji";
 import * as fi from "react-icons/fi";
 import * as im from "react-icons/im";
@@ -10,6 +10,9 @@ import "./emoji.scss";
 import { useSelector } from "react-redux";
 import MessageSkeleton from "./MessageSkeleton";
 import formatTimestamp from "@/hooks/customTimeFormatter";
+import { DirectionContext } from "@/context/DirectionContext";
+import Avvvatars from "avvvatars-react";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 const ChatBody = ({
   messages,
@@ -22,7 +25,9 @@ const ChatBody = ({
   businessData,
 }) => {
   const { user } = useSelector((state) => state.auth);
-  const myId = user?.user?.id;
+  
+  const { direction } = useContext(DirectionContext);
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
   const checkMessageType = (message) => {
   
@@ -54,11 +59,17 @@ const ChatBody = ({
               >
                 {checkMessageType(message) === 0 ? (
                   <div className={css.image}>
-                    <img src={defaultProfile} alt="" />
+                    <Avvvatars
+                      value={user?.name}
+                      size={isSmallDevice ? 40 : 46}
+                    />
                   </div>
                 ) : (
                   <div className={css.image}>
-                    <img src={defaultProfile} alt="" />
+                    <Avvvatars
+                      value={selectedChat?.customer?.name}
+                      size={isSmallDevice ? 40 : 46}
+                    />
                   </div>
                 )}
 
@@ -83,15 +94,20 @@ const ChatBody = ({
         </ScrollableFeed>
 
         {selectedChat ? (
-          <div className={css.chatSender}>
+          <div className={css.chatSender} dir={direction}>
             <InputEmoji
               value={newMessage}
               onKeyDown={handleKeyDown}
               onChange={handleChange}
               cleanOnEnter
               placeholder={"Type your message here"}
+              inputClass={css.inputMessageBox}
             />
-            <button disabled={newMessage === ""} className={css.sendButton} onClick={handleSendMessage}>
+            <button
+              disabled={newMessage === ""}
+              className={css.sendButton}
+              onClick={handleSendMessage}
+            >
               <fi.FiSend />
             </button>
           </div>

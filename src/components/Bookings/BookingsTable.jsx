@@ -16,6 +16,7 @@ const BookingsTable = ({
   isLoadingActivateBooking,
   handleMarkAsCompleteBooking,
   isLoadingCompleteBooking,
+  clickedBooking,
 }) => {
   const [hours, setHours] = useState();
 
@@ -28,7 +29,7 @@ const BookingsTable = ({
       setHours(hoursTemp);
     }
   }, [data]);
-  
+
   return (
     <div className={css.bookingsTable}>
       <div className={css.hoursHeading}>Hours</div>
@@ -66,10 +67,9 @@ const BookingsTable = ({
               <div className={css.item}>Payment</div>
               <div className={css.item}>
                 <div className="bg-[#01AB8E] w-24 md:w-28 flex text-[12px] md:text-[14px] justify-center items-center text-white rounded-full px-0 md:px-7 py-1">
-                  Approval
+                  Action
                 </div>
               </div>
-             
             </div>
 
             {/* Table Body  */}
@@ -104,10 +104,13 @@ const BookingsTable = ({
                     <p>
                       {item.status === 1 ? (
                         <Button
-                          isLoading={isLoadingCompleteBooking}
+                          isLoading={
+                            item.id === clickedBooking &&
+                            isLoadingCompleteBooking
+                          }
                           size="sm"
-                          className="w-24 h-[28px] text-[13px] hover:text-white"
-                          color="success"
+                          className="w-24 h-[28px] text-[#01AB8E] border-[#01AB8E] text-[13px] hover:bg-[#01AB8E] focus:bg-[#01AB8E]"
+                          // color="success"
                           variant="ghost"
                           radius="full"
                           onClick={() => handleMarkAsCompleteBooking(item.id)}
@@ -116,7 +119,10 @@ const BookingsTable = ({
                         </Button>
                       ) : item.status === 0 ? (
                         <Button
-                          isLoading={isLoadingActivateBooking}
+                          isLoading={
+                            item.id === clickedBooking &&
+                            isLoadingActivateBooking
+                          }
                           size="sm"
                           className="w-24 h-[28px] text-[13px]"
                           color="primary"
@@ -129,7 +135,7 @@ const BookingsTable = ({
                       ) : (
                         <Button
                           size="sm"
-                          className="w-24 h-[28px] text-[13px]"
+                          className="w-24 h-[28px] text-[13px] bg-[#01AB8E] text-white"
                           color="success"
                           radius="full"
                           disabled

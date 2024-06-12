@@ -27,7 +27,8 @@ export const chatApi = createApi({
 
     sendMessage: builder.mutation({
       query: ({ chatId, user_type, body }) => ({
-        url: `sendMessage/${chatId}`,
+        // url: `sendMessage/${chatId}`,
+        url: "privateChannel",
         method: "POST",
         body: { user_type, body },
       }),

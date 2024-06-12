@@ -18,12 +18,18 @@ export const PusherProvider = ({ children }) => {
       cluster: "ap1",
       encrypted: true,
       channelAuthorization: {
-        endpoint: `${import.meta.env.VITE_URI}broadcasting/auth`,
+        endpoint: `http://192.168.153.250/paycust/public/broadcasting/auth`,
         headers: {
           Authorization: `Bearer ${authToken}`,
-          "Access-Control-Allow-Origin": "*",
+          // "Access-Control-Allow-Origin": "*",
+          "Accept": "application/json"
         },
       },
+    });
+
+    const channel = pusherRef.current.subscribe("private-channel.1");
+    channel.bind("private_channel", (data) => {
+      alert("listeinign",data)
     });
     
     // Cleanup function to unsubscribe from the channel

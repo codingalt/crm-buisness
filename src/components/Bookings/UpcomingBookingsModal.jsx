@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Modal,
   ModalContent,
@@ -11,8 +11,11 @@ import { Avatar, Badge } from "antd";
 import { LuUser2 } from "react-icons/lu";
 import css from "./Modal.module.scss";
 import moment from "moment";
+import { DirectionContext } from "@/context/DirectionContext";
 
 const UpcomingBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
+  const { direction } = useContext(DirectionContext);
+
   return (
     <div className={css.wrapper}>
       <Modal
@@ -23,6 +26,7 @@ const UpcomingBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
         backdrop="blur"
         className="max-w-[90%] md:max-w-3xl"
         style={{ zIndex: "9999999" }}
+        dir={direction}
       >
         <ModalContent>
           {(onClose) => (

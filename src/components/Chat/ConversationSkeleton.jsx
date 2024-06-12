@@ -3,10 +3,10 @@ import css from "./chat.module.scss";
 import { Skeleton } from "@mui/material";
 
 const ConversationSkeleton = () => {
-  const skeletonArray = Array.from({ length: 6 });
+  const skeletonArray = Array.from({ length: 4 });
 
   return (
-    <>
+    <div className="h-full overflow-hidden scrollbar-hide">
       {skeletonArray.map((_, index) => (
         <li key={index}>
           <div className={css.image}>
@@ -22,7 +22,7 @@ const ConversationSkeleton = () => {
           </div>
         </li>
       ))}
-    </>
+    </div>
   );
 };
 

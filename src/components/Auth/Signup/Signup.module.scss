@@ -3,6 +3,10 @@
 .businessWrapper {
   padding: 1.4rem 0 !important;
 
+  form{
+    margin-top: 2.5rem;
+  }
+
   @media (max-width: 768px) {
     & {
       padding: 3rem 0 !important;

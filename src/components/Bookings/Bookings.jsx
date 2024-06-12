@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import css from "./Bookings.module.scss";
 import { FaChevronDown } from "react-icons/fa6";
 import user from "../../assets/girl.jpg";
@@ -21,6 +21,8 @@ import { MdOutlineDone } from "react-icons/md";
 import { MdFileDownloadDone } from "react-icons/md";
 import { toastSuccess } from "../Toast/Toast";
 import { useApiErrorHandling } from "@/hooks/useApiErrors";
+import { useTranslation } from "react-i18next";
+import { DirectionContext } from "@/context/DirectionContext";
 
 const Bookings = () => {
   const {
@@ -34,7 +36,10 @@ const Bookings = () => {
     onOpenChange: onOpenChange2,
   } = useDisclosure();
 
+  const { t } = useTranslation();
+
   const [isModal, setIsModal] = useState(false);
+  const [clickedBooking, setClickedBooking] = useState(null);
   const [filterDate, setFilterDate] = useState({
     startDate: moment(new Date("2024-05-01")).format("YYYY-MM-DD"),
     endDate: moment(new Date()).format("YYYY-MM-DD"),
@@ -54,6 +59,7 @@ const Bookings = () => {
   } = res1;
 
   const handleActivateBooking = async (id) => {
+    setClickedBooking(id);
     await activateBooking(id);
   };
 
@@ -74,6 +80,7 @@ const Bookings = () => {
   } = res2;
 
   const handleMarkAsCompleteBooking = async (id) => {
+    setClickedBooking(id);
     await markASComplete(id);
   };
 
@@ -89,7 +96,7 @@ const Bookings = () => {
     <>
       <div className={css.dashboardDetails}>
         <div className={css.top}>
-          <h1>Your Queues</h1>
+          <h1>{t("heading")}</h1>
         </div>
 
         {/* Active Bookings  */}
@@ -286,6 +293,7 @@ const Bookings = () => {
           isLoadingActivateBooking={isLoadingActivateBooking}
           handleMarkAsCompleteBooking={handleMarkAsCompleteBooking}
           isLoadingCompleteBooking={isLoadingCompleteBooking}
+          clickedBooking={clickedBooking}
         />
 
         {/* Filter Modal  */}

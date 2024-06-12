@@ -27,6 +27,7 @@ const Chat = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const pusher = usePusher();
+  console.log(pusher);
   const channelsRef = useRef({});
   const [messages, setMessages] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
@@ -52,35 +53,51 @@ const Chat = () => {
   const { data: conversations, isLoading: isLoadingConversations } =
     useGetConversationsQuery(props, { skip: !user || selectedChat });
 
+//  useEffect(() => {
+//    if (conversations && pusher) {
+//      const handleNewMessage = (data) => {
+//       //  setMessages((prevMessages) => [...prevMessages, data.message]);
+//       alert("Listening to pusher event..");
+//      };
+
+//      // Subscribe to Pusher channels for each communication
+//      conversations.communications.forEach((item) => {
+//        const channelName = `private-channel.1`;
+
+//        // Check if the channel is already subscribed
+//        if (!channelsRef.current[channelName]) {
+//          const channel = pusher.subscribe(channelName);
+//          channel.bind("private_channel", handleNewMessage);
+//          channelsRef.current[channelName] = channel; // Store the channel in the ref
+//        }
+//      });
+
+//      // Cleanup function to unsubscribe from all channels
+//      return () => {
+//        Object.keys(channelsRef.current).forEach((channelName) => {
+//          const channel = channelsRef.current[channelName];
+//          channel.unbind("NewMessage", handleNewMessage);
+//          pusher.unsubscribe(channelName);
+//          delete channelsRef.current[channelName]; // Remove the channel from the ref
+//        });
+//      };
+//    }
+//  }, [conversations, pusher]);
+
  useEffect(() => {
-   if (conversations && pusher) {
-     const handleNewMessage = (data) => {
-       setMessages((prevMessages) => [...prevMessages, data.message]);
+
+  if(pusher){
+     const channelName = `private-channel.1`;
+     const channel = pusher.subscribe(channelName);
+
+     const handleListen = () => {
+       alert("Listening to pusher event..");
      };
 
-     // Subscribe to Pusher channels for each communication
-     conversations.communications.forEach((item) => {
-       const channelName = `channel.${item.id}`;
-
-       // Check if the channel is already subscribed
-       if (!channelsRef.current[channelName]) {
-         const channel = pusher.subscribe(channelName);
-         channel.bind("NewMessage", handleNewMessage);
-         channelsRef.current[channelName] = channel; // Store the channel in the ref
-       }
-     });
-
-     // Cleanup function to unsubscribe from all channels
-     return () => {
-       Object.keys(channelsRef.current).forEach((channelName) => {
-         const channel = channelsRef.current[channelName];
-         channel.unbind("NewMessage", handleNewMessage);
-         pusher.unsubscribe(channelName);
-         delete channelsRef.current[channelName]; // Remove the channel from the ref
-       });
-     };
-   }
- }, [conversations, pusher]);
+     channel.bind("private_channel", handleListen);
+  }
+  
+ }, [pusher]);
 
   // Get oneOone Communication | Messages
   const {

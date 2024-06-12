@@ -15,17 +15,7 @@ const Conversation = ({ chat, chatId, handleChatMob }) => {
       className={chat.id === parseInt(chatId) ? css.activeChat : ""}
     >
       <div className={css.image}>
-        <Avvvatars value={chat.customer.name} size={isSmallDevice ? 49 : 54} />
-        {/* <Image
-          src={<Avvvatars value="tim@apple.com" />}
-          width={isSmallDevice ? 53 : 58}
-          height={isSmallDevice ? 53 : 58}
-          fallbackSrc={`https://placehold.co/${
-            isSmallDevice ? "53x53" : "58x58"
-          }`}
-          radius="full"
-          loading="lazy"
-        /> */}
+        <Avvvatars value={chat.customer.name} size={isSmallDevice ? 47 : 51} />
       </div>
       <div className={css.cDetail}>
         <div className={css.name}>{chat.customer.name}</div>

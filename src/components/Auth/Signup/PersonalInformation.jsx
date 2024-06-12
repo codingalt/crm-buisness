@@ -10,6 +10,7 @@ import ApiErrorDisplay from "../../../hooks/ApiErrorDisplay";
 import { AiOutlineCamera } from "react-icons/ai";
 import avatar from "../../../assets/loadingProfile.png"
 import { useSelector } from "react-redux";
+import BusinessLocation from "./BusinessLocation";
 
 const PersonalInformation = () => {
   const navigate = useNavigate();
@@ -17,11 +18,15 @@ const PersonalInformation = () => {
   const imageRef = useRef();
   const { user } = useSelector((store) => store.auth);
   const [show, setShow] = useState(null);
-  console.log(user);
+  const [isAddressError, setIsAddressError] = useState(false);
+  
   const initialValues = {
     name: "",
     description: "",
     address: "",
+    latLng: "",
+    country: "",
+    city: "",
     profileImg: "",
   };
 
@@ -45,11 +50,19 @@ const PersonalInformation = () => {
   const apiErrors = useApiErrorHandling(error);
 
   const handleSubmit = async (values) => {
-  
+    
+    if(!values.address){
+      setIsAddressError(true);
+      return;
+    }
+
     let formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
     formData.append("address", values.address);
+    formData.append("latLng", values.latLng);
+    formData.append("city", values.city);
+    formData.append("country", values.country);
     formData.append("profile_pic", values.profileImg);
 
     await storeBusinessInformation(formData);
@@ -159,20 +172,17 @@ const PersonalInformation = () => {
 
                   <div className={css.inputContainer}>
                     <label htmlFor="address">Address</label>
-                    <Field
-                      type="text"
-                      name="address"
-                      id="address"
-                      placeholder="Enter business address"
-                      className={
-                        errors.address && touched.address && "inputBottomBorder"
-                      }
+                    <BusinessLocation
+                      errors={errors}
+                      touched={touched}
+                      setIsAddressError={setIsAddressError}
+                      setFieldValue={setFieldValue}
                     />
-                    <ErrorMessage
-                      name="address"
-                      component="div"
-                      className={css.errorSpan}
-                    />
+                    {isAddressError && (
+                      <div className={css.errorSpan}>
+                        Business address is Required.
+                      </div>
+                    )}
                   </div>
 
                   <div className={css.button}>

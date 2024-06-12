@@ -115,6 +115,10 @@
       svg {
         font-size: 3.4rem;
         color: $primary;
+
+        [dir="rtl"] & {
+          transform: scaleX(-1);
+        }
       }
     }
   }
@@ -126,11 +130,11 @@
     padding-bottom: 4rem;
     position: relative;
 
-    .hoursHeading{
-        position: absolute;
-        left: 10px;
-        top: 5.7rem;
-        font-weight: 600;
+    .hoursHeading {
+      position: absolute;
+      left: 10px;
+      top: 5.7rem;
+      font-weight: 600;
     }
 
     h3 {
@@ -226,113 +230,112 @@
     }
   }
 
-  @media (max-width: 768px){
-    &{
+  @media (max-width: 768px) {
+    & {
       margin: 0.8rem 0;
       margin-top: 0.6rem;
 
-      .top{
+      .top {
         max-width: 100%;
         width: 100%;
         gap: 1.2rem;
 
-        h1{
+        h1 {
           font-size: 28px;
         }
       }
 
-      .cards{
+      .cards {
         width: 100%;
         max-width: 95%;
         flex-direction: column;
-        gap: .9rem;
+        gap: 0.9rem;
         align-items: stretch;
         margin-top: 2.2rem;
 
-        .inner{
-
-          h3{
+        .inner {
+          h3 {
             font-size: 20px;
           }
         }
 
-        .arrow{
+        .arrow {
           flex: 1;
           transform: rotate(90deg);
-          margin-top: .7rem;
-          
-          svg{
+          margin-top: 0.7rem;
+
+          svg {
             font-size: 2.9rem;
           }
         }
       }
 
-      .bookingsTable{
+      .bookingsTable {
         margin-top: 3.3rem;
 
-        h3{
+        h3 {
           font-size: 25px;
         }
 
-        .table{
+        .table {
           gap: 0rem;
 
-          .hoursCol{
+          .hoursCol {
             width: 80px;
             gap: 0.7rem;
 
-            .item{
+            .item {
               color: $primary;
               font-size: 13px;
               font-weight: 400;
             }
           }
 
-          .tableData{
+          .tableData {
             width: calc(100% - 80px);
 
-            .employeesTable{
+            .employeesTable {
               overflow-x: auto;
               scrollbar-width: none;
 
-              .tableHeader{
+              .tableHeader {
                 gap: 1.7rem;
                 padding: 15px 18px;
                 overflow-x: auto;
                 scrollbar-width: none;
                 width: max-content;
 
-                .item{
+                .item {
                   font-size: 13px;
                   width: 120px;
 
-                  &:nth-child(3){
+                  &:nth-child(3) {
                     width: 100px;
                   }
 
-                  &:nth-child(3){
+                  &:nth-child(3) {
                     width: 100px;
                   }
                 }
               }
 
-              .tableBody{
+              .tableBody {
                 overflow-x: auto;
                 scrollbar-width: none;
                 width: max-content;
 
-                .tableRow{
+                .tableRow {
                   padding: 15px 18px;
                   gap: 1.7rem;
                   scrollbar-width: none;
-                  
-                  p{
+
+                  p {
                     font-size: 13px;
                     width: 120px;
 
-                    &:nth-child(3){
-                    width: 100px;
-                  }
+                    &:nth-child(3) {
+                      width: 100px;
+                    }
                   }
                 }
               }
@@ -343,5 +346,3 @@
     }
   }
 }
-
-

@@ -3,6 +3,7 @@ import css from "./Diary.module.scss";
 import SchedulerCalendar from "./Scheduler";
 import { useGetBookingsQuery } from "@/services/api/bookingsApi/bookingsApi";
 import moment from "moment";
+import ClipSpinner from "../Loader/ClipSpinner";
 
 const Diary = () => {
   const [currentView, setCurrentView] = useState("month");
@@ -11,7 +12,7 @@ const Diary = () => {
     endDate: moment().endOf("month").format("YYYY-MM-DD"),
   });
 
-  const { data, isLoading } = useGetBookingsQuery({
+  const { data, isFetching: isLoading } = useGetBookingsQuery({
     start_date: filterDate.startDate,
     end_date: filterDate.endDate,
   });
@@ -27,7 +28,15 @@ const Diary = () => {
           data={data}
           currentView={currentView}
           setCurrentView={setCurrentView}
+          setFilterDate={setFilterDate}
         />
+
+        {isLoading && (
+          <div className="w-full absolute left-0 right-0 top-0 h-[750px] md:h-[640px] flex justify-center items-center flex-col space-y-1 z-50">
+            <ClipSpinner size={30} />
+            <span className="text-[#01ABAB]">Loading...</span>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -182,11 +182,13 @@ const AddEmployee = () => {
                 <label htmlFor="name">This employee can?</label>
                 <div className="mt-2 flex flex-col">
                   {isLoadingRoles ? (
-                    <div className="mt-2 flex flex-col">
-                      <Skeleton width={270} height={28} className="mb-2" />
-                      <Skeleton width={270} height={28} className="mb-2" />
-                      <Skeleton width={270} height={28} className="mb-2" />
-                      <Skeleton width={270} height={28} className="mb-2" />
+                    <div className="mt-0 flex flex-col">
+                      <Skeleton width={280} height={28} className="mb-2" />
+                      <Skeleton width={280} height={28} className="mb-2" />
+                      <Skeleton width={280} height={28} className="mb-2" />
+                      <Skeleton width={280} height={28} className="mb-2" />
+                      <Skeleton width={280} height={28} className="mb-2" />
+                      <Skeleton width={280} height={28} className="mb-2" />
                     </div>
                   ) : (
                     roles?.roles?.map((item) => (

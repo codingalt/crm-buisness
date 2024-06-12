@@ -32,7 +32,6 @@ const Protected = ({ Component }) => {
           owner: token?.business_owner,
         };
         dispatch(setAuth(user));
-        console.log(user);
 
         const isEmployee = token?.employee;
         const isProfileSetup = token?.profile_setup;

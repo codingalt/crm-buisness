@@ -32,9 +32,6 @@ export const personalInformationSchema = Yup.object({
   description: Yup.string()
     .max(255, "Maximun characters are 255")
     .required("Buisness description is Required"),
-  address: Yup.string()
-    .max(255, "Maximun characters are 255")
-    .required("Buisness Address is Required"),
   profileImg: Yup.mixed().nullable().required("Please Select Business Profile"),
 });
 
