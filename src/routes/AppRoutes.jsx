@@ -27,7 +27,11 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
 
     children: [
-      { index: true, element: <Email /> },
+      { index: true, element: <Login /> },
+      {
+        path: "/signup",
+        element: <Email />,
+      },
       {
         path: "/verificationCode",
         element: <Protected Component={VerificationCode} />,

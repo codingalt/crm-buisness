@@ -20,7 +20,7 @@ const Protected = ({ Component }) => {
   useEffect(() => {
     const authToken = localStorage.getItem("crmBusinessToken");
     if (!authToken) {
-      navigate("/login");
+      navigate("/");
     } else {
       // Check for token validity
       if (!isLoading) {
@@ -52,7 +52,7 @@ const Protected = ({ Component }) => {
           setShow(true);
         } else if (!isLoading && error) {
           setShow(false);
-          navigate("/login");
+          navigate("/");
         }
       }
     }
