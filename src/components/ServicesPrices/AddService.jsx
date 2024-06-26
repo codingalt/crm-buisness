@@ -9,6 +9,7 @@ import {
   Select,
   SelectItem,
   Skeleton,
+  Slider,
   Switch,
 } from "@nextui-org/react";
 import { FaCamera, FaUser } from "react-icons/fa6";
@@ -54,6 +55,7 @@ const AddService = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+   const [ageGroup, setAgeGroup] = useState([0, 60]);
 
   const { data: categories, isLoading: isLoadingCategories } =
     useGetServiceCategoriesQuery();
@@ -79,7 +81,6 @@ const AddService = () => {
   const apiErrors = useApiErrorHandling(error);
 
   const handleSubmit = async (values, { resetForm }) => {
-    console.log(values);
 
     const {data} = await addService({
       name: values.name,
@@ -89,6 +90,7 @@ const AddService = () => {
       gender: values.gender,
       time: values.time,
       price: values.price,
+      ageGroup: ageGroup,
       has_parking: values.has_parking,
     });
 
@@ -226,7 +228,9 @@ const AddService = () => {
                         >
                           <div className="flex gap-2 items-center">
                             <div className="flex flex-col">
-                              <span className="text-small">{item?.user.name}</span>
+                              <span className="text-small">
+                                {item?.user.name}
+                              </span>
                             </div>
                           </div>
                         </SelectItem>
@@ -505,7 +509,38 @@ const AddService = () => {
               </div>
             </div>
 
-            <div className="w-full mt-4 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
+            <div className="w-full mb-8 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
+              <div className={css.inputContainer}>
+                <div className={css.input}>
+                  <div className="flex flex-col gap-2 w-full h-full max-w-xxl items-start justify-center">
+                    <Slider
+                      label="Select age group"
+                      step={1}
+                      maxValue={100}
+                      minValue={0}
+                      value={ageGroup}
+                      onChange={setAgeGroup}
+                      className="max-w-xxl"
+                      showTooltip={true}
+                      color="success"
+                    />
+                    <p className="text-default-500 font-medium text-small">
+                      Selected age group:{" "}
+                      {Array.isArray(ageGroup) &&
+                        ageGroup.map((b) => `${b}`).join(" – ")}
+                    </p>
+                  </div>
+
+                  <ErrorMessage
+                    name="ageGroup"
+                    component="div"
+                    className={css.errorSpan}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full mt-5 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
               <div className={css.inputContainer}>
                 <Switch
                   onValueChange={(e) => {
