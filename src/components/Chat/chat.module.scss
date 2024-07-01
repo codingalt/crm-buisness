@@ -136,7 +136,8 @@ $background-color_7: #5cbfa1;
       margin-bottom: 8px;
 
       &:hover {
-        background-color: #fbfbfc;
+        // background-color: #fbfbfc;
+        background-color: #fcfcfd;
         transition: all 0.2s;
         color: $color_3;
         .preview {
@@ -221,14 +222,15 @@ $background-color_7: #5cbfa1;
     position: relative;
     display: flex;
     padding: 1rem 1.2rem;
+    padding-left: .9rem;
     align-items: center;
     gap: 0.9rem;
   }
 }
 .chatHeader {
   .image {
-    width: 48px;
-    height: 48px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     img {
       width: 100%;
@@ -246,10 +248,11 @@ $background-color_7: #5cbfa1;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 160px;
+      line-height: 22px;
     }
     .onlineStatus {
       color: $color_2;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       margin-left: 3px;
       font-weight: 400 !important;
     }

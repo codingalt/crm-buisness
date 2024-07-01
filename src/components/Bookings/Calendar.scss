@@ -4,19 +4,6 @@
   --primary-clr: #b38add;
 }
 
-::-webkit-scrollbar {
-  width: 3px;
-  scrollbar-width: thin;
-}
-::-webkit-scrollbar-track {
-  background: #f5f5f5;
-  border-radius: 50px;
-}
-::-webkit-scrollbar-thumb {
-  background: $primaryLight;
-  border-radius: 50px;
-}
-
 .css-919eu4 {
   background-color: transparent !important;
 }
@@ -48,27 +35,11 @@
   color: #878895;
   border-radius: 5px;
   background-color: #fff;
+  border: 1px solid #eee;
+  padding-bottom: 10px;
+  border-radius: 1rem;
 }
 
-.event-date {
-  position: absolute;
-  left: 197px;
-  top: 44px;
-}
-
-/* set after behind the main element */
-.calendar::before,
-.calendar::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  width: 12px;
-  height: 97%;
-  border-radius: 0 5px 5px 0;
-  background-color: #d3d4d6d7;
-  transform: translateY(-50%);
-}
 .calendar::before {
   height: 94%;
   left: calc(100% + 12px);
@@ -76,12 +47,12 @@
 }
 .calendar .month {
   width: 100%;
-  height: 60px;
+  height: 55px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 25px;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 500;
   text-transform: capitalize;
   background-color: $primary;
@@ -97,6 +68,7 @@
   }
 }
 
+
 .calendar .month .prev,
 .calendar .month .next {
   cursor: pointer;
@@ -107,18 +79,18 @@
 }
 .calendar .weekdays {
   width: 100%;
-  height: 63px;
+  height: 58px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0px;
+  padding: 0 13px;
   font-size: 1rem;
   font-weight: 500;
   text-transform: capitalize;
   margin-top: 2px;
 }
 .weekdays div {
-  width: 14.28%;
+  width: 13.28%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -129,20 +101,21 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 0 0px;
+  padding: 0 13px;
   font-size: 1rem;
   font-weight: 500;
   height: 62%;
 }
 .calendar .days .day {
-  width: 14.28%;
-  height: 80px;
+  width: 13.28%;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.1s;
-  //   border: 1px solid #f5f5f5;
+  transition: all 0.2s;
+  border-radius: 10px;
+  margin-bottom: .35rem;
 }
 // .calendar .days .day:nth-child(7n + 1) {
 //   border-left: 2px solid #f5f5f5;
@@ -159,18 +132,27 @@
 
 .calendar .days .day:not(.prev-date, .next-date):hover {
   color: #fff;
-  background-color: $primaryLight;
+  background-color: $primary;
   transition: all 0.1s;
 }
+
+.calendar .days .prev-date,
+.calendar .days .next-date {
+  color: #b3b3b3;
+  pointer-events: none;
+}
+
 .calendar .days .prev-date,
 .calendar .days .next-date {
   color: #b3b3b3;
 }
 .calendar .days .active {
   position: relative;
-  font-size: 2rem;
+  font-size: 1.7rem;
   color: #fff;
-  background-color: $primaryLight;
+  background-color: $primary;
+  border-radius: 10px;
+  transition: all 0.2s;
 }
 .calendar .days .active::before {
   content: "";
@@ -179,7 +161,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  // box-shadow: 0 0 6px 1px $primary;
+  box-shadow: 0 0 1px 1px $primary;
+  border-radius: 10px;
 }
 .calendar .days .today {
   font-size: 2rem;
@@ -301,14 +284,15 @@
     bottom: 100px;
   }
 }
+
 @media screen and (max-width: 500px) {
   .calendar .month {
-    height: 65px;
-    padding: 0 18px;
-    font-size: 1.1rem;
+    height: 58px;
+    padding: 0 15px;
+    font-size: 1.05rem;
 
     svg {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
   }
   .calendar .weekdays {
@@ -317,7 +301,7 @@
   }
   .calendar .days .day {
     height: 40px;
-    width: 13.28%;
+    width: 13%;
     font-size: 0.82rem;
   }
   .calendar .days .day.active,
@@ -340,6 +324,8 @@
   .calendar .days .active::before {
     box-shadow: 0 0 2px 1px $primary;
     border-radius: 50%;
+    box-shadow: none;
+    transition: all .3s;
   }
 }
 

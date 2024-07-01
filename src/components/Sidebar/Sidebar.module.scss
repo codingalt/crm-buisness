@@ -13,7 +13,7 @@ ul li {
 .sidebar {
   width: 90px;
   height: 100%;
-  z-index: 100;
+  z-index: 49;
   overflow-y: auto;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -51,11 +51,12 @@ ul li {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
 }
 
 .sidebarProfile svg{
   color: $primary;
-  font-size: 1.3rem;
+  font-size: 1.45rem;
   cursor: pointer;
   margin-bottom: 5px;
 }

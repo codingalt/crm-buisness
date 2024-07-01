@@ -20,6 +20,10 @@ export const bookingsApi = createApi({
       providesTags: ["Bookings"],
     }),
 
+    getPaymentMethods: builder.query({
+      query: () => `paymentMethods`,
+    }),
+
     activateBooking: builder.mutation({
       query: (bookingId) => ({
         url: `business/startTheService/${bookingId}`,
@@ -43,5 +47,6 @@ export const bookingsApi = createApi({
 export const {
   useGetBookingsQuery,
   useActivateBookingMutation,
-  useMarkAsCompleteBookingMutation
+  useMarkAsCompleteBookingMutation,
+  useGetPaymentMethodsQuery
 } = bookingsApi;

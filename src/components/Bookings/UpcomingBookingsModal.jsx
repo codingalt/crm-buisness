@@ -12,6 +12,8 @@ import { LuUser2 } from "react-icons/lu";
 import css from "./Modal.module.scss";
 import moment from "moment";
 import { DirectionContext } from "@/context/DirectionContext";
+import { FaCreditCard } from "react-icons/fa";
+import { IoWallet } from "react-icons/io5";
 
 const UpcomingBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
   const { direction } = useContext(DirectionContext);
@@ -57,6 +59,14 @@ const UpcomingBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
                       className={css.card}
                       style={{ backgroundColor: "#ECF3F9" }}
                     >
+                      <div className="absolute top-3 md:top-4 right-3 text-default-500 text-xs font-normal flex items-center gap-2">
+                        {item?.payment_method?.code == "card" ? (
+                          <FaCreditCard />
+                        ) : (
+                          <IoWallet />
+                        )}
+                        <span>{item?.payment_method?.name}</span>
+                      </div>
                       <div className={css.details}>
                         <Avatar
                           icon={<LuUser2 fontSize={22} />}

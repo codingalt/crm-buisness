@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import css from "./Bookings.module.scss";
-import { FaChevronDown } from "react-icons/fa6";
-import user from "../../assets/girl.jpg";
 import { HiMiniArrowLongRight } from "react-icons/hi2";
 import BookingsTable from "./BookingsTable";
 import FilterByDateModal from "./FilterByDateModal";
@@ -18,13 +16,18 @@ import UpcomingBookingsModal from "./UpcomingBookingsModal";
 import { Skeleton } from "@mui/material";
 import ActiveBookingsModal from "./ActiveBookingsModal";
 import { MdOutlineDone } from "react-icons/md";
-import { MdFileDownloadDone } from "react-icons/md";
 import { toastSuccess } from "../Toast/Toast";
 import { useApiErrorHandling } from "@/hooks/useApiErrors";
 import { useTranslation } from "react-i18next";
 import { DirectionContext } from "@/context/DirectionContext";
+import { FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaCreditCard } from "react-icons/fa";
+import { IoWallet } from "react-icons/io5";
 
 const Bookings = () => {
+  const navigate = useNavigate();
+
   const {
     isOpen: isOpen1,
     onOpen: onOpen1,
@@ -41,8 +44,8 @@ const Bookings = () => {
   const [isModal, setIsModal] = useState(false);
   const [clickedBooking, setClickedBooking] = useState(null);
   const [filterDate, setFilterDate] = useState({
-    startDate: moment(new Date("2024-05-01")).format("YYYY-MM-DD"),
-    endDate: moment(new Date()).format("YYYY-MM-DD"),
+    startDate: moment().startOf("month").format("YYYY-MM-DD"),
+    endDate: moment().endOf("month").format("YYYY-MM-DD"),
   });
 
   const { data, isLoading } = useGetBookingsQuery({
@@ -97,6 +100,9 @@ const Bookings = () => {
       <div className={css.dashboardDetails}>
         <div className={css.top}>
           <h1>{t("heading")}</h1>
+          <button type="button" onClick={() => navigate("/addAppointment")}>
+            <FaPlus /> <span>Add Appointment</span>
+          </button>
         </div>
 
         {/* Active Bookings  */}
@@ -127,6 +133,14 @@ const Bookings = () => {
             ) : (
               data?.active?.length > 0 && (
                 <div className={css.card}>
+                  <div className="absolute top-3 md:top-4 right-3 text-default-500 text-xs font-normal flex items-center gap-2">
+                    {data?.active[0]?.payment_method?.code == "card" ? (
+                      <FaCreditCard />
+                    ) : (
+                      <IoWallet />
+                    )}
+                    <span>{data?.active[0]?.payment_method?.name}</span>
+                  </div>
                   <div className={css.details}>
                     <Avatar
                       icon={<LuUser2 fontSize={22} />}
@@ -158,8 +172,7 @@ const Bookings = () => {
                     <Button
                       isLoading={isLoadingCompleteBooking}
                       size="sm"
-                      className="w-28 h-8"
-                      color="success"
+                      className="w-28 h-8 border-[#01AB8E] text-[#01AB8E] hover:bg-[#01AB8E]"
                       variant="ghost"
                       startContent={<MdOutlineDone fontSize={30} />}
                       onClick={() =>
@@ -220,6 +233,14 @@ const Bookings = () => {
                   className={css.card}
                   style={{ backgroundColor: "#ECF3F9" }}
                 >
+                  <div className="absolute top-3 md:top-4 right-3 text-default-500 text-xs font-normal flex items-center gap-2">
+                    {data?.upComing[0]?.payment_method?.code == "card" ? (
+                      <FaCreditCard />
+                    ) : (
+                      <IoWallet />
+                    )}
+                    <span>{data?.upComing[0]?.payment_method?.name}</span>
+                  </div>
                   <div className={css.details}>
                     <Avatar
                       icon={<LuUser2 fontSize={22} />}

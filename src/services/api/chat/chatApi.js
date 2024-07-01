@@ -16,7 +16,6 @@ export const chatApi = createApi({
   endpoints: (builder) => ({
     getConversations: builder.query({
       query: ({ user_type }) => `fetchCommunications?user_type=${user_type}`,
-      // providesTags: ["chatApi"],
     }),
 
     oneOoneCommunication: builder.query({
@@ -34,6 +33,13 @@ export const chatApi = createApi({
       }),
       // invalidatesTags: ["chatApi"],
     }),
+
+    assignChatToEmployee: builder.mutation({
+      query: ({ communicationId, employeeId }) => ({
+        url: `business/assignCommunicationToEmployee/${communicationId}/${employeeId}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -41,4 +47,5 @@ export const {
   useGetConversationsQuery,
   useOneOoneCommunicationQuery,
   useSendMessageMutation,
+  useAssignChatToEmployeeMutation
 } = chatApi;

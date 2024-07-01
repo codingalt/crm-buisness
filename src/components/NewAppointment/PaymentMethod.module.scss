@@ -1,0 +1,91 @@
+@import "../../styles/constants.scss";
+
+.paymentMethodWrapper {
+  width: 100%;
+
+  .methodCards {
+    width: 100%;
+    margin: 3rem auto;
+    margin-bottom: 5;
+    max-width: 90%;
+
+    .card {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #d2d2d2;
+      @include flexCenter;
+      gap: 0.8rem;
+      padding: 3.5rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      svg {
+        font-size: 2.4rem;
+      }
+
+      p {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 400;
+      }
+    }
+  }
+
+  .nextButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    button {
+      @include button($width: 11rem, $height: 3rem);
+    }
+  }
+
+  @media (max-width: 768px) {
+    & {
+      width: 95%;
+      margin: auto;
+      margin-top: 0.5rem;
+
+      .heading {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 0.1rem;
+        text-align: center;
+      }
+
+      .methodCards {
+        margin: 2.8rem auto;
+        margin-bottom: 6rem;
+
+        .card {
+          padding: 2.5rem 1.5rem;
+          width: 87%;
+
+          svg {
+            font-size: 1.8rem;
+          }
+
+          p {
+            font-size: 18px;
+          }
+        }
+      }
+
+      .nextButton {
+        display: none;
+      }
+
+      .mobileBtn {
+        margin-bottom: 1.5rem;
+        margin-top: 40px;
+
+        button {
+          @include button($width: 10.5rem, $height: 2.5rem);
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
+}

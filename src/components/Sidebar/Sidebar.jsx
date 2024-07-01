@@ -14,6 +14,7 @@ import { IoStatsChart, IoChatboxEllipses } from "react-icons/io5";
 import { AiFillHome } from "react-icons/ai";
 import useClickOutside from "../../hooks/useClickOutside";
 import { useSelector } from "react-redux";
+import { TbLogout2 } from "react-icons/tb";
 
 const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
   const sidebarRef = useRef();
@@ -41,7 +42,6 @@ const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
       to: "/dashboard",
       icon: <AiFillHome />,
       title: "Dashboard",
-      role: "can_dashboard",
     },
     {
       to: "/statistics",
@@ -71,7 +71,6 @@ const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
       to: "/diary",
       icon: <FaCalendarCheck />,
       title: "Diary",
-      role: "can_business_diary",
     },
     {
       to: "/profile",
@@ -85,7 +84,12 @@ const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
 
   const accessibleMenuItems = isBusinessOwner
     ? menuItems
-    : menuItems.filter((item) => roles.includes(item.role));
+    : menuItems.filter((item) => !item.role || roles.includes(item.role));
+
+  const handleLogout = () => {
+    localStorage.removeItem("crmBusinessToken");
+    window.location.reload(false);
+  };
 
   return (
     <div
@@ -94,10 +98,11 @@ const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
       }
       ref={sidebarRef}
     >
-      <div className={css.sidebarProfile}>
-        <FaLightbulb />
-        <LuClock4 />
-      </div>
+      <Tooltip title="Logout" placement="right">
+        <div className={css.sidebarProfile}>
+          <TbLogout2 onClick={handleLogout} />
+        </div>
+      </Tooltip>
       <div className={css.sidebarMenu}>
         <ul style={{ paddingLeft: "0" }}>
           {accessibleMenuItems.map((item) => (

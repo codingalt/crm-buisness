@@ -5,7 +5,10 @@ import { useApiErrorHandling } from "../../../hooks/useApiErrors";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { loginSchema } from "../../../utils/validations/AuthValidation";
 import { Button } from "@nextui-org/react";
-import { useLoginUserMutation, useValidateTokenQuery } from "../../../services/api/authApi/authApi";
+import {
+  useLoginUserMutation,
+  useValidateTokenQuery,
+} from "../../../services/api/authApi/authApi";
 import ApiErrorDisplay from "../../../hooks/ApiErrorDisplay";
 import ClipSpinner from "@/components/Loader/ClipSpinner";
 
@@ -43,39 +46,40 @@ const Login = () => {
   };
 
   const [loginUser, res] = useLoginUserMutation();
-  const {isLoading, isSuccess, error} = res;
+  const { isLoading, isSuccess, error } = res;
 
   const apiErrors = useApiErrorHandling(error);
 
   const handleSubmit = async (values) => {
-    const {data} = await loginUser({
+    const { data } = await loginUser({
       email: values.email,
       password: values.password,
     });
 
     if (data?.token) {
       localStorage.setItem("crmBusinessToken", data.token);
+
       navigate("/dashboard");
     }
   };
 
-   if (isLoadingValidate) {
-     return (
-       <div
-         style={{
-           width: "100%",
-           height: "100vh",
-           display: "flex",
-           justifyContent: "center",
-           alignItems: "center",
-           zIndex: "999",
-           paddingBottom: "3rem",
-         }}
-       >
-         <ClipSpinner color="#01ABAB" size={45} speedMultiplier={0.85} />
-       </div>
-     );
-   }
+  if (isLoadingValidate) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: "999",
+          paddingBottom: "3rem",
+        }}
+      >
+        <ClipSpinner color="#01ABAB" size={45} speedMultiplier={0.85} />
+      </div>
+    );
+  }
 
   return (
     <>

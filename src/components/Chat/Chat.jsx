@@ -4,7 +4,6 @@ import Conversation from "./Conversation";
 import * as bi from "react-icons/bi";
 import ChatBody from "./ChatBody";
 import ChatHeader from "./ChatHeader";
-import { Container } from "@mui/material";
 import { useSelector } from "react-redux";
 import {
   useGetConversationsQuery,
@@ -17,6 +16,8 @@ import { TbMessage } from "react-icons/tb";
 import { useGetBusinessProfileQuery } from "@/services/api/profileApi/profileApi";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { usePusher } from "@/context/PusherContext";
+import { useDisclosure } from "@nextui-org/react";
+import AssignChatModal from "./AssignChatModal";
 
 const Chat = () => {
   const location = useLocation();
@@ -27,11 +28,14 @@ const Chat = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const pusher = usePusher();
-  console.log(pusher);
+
   const channelsRef = useRef({});
+  const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [newMessage, setNewMessage] = useState("");
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleChatMob = () => {
     if (isSmallDevice) {
@@ -50,61 +54,65 @@ const Chat = () => {
   const { data: businessData } = useGetBusinessProfileQuery();
 
   // Get Conversations
-  const { data: conversations, isLoading: isLoadingConversations } =
-    useGetConversationsQuery(props, { skip: !user || selectedChat });
+  const {
+    data: conversations,
+    isLoading: isLoadingConversations,
+    refetch: refetchChats,
+    isUninitialized,
+  } = useGetConversationsQuery(props, { skip: !user,refetchOnMountOrArgChange: true });
 
-//  useEffect(() => {
-//    if (conversations && pusher) {
-//      const handleNewMessage = (data) => {
-//       //  setMessages((prevMessages) => [...prevMessages, data.message]);
-//       alert("Listening to pusher event..");
-//      };
+  useEffect(()=>{
+    if(conversations){
+      setChats(conversations?.communications);
+    }
+  },[conversations]);
 
-//      // Subscribe to Pusher channels for each communication
-//      conversations.communications.forEach((item) => {
-//        const channelName = `private-channel.1`;
+  //  useEffect(() => {
+  //    if (conversations && pusher) {
+  //      const handleNewMessage = (data) => {
+  //       //  setMessages((prevMessages) => [...prevMessages, data.message]);
+  //       alert("Listening to pusher event..");
+  //      };
 
-//        // Check if the channel is already subscribed
-//        if (!channelsRef.current[channelName]) {
-//          const channel = pusher.subscribe(channelName);
-//          channel.bind("private_channel", handleNewMessage);
-//          channelsRef.current[channelName] = channel; // Store the channel in the ref
-//        }
-//      });
+  //      // Subscribe to Pusher channels for each communication
+  //      conversations.communications.forEach((item) => {
+  //        const channelName = `private-channel.1`;
 
-//      // Cleanup function to unsubscribe from all channels
-//      return () => {
-//        Object.keys(channelsRef.current).forEach((channelName) => {
-//          const channel = channelsRef.current[channelName];
-//          channel.unbind("NewMessage", handleNewMessage);
-//          pusher.unsubscribe(channelName);
-//          delete channelsRef.current[channelName]; // Remove the channel from the ref
-//        });
-//      };
-//    }
-//  }, [conversations, pusher]);
+  //        // Check if the channel is already subscribed
+  //        if (!channelsRef.current[channelName]) {
+  //          const channel = pusher.subscribe(channelName);
+  //          channel.bind("private_channel", handleNewMessage);
+  //          channelsRef.current[channelName] = channel; // Store the channel in the ref
+  //        }
+  //      });
 
- useEffect(() => {
+  //      // Cleanup function to unsubscribe from all channels
+  //      return () => {
+  //        Object.keys(channelsRef.current).forEach((channelName) => {
+  //          const channel = channelsRef.current[channelName];
+  //          channel.unbind("NewMessage", handleNewMessage);
+  //          pusher.unsubscribe(channelName);
+  //          delete channelsRef.current[channelName]; // Remove the channel from the ref
+  //        });
+  //      };
+  //    }
+  //  }, [conversations, pusher]);
 
-  if(pusher){
-     const channelName = `private-channel.1`;
-     const channel = pusher.subscribe(channelName);
+  useEffect(() => {
+    if (pusher) {
+      const channelName = `private-channel.1`;
+      const channel = pusher.subscribe(channelName);
 
-     const handleListen = () => {
-       alert("Listening to pusher event..");
-     };
+      const handleListen = () => {
+        alert("Listening to pusher event..");
+      };
 
-     channel.bind("private_channel", handleListen);
-  }
-  
- }, [pusher]);
+      channel.bind("private_channel", handleListen);
+    }
+  }, [pusher]);
 
   // Get oneOone Communication | Messages
-  const {
-    data: messagesData,
-    isFetching: isLoadingMessages,
-    refetch,
-  } = useOneOoneCommunicationQuery(props, {
+  const { data: messagesData } = useOneOoneCommunicationQuery(props, {
     refetchOnMountOrArgChange: true,
     skip: !selectedChat,
   });
@@ -115,17 +123,19 @@ const Chat = () => {
   useEffect(() => {
     if (messagesData) {
       setMessages(messagesData?.communications?.messages);
+      setIsLoadingMessages(false);
     }
   }, [messagesData]);
 
   // Check If ChatId is present in the Url
   useEffect(() => {
     if (chatId) {
-      setSelectedChat(
-        conversations?.communications?.find(
-          (chat) => chat.id === parseInt(chatId)
-        )
+      const chat = conversations?.communications?.find(
+        (chat) => chat.id === parseInt(chatId)
       );
+      if (chat) {
+        setSelectedChat(chat);
+      }
     }
   }, [chatId, conversations]);
 
@@ -136,6 +146,7 @@ const Chat = () => {
   };
 
   const handleChatClick = (chat) => {
+    setIsLoadingMessages(true);
     setSelectedChat(chat);
     updateSearchParams(chat.id);
   };
@@ -186,101 +197,114 @@ const Chat = () => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-
+  
   // Filter conversations based on search query
-  const filteredConversations = conversations?.communications?.filter((chat) =>
+  const filteredConversations = chats?.filter((chat) =>
     chat.customer.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="w-full xl:max-w-screen-xl md:max-w-screen-2xl mx-auto px-0 md:px-4 pt-1 md:pt-5 pb-0 max-h-[79.5vh]">
-      <div className={css.chatWrapper}>
-        <div className={css.chatContainer}>
-          <div
-            className={`${css.chatLeft} shadow-sm border`}
-            style={activeChatMob ? { display: "none" } : { display: "block" }}
-          >
-            <div className={css.cLeftHeading}>
-              <span>Chats</span>
-            </div>
-            <div className={`${css.chatSearch}`}>
-              <bi.BiSearch />
-              <input
-                type="text"
-                value={searchQuery}
-                placeholder="SEARCH"
-                onChange={handleSearchChange}
-              />
-            </div>
-
-            {/* Conversations  */}
-            <div className={`${css.conversation} border-t-1`}>
-              <ul
-                style={isLoadingConversations ? { scrollbarWidth: "none" } : {}}
-              >
-                {isLoadingConversations ? (
-                  <ConversationSkeleton />
-                ) : (
-                  filteredConversations?.map((chat, index) => (
-                    <div key={chat.id} onClick={() => handleChatClick(chat)}>
-                      <Conversation
-                        chat={chat}
-                        chatId={chatId}
-                        handleChatMob={handleChatMob}
-                      />
-                    </div>
-                  ))
-                )}
-
-                {/* No Conversation Message  */}
-                {!isLoadingConversations &&
-                  conversations?.communications?.length === 0 && (
-                    <div className="w-full h-full flex gap-y-3 items-center justify-center px-20 text-center flex-col">
-                      <TbMessage fontSize={60} color="#01AB8E" />
-                      <p className="text-tiny text-default-500 font-medium">
-                        Messages from your customer will appear here.
-                      </p>
-                    </div>
-                  )}
-              </ul>
-            </div>
-          </div>
-
-          {/* Messages  */}
-
-          {
+    <>
+      {/* Assign Chat to Employee Modal  */}
+      <AssignChatModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        communicationId={selectedChat?.id}
+        refetchChats={refetchChats}
+        isUninitialized={isUninitialized}
+      />
+      <div className="w-full xl:max-w-screen-xl md:max-w-screen-2xl mx-auto px-0 md:px-4 pt-1 md:pt-5 pb-0 max-h-[79.5vh]">
+        <div className={css.chatWrapper}>
+          <div className={css.chatContainer}>
             <div
-              className={
-                activeChatMob
-                  ? `${css.chatRight} ${css.active_chat_section}`
-                  : css.chatRight
-              }
-              // className={css.chatRight}
+              className={`${css.chatLeft} shadow-sm border`}
+              style={activeChatMob ? { display: "none" } : { display: "block" }}
             >
-              <ChatHeader
-                selectedChat={selectedChat}
-                activeChatMob={activeChatMob}
-                handleChatMob={setActiveChatMob}
-              />
-
-              <div className={`${css.messageContainer} shadow-sm border`}>
-                <ChatBody
-                  selectedChat={selectedChat}
-                  newMessage={newMessage}
-                  handleKeyDown={handleKeyDown}
-                  handleChange={handleChange}
-                  messages={messages}
-                  handleSendMessage={handleSendMessage}
-                  isLoadingMessages={isLoadingMessages}
-                  businessData={businessData}
+              <div className={css.cLeftHeading}>
+                <span>Chats</span>
+              </div>
+              <div className={`${css.chatSearch}`}>
+                <bi.BiSearch />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  placeholder="SEARCH"
+                  onChange={handleSearchChange}
                 />
               </div>
-              {/* end of message container div  */}
+
+              {/* Conversations  */}
+              <div className={`${css.conversation} border-t-1`}>
+                <ul
+                  style={
+                    isLoadingConversations ? { scrollbarWidth: "none" } : {}
+                  }
+                >
+                  {isLoadingConversations ? (
+                    <ConversationSkeleton />
+                  ) : (
+                    filteredConversations?.map((chat, index) => (
+                      <div key={chat.id} onClick={() => handleChatClick(chat)}>
+                        <Conversation
+                          chat={chat}
+                          chatId={chatId}
+                          handleChatMob={handleChatMob}
+                        />
+                      </div>
+                    ))
+                  )}
+
+                  {/* No Conversation Message  */}
+                  {!isLoadingConversations &&
+                    conversations?.communications?.length === 0 && (
+                      <div className="w-full h-full flex gap-y-3 items-center justify-center px-20 text-center flex-col">
+                        <TbMessage fontSize={60} color="#01AB8E" />
+                        <p className="text-tiny text-default-500 font-medium">
+                          Messages from your customer will appear here.
+                        </p>
+                      </div>
+                    )}
+                </ul>
+              </div>
             </div>
-          }
+
+            {/* Messages  */}
+
+            {
+              <div
+                className={
+                  activeChatMob
+                    ? `${css.chatRight} ${css.active_chat_section}`
+                    : css.chatRight
+                }
+                // className={css.chatRight}
+              >
+                <ChatHeader
+                  selectedChat={selectedChat}
+                  activeChatMob={activeChatMob}
+                  handleChatMob={setActiveChatMob}
+                  onOpen={onOpen}
+                />
+
+                <div className={`${css.messageContainer} shadow-sm border`}>
+                  <ChatBody
+                    selectedChat={selectedChat}
+                    newMessage={newMessage}
+                    handleKeyDown={handleKeyDown}
+                    handleChange={handleChange}
+                    messages={messages}
+                    handleSendMessage={handleSendMessage}
+                    isLoadingMessages={isLoadingMessages}
+                    businessData={businessData}
+                  />
+                </div>
+                {/* end of message container div  */}
+              </div>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

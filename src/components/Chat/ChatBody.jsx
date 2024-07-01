@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import InputEmoji from "react-input-emoji";
 import * as fi from "react-icons/fi";
-import * as im from "react-icons/im";
-import defaultProfile from "@/assets/avatar.png";
 import noChat from "@/assets/nochat.png";
 import ScrollableFeed from "react-scrollable-feed";
 import css from "./chat.module.scss";
@@ -61,14 +59,14 @@ const ChatBody = ({
                   <div className={css.image}>
                     <Avvvatars
                       value={user?.name}
-                      size={isSmallDevice ? 40 : 46}
+                      size={isSmallDevice ? 35 : 46}
                     />
                   </div>
                 ) : (
                   <div className={css.image}>
                     <Avvvatars
                       value={selectedChat?.customer?.name}
-                      size={isSmallDevice ? 40 : 46}
+                      size={isSmallDevice ? 35 : 46}
                     />
                   </div>
                 )}

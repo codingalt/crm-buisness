@@ -4,7 +4,6 @@ import useClickOutside from "../../hooks/useClickOutside";
 import css from "./FilterModal.module.scss";
 import { RxCross2 } from "react-icons/rx";
 import Calendar from "./Calendar";
-import Calendar2 from "./Calendar2";
 
 const FilterByDateModal = ({ isModal, setIsModal }) => {
   const modalRef = useRef(null);
@@ -30,7 +29,7 @@ const FilterByDateModal = ({ isModal, setIsModal }) => {
               transition={{ duration: 0.2 }}
               ref={modalRef}
             >
-              <div className={`${css.heading} max-w-5xl mx-auto`}>
+              <div className={`${css.heading} max-w-3xl mx-auto`}>
                 <span>Daily - Monthly</span>
                 <div
                   className="w-8 h-8 md:w-10 md:h-10 cursor-pointer rounded-full bg-default-200 flex items-center justify-center"
@@ -41,11 +40,11 @@ const FilterByDateModal = ({ isModal, setIsModal }) => {
                 </div>
               </div>
               
-              <div className={`${css.calendarWrapper} max-w-5xl`}>
-                <Calendar2 />
+              <div className={`${css.calendarWrapper} max-w-3xl`}>
+                <Calendar />
               </div>
 
-              <div className={`${css.button} max-w-5xl mx-auto flex justify-end items-center`}>
+              <div className={`${css.button} max-w-3xl mx-auto flex justify-end items-center`}>
                 <button>Apply Filters</button>
               </div>
             </motion.div>

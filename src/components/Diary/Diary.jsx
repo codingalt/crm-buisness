@@ -23,7 +23,7 @@ const Diary = () => {
         <h1 className="capitalize">Diary - {currentView}</h1>
       </div>
 
-      <div className={`max-w-screen-xl w-full mx-auto my-6 md:my-6 pb-24`}>
+      <div className={`max-w-screen-xl w-full mx-auto my-5 md:my-5 pb-24`}>
         <SchedulerCalendar
           data={data}
           currentView={currentView}

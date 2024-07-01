@@ -6,7 +6,7 @@ const ApiErrorDisplay = ({ apiErrors, className }) => {
 
   return (
     <div className={`w-full ${className}`}>
-        <Alert icon severity="error">
+        <Alert icon={false} severity="error">
           {apiErrors.map((error, index) => (
             <li key={index}>
               {error}

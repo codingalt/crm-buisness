@@ -6,7 +6,6 @@ import Email from "../components/Auth/Signup/Email";
 import VerificationCode from "../components/Auth/Signup/VerificationCode";
 import PersonalInformation from "../components/Auth/Signup/PersonalInformation";
 import Login from "../components/Auth/Login/Login";
-import DashboardPage from "../pages/DashboardPage";
 import ServicesPage from "../pages/ServicesPage";
 import AddNewServicePage from "../pages/AddNewServicePage";
 import StatisticsPage from "../pages/StatisticsPage";
@@ -19,6 +18,7 @@ import ChatPage from "@/pages/ChatPage";
 import NotFound from "@/components/NotFound/NotFound";
 import DiaryPage from "@/pages/DiaryPage";
 import EmployeeSetPasswordPage from "@/pages/EmployeeSetPasswordPage";
+import AddAppointmentPage from "@/pages/AddAppointmentPage";
 
 export const router = createBrowserRouter([
   {
@@ -79,6 +79,10 @@ export const router = createBrowserRouter([
       {
         path: "/diary",
         element: <Protected Component={DiaryPage} />,
+      },
+      {
+        path: "/addAppointment",
+        element: <Protected Component={AddAppointmentPage} />,
       },
       {
         path: "/setup-password",

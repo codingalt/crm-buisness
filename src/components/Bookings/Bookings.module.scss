@@ -7,8 +7,8 @@
   .top {
     display: flex;
     align-items: center;
-    gap: 1.4rem;
-    width: calc(100% - 90px);
+    justify-content: space-between;
+    width: 100%;
     max-width: 85%;
     margin: 0 auto;
 
@@ -17,9 +17,10 @@
       font-weight: 500;
     }
 
-    svg {
-      font-size: 19px;
-      color: $primary;
+    button {
+      @include button($width: 12.2rem, $height: 2.8rem);
+      font-size: 14px;
+      gap: 8px;
     }
   }
 
@@ -32,7 +33,7 @@
     align-items: center;
     gap: 4rem;
     margin: 0 auto;
-    margin-top: 1.8rem;
+    margin-top: 2.4rem;
 
     .inner {
       flex: 1;
@@ -57,6 +58,7 @@
         background-color: #fdf3f1;
         border-radius: 8px;
         padding: 16px 16px;
+        position: relative;
 
         .details {
           display: flex;
@@ -81,8 +83,8 @@
             }
 
             span {
-              font-size: 15px;
-              font-weight: 600;
+              font-size: 14px;
+              font-weight: 500;
             }
           }
         }
@@ -92,7 +94,7 @@
           align-items: center;
           justify-content: space-between;
           width: 100%;
-          margin-top: 1.3rem;
+          margin-top: 1.6rem;
 
           p {
             font-size: 15px;
@@ -144,7 +146,7 @@
 
     .table {
       display: flex;
-      gap: 1.8rem;
+      gap: 1rem;
 
       .hoursCol {
         display: flex;
@@ -179,7 +181,7 @@
             display: flex;
             align-items: center;
             background-color: #f6f6f6;
-            margin-bottom: 1.55rem;
+            margin-bottom: 1.5rem;
             border-radius: 8px;
             padding: 16px 22px;
 
@@ -190,10 +192,14 @@
               letter-spacing: 0.3px;
               color: #222222;
               display: flex;
-              justify-content: center;
 
               &:nth-child(1) {
                 justify-content: flex-start;
+              }
+
+              &:last-child {
+                flex: 0.7;
+                justify-content: center;
               }
             }
           }
@@ -211,16 +217,20 @@
               border-radius: 8px;
               padding: 16px 22px;
 
-              p {
+              .item {
                 flex: 1;
                 font-size: 16px;
                 font-weight: 400;
                 color: #000;
                 display: flex;
-                justify-content: center;
 
                 &:nth-child(1) {
                   justify-content: flex-start;
+                }
+
+                &:last-child {
+                  flex: 0.7;
+                  justify-content: center;
                 }
               }
             }
@@ -239,6 +249,16 @@
         max-width: 100%;
         width: 100%;
         gap: 1.2rem;
+        flex-direction: column-reverse;
+        align-items: flex-start;
+
+        button {
+          height: 2.5rem;
+          width: 10.5rem;
+          gap: 5px;
+          font-size: 13px;
+          margin-left: auto;
+        }
 
         h1 {
           font-size: 28px;
@@ -251,11 +271,18 @@
         flex-direction: column;
         gap: 0.9rem;
         align-items: stretch;
-        margin-top: 2.2rem;
+        margin-top: 2rem;
 
         .inner {
           h3 {
             font-size: 20px;
+          }
+
+          .card{
+
+            .details{
+              margin-top: 8px;
+            }
           }
         }
 
@@ -300,21 +327,17 @@
 
               .tableHeader {
                 gap: 1.7rem;
-                padding: 15px 18px;
+                padding: 11px 18px;
                 overflow-x: auto;
                 scrollbar-width: none;
                 width: max-content;
 
                 .item {
                   font-size: 13px;
-                  width: 120px;
+                  width: 70px;
 
-                  &:nth-child(3) {
-                    width: 100px;
-                  }
-
-                  &:nth-child(3) {
-                    width: 100px;
+                  &:nth-child(4) {
+                    width: 350px;
                   }
                 }
               }
@@ -325,16 +348,16 @@
                 width: max-content;
 
                 .tableRow {
-                  padding: 15px 18px;
+                  padding: 11px 18px;
                   gap: 1.7rem;
                   scrollbar-width: none;
 
-                  p {
+                  .item {
                     font-size: 13px;
-                    width: 120px;
+                    width: 70px;
 
-                    &:nth-child(3) {
-                      width: 100px;
+                    &:nth-child(4) {
+                      width: 350px;
                     }
                   }
                 }

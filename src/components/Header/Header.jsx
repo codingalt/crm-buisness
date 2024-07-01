@@ -45,7 +45,7 @@ const Header = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
   };
 
   return (
-    <header className={`${css.Header}`}>
+    <header className={`${css.Header} z-40`}>
       <div className={`${css.header_left} flex items-center gap-2`}>
         <div className={css.logo}>
           <img src={logo} alt="" />

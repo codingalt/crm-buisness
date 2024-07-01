@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import css from "./Bookings.module.scss";
-import { RxCross2 } from "react-icons/rx";
-import { MdDone } from "react-icons/md";
 import { RiFilter3Fill } from "react-icons/ri";
 import { Empty } from "antd";
 import ClipSpinner from "../Loader/ClipSpinner";
 import moment from "moment";
 import { Button } from "@nextui-org/react";
+import { truncateText } from "@/utils/helpers/helpers";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 const BookingsTable = ({
   setIsModal,
@@ -18,6 +18,7 @@ const BookingsTable = ({
   isLoadingCompleteBooking,
   clickedBooking,
 }) => {
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const [hours, setHours] = useState();
 
   useEffect(() => {
@@ -61,8 +62,8 @@ const BookingsTable = ({
           <div className={`${css.employeesTable}`}>
             {/* Table Header  */}
             <div className={css.tableHeader}>
-              <div className={css.item}>Customer Name</div>
-              <div className={css.item}>Service Provider</div>
+              <div className={css.item}>Name</div>
+              <div className={css.item}>Service</div>
               <div className={css.item}>Time</div>
               <div className={css.item}>Payment</div>
               <div className={css.item}>
@@ -97,11 +98,24 @@ const BookingsTable = ({
                         : { background: "#f6ffed" }
                     }
                   >
-                    <p>{item.customer.name}</p>
-                    <p>{item.service.name}</p>
-                    <p>{item.service.time}min</p>
-                    <p>{item.price} Nis</p>
-                    <p>
+                    <div className={css.item}>
+                      {truncateText(item.customer.name, 12)}
+                    </div>
+                    <div className={css.item}>
+                      {truncateText(item.service.name, isSmallDevice ? 15 : 18)}
+                    </div>
+                    <div className={css.item}>
+                      {moment(item?.appointment_date).format("MMMM D, h:mm a")}
+                    </div>
+                    <div
+                      className={`${css.item} flex text-nowrap items-center gap-1`}
+                    >
+                      <span>{item.price} Nis</span>
+                      <span className="text-tiny text-[#01ab8e]">
+                        | {item.payment_method?.name}
+                      </span>
+                    </div>
+                    <div className={css.item}>
                       {item.status === 1 ? (
                         <Button
                           isLoading={
@@ -135,7 +149,7 @@ const BookingsTable = ({
                       ) : (
                         <Button
                           size="sm"
-                          className="w-24 h-[28px] text-[13px] bg-[#01AB8E] text-white"
+                          className="w-24 h-[28px] pointer-events-none text-[13px] bg-[#01AB8E] text-white"
                           color="success"
                           radius="full"
                           disabled
@@ -143,7 +157,7 @@ const BookingsTable = ({
                           Finished
                         </Button>
                       )}
-                    </p>
+                    </div>
                   </div>
                 ))
               )}

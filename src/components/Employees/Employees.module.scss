@@ -134,6 +134,8 @@
           .item {
             font-size: 13px;
             width: 130px;
+            width: auto;
+            
           }
         }
 
@@ -148,6 +150,8 @@
             p {
               font-size: 13px;
               width: 120px;
+              width: max-content;
+              text-overflow: ellipsis;
             }
 
             .action {
