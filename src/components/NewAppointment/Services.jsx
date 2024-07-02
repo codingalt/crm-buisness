@@ -33,7 +33,7 @@ const Services = ({ selectedService, setSelectedService,data,isLoading }) => {
 
   return (
     <div
-      className={`${css.services} h-auto grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-x-4 md:gap-x-8`}
+      className={`${css.services} h-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-x-4 md:gap-x-8`}
     >
       {isLoading
         ? Array.from({ length: value }).map((_, index) => (

@@ -171,4 +171,19 @@
       }
     }
   }
+
+  @media (max-width: 768p) {
+    &{
+      margin: 1rem auto;
+
+      h3{
+        font-size: 1.4rem;
+        line-height: 38px;
+      }
+
+      .card{
+        
+      }
+    }
+  }
 }
