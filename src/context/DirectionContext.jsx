@@ -16,8 +16,7 @@ export const DirectionProvider = ({ children }) => {
     const newLanguage = language;
     i18n.changeLanguage(newLanguage);
     localStorage.setItem("language", newLanguage);
-    window.postMessage(JSON.stringify(newLanguage), "*");
-    window.Flutter.postMessage(JSON.stringify(newLanguage));
+    window.Language.postMessage(JSON.stringify(newLanguage));
   };
 
   useEffect(() => {
