@@ -5,8 +5,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import ImagePlaceholder from "../ui/Image/ImagePlaceholder";
 import { Skeleton } from "@nextui-org/react";
 
-const Services = () => {
-  const { data, isLoading } = useGetServicesQuery();
+const Services = ({ selectedService, setSelectedService,data,isLoading }) => {
   const [value, setValue] = useState(0);
 
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
@@ -40,12 +39,20 @@ const Services = () => {
         ? Array.from({ length: value }).map((_, index) => (
             <Skeleton
               key={index}
-              className="w-full h-[72px] rounded-[10px] mb-5"
+              className="w-full h-[65px] rounded-[10px] mb-5"
               disableAnimation
             />
           ))
         : data?.services?.map((item) => (
-            <div key={item.id} className={css.cardService}>
+            <div
+              onClick={() => setSelectedService(item.id)}
+              key={item.id}
+              className={
+                selectedService === item.id
+                  ? `${css.cardService} ${css.activeCard}`
+                  : css.cardService
+              }
+            >
               <div className={css.image}>
                 <ImagePlaceholder src={item.image} radius={"50%"} />
               </div>

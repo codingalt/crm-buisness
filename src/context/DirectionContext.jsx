@@ -16,13 +16,12 @@ export const DirectionProvider = ({ children }) => {
     const newLanguage = language;
     i18n.changeLanguage(newLanguage);
     localStorage.setItem("language", newLanguage);
+    window.postMessage(JSON.stringify(newLanguage), "*");
   };
-
 
   useEffect(() => {
     const handleLanguageChange = (lng) => {
       setDirection(rtlLanguages.includes(lng) ? "rtl" : "ltr");
-      //  setDirection(lng === "en" ? "ltr" : "rtl");
     };
 
     i18n.on("languageChanged", handleLanguageChange);

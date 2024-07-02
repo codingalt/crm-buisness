@@ -1,47 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import css from "./NewAppointment.module.scss";
 import Services from "./Services";
 import { Step, StepContent, StepLabel, Stepper } from "@mui/material";
 import CustomerData from "./CustomerData";
 import PaymentMethod from "./PaymentMethod";
 import { Button } from "@nextui-org/react";
+import { toastError } from "../Toast/Toast";
+import { useGetPaymentMethodsQuery } from "@/services/api/bookingsApi/bookingsApi";
+import { useGetServicesQuery } from "@/services/api/servicesApi/servicesApi";
 
 const NewAppointment = () => {
   const [activeStep, setActiveStep] = useState(0);
   const stepsLength = 3;
+  const [selectedService, setSelectedService] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [isCustomer, setIsCustomer] = useState(false);
+  const { data, isLoading, refetch, error } = useGetPaymentMethodsQuery();
+  const { data: services, isLoading: isLoadingServices } =
+    useGetServicesQuery();
 
-    const handleNext = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
+  useEffect(() => {
+    if (data) {
+      setPaymentMethod(data.paymentMethods[0]);
+    }
+  }, [data]);
 
-    const handleBack = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
+  const [initialValues, setInitialValues] = useState({
+    name: "",
+    email: "",
+    contact: "",
+  });
 
-    const StepsButton = ()=>{
-      return (
-        <div className="mb-2 mt-14">
-          <div>
-            <Button
-            size="lg"
-            radius="sm"
-              onClick={handleNext}
-              className="mr-3 mt-1 bg-[#01ab8e] text-white"
-            >
-              {activeStep === stepsLength - 1 ? "Finish" : "Continue"}
-            </Button>
-            <Button
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              className="mr-1 mt-1 bg-transparent"
-            >
-              Back
-            </Button>
-          </div>
-        </div>
-      );
+  const handleNext = () => {
+    if (activeStep === 0 && !selectedService) {
+      toastError("Please select a service");
+      return;
     }
 
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const StepsButton = () => {
+    return (
+      <div className="mb-2 mt-14">
+        <div>
+          <Button
+            size="lg"
+            radius="sm"
+            onClick={handleNext}
+            className="mr-3 mt-1 bg-[#01ab8e] text-white"
+          >
+            {activeStep === stepsLength - 1 ? "Finish" : "Continue"}
+          </Button>
+          <Button
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            className="mr-1 mt-1 bg-transparent"
+          >
+            Back
+          </Button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className={`${css.wrapper} max-w-screen-2xl xl:px-2`}>
@@ -75,7 +100,12 @@ const NewAppointment = () => {
                   py: "28px",
                 }}
               >
-                <Services />
+                <Services
+                  selectedService={selectedService}
+                  setSelectedService={setSelectedService}
+                  data={services}
+                  isLoading={isLoadingServices}
+                />
                 <StepsButton />
               </StepContent>
             </Step>
@@ -104,8 +134,17 @@ const NewAppointment = () => {
                   py: "28px",
                 }}
               >
-                <CustomerData />
-                <StepsButton />
+                <CustomerData
+                  handleNext={handleNext}
+                  handleBack={handleBack}
+                  activeStep={activeStep}
+                  stepsLength={stepsLength}
+                  initialValues={initialValues}
+                  setInitialValues={setInitialValues}
+                  isCustomer={isCustomer}
+                  setIsCustomer={setIsCustomer}
+                />
+                {/* <StepsButton /> */}
               </StepContent>
             </Step>
 
@@ -133,7 +172,14 @@ const NewAppointment = () => {
                   py: "28px",
                 }}
               >
-                <PaymentMethod />
+                <PaymentMethod
+                  paymentMethod={paymentMethod}
+                  setPaymentMethod={setPaymentMethod}
+                  isLoading={isLoading}
+                  refetch={refetch}
+                  error={error}
+                  data={data}
+                />
                 <StepsButton />
               </StepContent>
             </Step>

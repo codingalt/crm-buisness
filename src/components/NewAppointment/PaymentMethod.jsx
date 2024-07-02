@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import css from "./PaymentMethod.module.scss";
 import { Button } from "@nextui-org/react";
 import { Skeleton } from "@mui/material";
@@ -7,9 +7,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import { iconMap } from "./Icons";
 import { useGetPaymentMethodsQuery } from "@/services/api/bookingsApi/bookingsApi";
 
-const PaymentMethod = ({  }) => {
-  const { data, isLoading, refetch, error } = useGetPaymentMethodsQuery();
-  const [paymentMethod, setPaymentMethod] = useState("cash");
+const PaymentMethod = ({ paymentMethod, setPaymentMethod,isLoading, refetch,error,data }) => {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
   return (
@@ -38,17 +36,17 @@ const PaymentMethod = ({  }) => {
               <div
                 key={item.id}
                 className={`${css.card} ${
-                  paymentMethod === item.code
+                  paymentMethod?.code === item.code
                     ? "bg-[#01ABAB] hover:bg-[#01ABAB] text-white"
                     : "hover:bg-[#f7f7f7] text-[#3C3C3C]"
                 }`}
                 onClick={() => {
-                  setPaymentMethod(item.code);
+                  setPaymentMethod(item);
                 }}
               >
                 <div
                   className={`${
-                    paymentMethod === item.code
+                    paymentMethod?.code === item.code
                       ? "text-white"
                       : "text-[#01ABAB]"
                   }`}

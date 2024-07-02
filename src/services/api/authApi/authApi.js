@@ -19,6 +19,14 @@ export const authApi = createApi({
       providesTags: ["Users"],
     }),
 
+    getCustomerDataByEmail: builder.mutation({
+      query: (data) => ({
+        url: "customerData",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
     registerUser: builder.mutation({
       query: (data) => ({
         url: "register",
@@ -73,4 +81,5 @@ export const {
   useValidateCodeMutation,
   useReSendVerificationCodeMutation,
   useStoreBusinessInformationMutation,
+  useGetCustomerDataByEmailMutation
 } = authApi;
