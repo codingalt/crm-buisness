@@ -80,7 +80,7 @@
             display: flex;
             align-items: center;
             gap: 2px;
-            margin-bottom: .9rem;
+            margin-bottom: 0.9rem;
 
             p {
               font-size: 18px;
@@ -172,17 +172,61 @@
     }
   }
 
-  @media (max-width: 768p) {
-    &{
+  @media (max-width: 768px) {
+    & {
       margin: 1rem auto;
 
-      h3{
-        font-size: 1.4rem;
-        line-height: 38px;
+      h3 {
+        font-size: 1.3rem;
+        line-height: 31px;
       }
 
-      .card{
-        
+      .card {
+        padding: 1.5rem 0.9rem;
+
+        .services {
+          .cardService {
+            margin-bottom: 15px;
+            width: 94%;
+          }
+        }
+
+        .customerData {
+          flex-direction: column;
+
+          .left {
+            form {
+              .customerCheckbox {
+                gap: 2px;
+                margin-bottom: 0.6rem;
+              }
+
+              .inputContainer {
+                gap: 4px;
+                margin-bottom: 2rem;
+
+                label {
+                  font-size: 14px;
+                  line-height: 23px;
+                }
+
+                input {
+                  height: 2.8rem;
+                  font-size: 15px;
+                  padding-left: 0.8rem;
+
+                  &::placeholder {
+                    font-size: 12px;
+                  }
+                }
+              }
+            }
+          }
+
+          .right {
+            display: none;
+          }
+        }
       }
     }
   }

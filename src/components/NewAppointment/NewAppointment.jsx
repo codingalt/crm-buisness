@@ -46,7 +46,7 @@ const NewAppointment = () => {
 
   const StepsButton = () => {
     return (
-      <div className="mb-2 mt-14">
+      <div className="mb-2 mt-12 md:mt-14">
         <div>
           <Button
             size="lg"
@@ -90,6 +90,12 @@ const NewAppointment = () => {
                     fontWeight: 500,
                     lineHeight: "36px",
                   },
+                  "@media (max-width: 600px)": {
+                    [".MuiStepLabel-label"]: {
+                      fontSize: "20px",
+                      lineHeight: "32px",
+                    },
+                  },
                 }}
               >
                 Select a Service
@@ -98,6 +104,10 @@ const NewAppointment = () => {
                 sx={{
                   pl: "35px",
                   py: "28px",
+                  "@media (max-width: 600px)": {
+                    pl: "20px",
+                    py: "18px",
+                  },
                 }}
               >
                 <Services
@@ -124,6 +134,12 @@ const NewAppointment = () => {
                     fontWeight: 500,
                     lineHeight: "36px",
                   },
+                  "@media (max-width: 600px)": {
+                    [".MuiStepLabel-label"]: {
+                      fontSize: "20px",
+                      lineHeight: "32px",
+                    },
+                  },
                 }}
               >
                 Provide Customer's Data <span className={css.sec_text}></span>
@@ -132,6 +148,10 @@ const NewAppointment = () => {
                 sx={{
                   pl: "35px",
                   py: "28px",
+                  "@media (max-width: 600px)": {
+                    pl: "20px",
+                    py: "18px",
+                  },
                 }}
               >
                 <CustomerData
@@ -162,6 +182,12 @@ const NewAppointment = () => {
                     fontWeight: 500,
                     lineHeight: "36px",
                   },
+                  "@media (max-width: 600px)": {
+                    [".MuiStepLabel-label"]: {
+                      fontSize: "20px",
+                      lineHeight: "32px",
+                    },
+                  },
                 }}
               >
                 Select Payment Method
@@ -170,6 +196,10 @@ const NewAppointment = () => {
                 sx={{
                   pl: "35px",
                   py: "28px",
+                  "@media (max-width: 600px)": {
+                    pl: "20px",
+                    py: "18px",
+                  },
                 }}
               >
                 <PaymentMethod

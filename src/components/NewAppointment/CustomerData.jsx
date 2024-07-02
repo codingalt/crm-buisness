@@ -13,6 +13,7 @@ import debounce from "lodash.debounce";
 import { TiTick } from "react-icons/ti";
 import { useGetCustomerDataByEmailMutation } from "@/services/api/authApi/authApi";
 import ClipSpinner from "../Loader/ClipSpinner";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 const CustomerData = ({
   handleNext,
@@ -28,6 +29,7 @@ const CustomerData = ({
   const [isValid, setIsValid] = useState(null);
   const [getCustomerData, res] = useGetCustomerDataByEmailMutation();
   const { isLoading, isSuccess, error } = res;
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
   useEffect(() => {
     if (error) {
@@ -107,14 +109,14 @@ const CustomerData = ({
                   isSelected={isCustomer}
                   onValueChange={setIsCustomer}
                   radius="sm"
-                  size="lg"
+                  size={isSmallDevice ? "sm" : "lg"}
                 >
                   The client is a customer on this platform
                 </Checkbox>
               </div>
 
-              <div className="flex gap-1 mb-11 text-sm font-normal text-[#01ab8e]">
-                <MdErrorOutline className="text-[19px]" />
+              <div className="flex gap-1 mb-8 md:mb-11 text-tiny md:text-sm font-normal text-[#01ab8e]">
+                <MdErrorOutline className="text-[26px] -mt-0.5 md:mt-0 md:text-[19px]" />
                 <span>
                   Registered Customers Will Need To Confirm The Appointment
                 </span>
@@ -130,6 +132,7 @@ const CustomerData = ({
                   className={errors.email && touched.email && "redBorder"}
                   onKeyUp={(e) => handleEmailValidation(e, setFieldValue)}
                   // disabled={isLoading}
+                  style={{paddingRight: "2.9rem" }}
                 />
                 <ErrorMessage
                   name="email"
@@ -137,7 +140,7 @@ const CustomerData = ({
                   className={css.errorSpan}
                 />
 
-                <div className={"z-10 absolute right-5 top-1/2 text-2xl"}>
+                <div className={"z-10 absolute right-2 mt-1 md:mt-0 md:right-5 top-1/2 text-xl md:text-2xl"}>
                   {isLoading ? (
                     <ClipSpinner size={21} />
                   ) : isValid ? (

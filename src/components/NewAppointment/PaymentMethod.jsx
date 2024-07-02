@@ -13,7 +13,7 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod,isLoading, refetch,erro
   return (
     <div className={css.paymentMethodWrapper}>
       <div
-        className={`${css.methodCards} px-0 md:px-12 pl-0 flex flex-col md:flex-row gap-24 md:gap-9 items-center`}
+        className={`${css.methodCards} px-0 md:px-12 pl-0 flex flex-col md:flex-row gap-5 md:gap-9 items-center`}
       >
         {isLoading ? (
           <>
