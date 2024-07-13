@@ -40,6 +40,17 @@ const Conversation = ({ chat, chatId, handleChatMob }) => {
           <div className={css.preview}>Click to View Messages.</div>
         )}
       </div>
+
+      {/* Unread Message Count  */}
+      {parseInt(chat?.unread_messages) > 0 && (
+        <div className="absolute top-8 right-2.5 -mt-2">
+          <div className="flex items-center justify-center w-[24px] h-[24px] shadow-lg rounded-full bg-blue-500 text-white text-xs">
+            {parseInt(chat.unread_messages) > 9
+              ? `9+`
+              : chat.unread_messages}
+          </div>
+        </div>
+      )}
     </li>
   );
 };

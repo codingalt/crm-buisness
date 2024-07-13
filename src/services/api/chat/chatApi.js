@@ -24,14 +24,20 @@ export const chatApi = createApi({
       providesTags: ["chatApi"],
     }),
 
-    sendMessage: builder.mutation({
-      query: ({ chatId, user_type, body }) => ({
-        // url: `sendMessage/${chatId}`,
-        url: "privateChannel",
+    readMessages: builder.mutation({
+      query: ({ communication_id, user_type }) => ({
+        url: `readMessages/${communication_id}`,
         method: "POST",
-        body: { user_type, body },
+        body: {user_type: user_type},
       }),
-      // invalidatesTags: ["chatApi"],
+    }),
+
+    sendMessage: builder.mutation({
+      query: ({ chatId, data }) => ({
+        url: `sendMessage/${chatId}`,
+        method: "POST",
+        body: data,
+      }),
     }),
 
     assignChatToEmployee: builder.mutation({
@@ -47,5 +53,6 @@ export const {
   useGetConversationsQuery,
   useOneOoneCommunicationQuery,
   useSendMessageMutation,
-  useAssignChatToEmployeeMutation
+  useAssignChatToEmployeeMutation,
+  useReadMessagesMutation
 } = chatApi;

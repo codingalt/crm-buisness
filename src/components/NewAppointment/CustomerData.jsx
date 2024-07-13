@@ -14,6 +14,9 @@ import { TiTick } from "react-icons/ti";
 import { useGetCustomerDataByEmailMutation } from "@/services/api/authApi/authApi";
 import ClipSpinner from "../Loader/ClipSpinner";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import { Tooltip } from "@mui/material";
+import { useApiErrorHandling } from "@/hooks/useApiErrors";
+import { toastError } from "../Toast/Toast";
 
 const CustomerData = ({
   handleNext,
@@ -28,29 +31,52 @@ const CustomerData = ({
   const [isError, setIsError] = useState(null);
   const [isValid, setIsValid] = useState(null);
   const [getCustomerData, res] = useGetCustomerDataByEmailMutation();
-  const { isLoading, isSuccess, error } = res;
+  const { data, isLoading, isSuccess, error } = res;
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
-  useEffect(() => {
-    if (error) {
-      setIsError(error);
-    }
-  }, [error]);
+  const apiErrors = useApiErrorHandling(error);
 
   useEffect(() => {
-    if (isSuccess) {
-      setIsValid(true);
+    if (data) {
+      if (data.customer) {
+        setIsValid(true);
+        // setIsCustomer(true);
+        const res = data.customer;
+        setInitialValues((prevValues) => ({
+          ...prevValues,
+          name: res.name,
+          email: res.email,
+          contact: res.phone_number,
+        }));
+      } else {
+        // Set Error
+        if(isCustomer){
+          setIsError(true);
+        }
+      }
     }
-  }, [isSuccess]);
+  }, [data]);
 
   const handleSubmit = async (values) => {
-    console.log(values);
+
+    const {data: resp} = await getCustomerData({ email: values.email });
+    const res = resp?.customer;
+
     setInitialValues({
       name: values.name,
       email: values.email,
       contact: values.contact,
     });
-    handleNext();
+
+    if (isCustomer && !res) {
+      setIsError(true);
+      toastError("Please enter a valid email address");
+    } else if (!isCustomer && res) {
+      toastError("Customer with this email is already registered.");
+      return;
+    } else {
+      handleNext();
+    }
   };
 
   const handleEmailValidation = debounce(async (event, setFieldValue) => {
@@ -58,15 +84,17 @@ const CustomerData = ({
     // Get Customer Data when email is valid
     setIsError(null);
     setIsValid(null);
-    if (value.trim() !== "") {
-      // Validate email format
-      if (Yup.string().email().isValidSync(value)) {
-        await getCustomerData({ email: value });
-        setFieldValue("email", value);
-      } else {
+    if(isCustomer){
+      if (value.trim() !== "") {
+        // Validate email format
+        if (Yup.string().email().isValidSync(value)) {
+          await getCustomerData({ email: value });
+        } 
       }
     }
-  }, 500);
+
+    setFieldValue("email", value);
+  }, 1000);
 
   const StepsButton = () => {
     return (
@@ -101,6 +129,7 @@ const CustomerData = ({
             isCustomer ? manualAppointmentSchema2 : manualAppointmentSchema
           }
           onSubmit={handleSubmit}
+          enableReinitialize
         >
           {({ errors, setFieldValue, touched }) => (
             <Form className={css.formData}>
@@ -115,7 +144,7 @@ const CustomerData = ({
                 </Checkbox>
               </div>
 
-              <div className="flex gap-1 mb-8 md:mb-11 text-tiny md:text-sm font-normal text-[#01ab8e]">
+              <div className="flex gap-1 mb-10 md:mb-11 text-tiny md:text-sm font-normal text-[#01ab8e]">
                 <MdErrorOutline className="text-[26px] -mt-0.5 md:mt-0 md:text-[19px]" />
                 <span>
                   Registered Customers Will Need To Confirm The Appointment
@@ -132,7 +161,7 @@ const CustomerData = ({
                   className={errors.email && touched.email && "redBorder"}
                   onKeyUp={(e) => handleEmailValidation(e, setFieldValue)}
                   // disabled={isLoading}
-                  style={{paddingRight: "2.9rem" }}
+                  style={{ paddingRight: "2.7rem" }}
                 />
                 <ErrorMessage
                   name="email"
@@ -140,17 +169,23 @@ const CustomerData = ({
                   className={css.errorSpan}
                 />
 
-                <div className={"z-10 absolute right-2 mt-1 md:mt-0 md:right-5 top-1/2 text-xl md:text-2xl"}>
-                  {isLoading ? (
-                    <ClipSpinner size={21} />
-                  ) : isValid ? (
-                    <TiTick className="text-green-500" />
-                  ) : isError ? (
-                    <MdErrorOutline className="text-red-500" />
-                  ) : (
-                    <></>
-                  )}
-                </div>
+                <Tooltip title={isError && "Customer not found"}>
+                  <div
+                    className={
+                      "z-10 w-8 h-8 md:w-9 md:h-9 flex items-center justify-center hover:bg-slate-100 rounded-full transition-all absolute right-1 -mt-0.5 md:-mt-1 md:right-4 top-1/2 text-lg md:text-2xl"
+                    }
+                  >
+                    {isLoading ? (
+                      <ClipSpinner size={isSmallDevice ? 18 : 21} />
+                    ) : isValid ? (
+                      <TiTick className="text-green-500" />
+                    ) : isError ? (
+                      <MdErrorOutline className="text-red-500" />
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </Tooltip>
               </div>
 
               <div className={css.inputContainer}>

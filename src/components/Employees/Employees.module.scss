@@ -49,10 +49,11 @@
       display: flex;
       align-items: center;
       margin-bottom: 1rem;
+      margin-left: 11px;
 
       .item {
         flex: 1;
-        font-size: 17px;
+        font-size: 16px;
         font-weight: 600;
         letter-spacing: 0.3px;
         color: #222222;
@@ -72,10 +73,25 @@
         border-radius: 8px;
         padding: 9px 16px;
 
-        p {
+        .item {
           flex: 1;
-          font-size: 16px;
+          font-size: 15px;
           font-weight: 400;
+          color: #000;
+          display: flex;
+
+          &:nth-child(1) {
+            justify-content: flex-start;
+          }
+
+          &:nth-child(3) {
+            padding-left: 20px;
+          }
+
+          &:last-child {
+            flex: 0.7;
+            justify-content: center;
+          }
         }
 
         .action {
@@ -83,7 +99,7 @@
           display: flex;
           align-items: center;
           // justify-content: flex-end;
-          gap: 1.1rem;
+          gap: 0.94rem;
 
           .stats {
             width: 46px;
@@ -130,28 +146,28 @@
         .tableHeader {
           width: max-content;
           gap: 1.7rem;
+          overflow-x: auto;
+          scrollbar-width: none;
+          margin-left: 11px;
 
           .item {
             font-size: 13px;
             width: 130px;
-            width: auto;
-            
           }
         }
 
         .tableBody {
           scrollbar-width: none;
+          width: max-content;
 
           .tableRow {
             gap: 1.7rem;
             margin-bottom: 1.4rem;
-            width: max-content;
+            scrollbar-width: none;
 
-            p {
+            .item {
               font-size: 13px;
-              width: 120px;
-              width: max-content;
-              text-overflow: ellipsis;
+              width: 130px;
             }
 
             .action {
@@ -232,7 +248,6 @@
 
   @media (max-width: 768px) {
     & {
-
       .heading {
         font-size: 28px;
       }

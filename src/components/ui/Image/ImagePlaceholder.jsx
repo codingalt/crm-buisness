@@ -68,7 +68,7 @@ const ImagePlaceholder = ({
       }}
     >
       <div
-        className="relative overflow-hidden rounded-inherit rounded-small"
+        className="relative z-0 overflow-hidden rounded-inherit rounded-small"
         style={{ borderRadius: radius ? radius : 0 }}
       >
         <img
@@ -77,7 +77,7 @@ const ImagePlaceholder = ({
             imageLoaded && "opacity-100"
           } shadow-none object-cover transform ${
             isZoomed && "hover:scale-125"
-          } opacity-0 transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-small`}
+          } opacity-0 z-0 transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-small`}
           width="100%"
           height="100%"
           loading="lazy"

@@ -1,7 +1,8 @@
 $background-color_3: #f5f7fb;
 
 .react-emoji {
-  width: 90% !important;
+  width: calc(100% - 140px) !important;
+  z-index: 100;
 }
 
 [dir="rtl"] .react-emoji {
@@ -28,11 +29,13 @@ $background-color_3: #f5f7fb;
 .react-input-emoji--container {
   background-color: $background-color_3 !important;
   border-radius: 2rem !important;
-  padding-left: 1rem;
+  padding-left: .8rem;
+  margin-left: 8px;
 }
 
 @media screen and (max-width: 430px) {
   .react-emoji {
+    width: calc(100% - 89px) !important;
     max-width: 84% !important;
   }
 
@@ -47,10 +50,15 @@ $background-color_3: #f5f7fb;
   .react-input-emoji--container {
     border-radius: 2rem !important;
     padding-left: 0.6rem;
+    margin-left: 3px;
   }
 
   .react-input-emoji--placeholder {
-    font-size: 0.8rem;
-    left: 10px;
+    font-size: 0.75rem;
+    left: 7px;
+  }
+
+  .react-input-emoji--button{
+    display: none !important;
   }
 }

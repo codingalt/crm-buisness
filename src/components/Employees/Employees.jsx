@@ -8,10 +8,13 @@ import { useGetEmployeesQuery } from "../../services/api/employeesApi/employeesA
 import { ClipLoader } from "react-spinners";
 import empty from "../../assets/empty.png"
 import { Image } from "@nextui-org/react";
+import { truncateText } from "@/utils/helpers/helpers";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 const Employees = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useGetEmployeesQuery();
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
   return (
     <div className={`${css.wrapper} mx-auto`}>
@@ -32,8 +35,12 @@ const Employees = () => {
         {/* Table Header  */}
         <div className={css.tableHeader}>
           <div className={css.item}>Employee Name</div>
-          <div className={css.item}>Employee Email</div>
-          <div className={css.item}>Employee Contact</div>
+          <div className={css.item}>
+            Employee Email
+          </div>
+          <div className={css.item}>
+            Employee Contact
+          </div>
           <div className={css.item}>Action</div>
         </div>
 
@@ -57,9 +64,18 @@ const Employees = () => {
           {!isLoading &&
             data?.employees?.map((item) => (
               <div className={css.tableRow} key={item.id}>
-                <p>{item.user.name}</p>
-                <p>{item.user.email}</p>
-                <p>{item.user.phone_number}</p>
+                <div className={css.item}>
+                  {truncateText(item.user.name, 12)}
+                </div>
+                <div className={css.item}>
+                  {truncateText(item.user.email, isSmallDevice ? 15 : 24)}
+                </div>
+                <div className={css.item}>
+                  {truncateText(
+                    item.user.phone_number,
+                    isSmallDevice ? 15 : 24
+                  )}
+                </div>
                 <div className={css.action}>
                   <div
                     className={`${css.stats} shadow-lg border cursor-pointer`}

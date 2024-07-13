@@ -21,7 +21,7 @@ export const authApi = createApi({
 
     getCustomerDataByEmail: builder.mutation({
       query: (data) => ({
-        url: "customerData",
+        url: "business/getCustomerDetails",
         method: "POST",
         body: data,
       }),

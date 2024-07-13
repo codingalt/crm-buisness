@@ -72,7 +72,7 @@ $background-color_7: #5cbfa1;
 
   .chatSearch {
     width: 93%;
-    height: 3rem;
+    height: 2.8rem;
     border-radius: 2rem;
     position: relative;
     margin: 1rem auto;
@@ -86,8 +86,8 @@ $background-color_7: #5cbfa1;
 .chatSearch {
   svg {
     position: absolute;
-    left: 4%;
-    top: 35%;
+    left: 5.5%;
+    top: 33.8%;
     margin: auto;
     font-size: 1.15rem;
     color: $color_2;
@@ -129,9 +129,9 @@ $background-color_7: #5cbfa1;
     li {
       position: relative;
       display: flex;
-      gap: .85rem;
+      gap: 0.85rem;
       align-items: center;
-      padding: .5rem 1rem;
+      padding: 0.5rem 1rem;
       cursor: pointer;
       margin-bottom: 8px;
 
@@ -222,9 +222,9 @@ $background-color_7: #5cbfa1;
     position: relative;
     display: flex;
     padding: 1rem 1.2rem;
-    padding-left: .9rem;
+    padding-left: 1.5rem;
     align-items: center;
-    gap: 0.9rem;
+    gap: 0.8rem;
   }
 }
 .chatHeader {
@@ -274,23 +274,31 @@ $background-color_7: #5cbfa1;
     }
   }
 }
+
 .messageBox {
   display: flex;
   gap: 1rem;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   width: 100%;
 }
 .myMessage {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   width: 97%;
   overflow: hidden;
   margin-right: 0.5rem;
 
   &:nth-child(1) {
     margin-top: 1.1rem;
+  }
+
+  .image {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-left: auto;
   }
 }
 .message {
@@ -302,10 +310,11 @@ $background-color_7: #5cbfa1;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-top: 4px;
+  margin-top: 0px;
   letter-spacing: 0.2px;
   color: $color_6;
   margin-right: 0.5rem;
+  min-width: 8.5rem;
 
   &:nth-child(1) {
     margin-top: 1.1rem;
@@ -313,7 +322,10 @@ $background-color_7: #5cbfa1;
 
   > span {
     &:nth-child(1) {
-      line-break: anywhere;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+      display: inline-block;
     }
 
     &:nth-child(2) {
@@ -323,6 +335,10 @@ $background-color_7: #5cbfa1;
     }
   }
 }
+
+// .fileMessage{
+//   padding: 0.7rem 0rem;
+// }
 
 .own {
   justify-self: flex-end !important;
@@ -339,18 +355,15 @@ $background-color_7: #5cbfa1;
   width: 100%;
   height: 3.2rem;
   display: flex;
-  gap: 1rem;
+  gap: 0rem;
   background-color: #fff;
   padding-top: 1rem;
 
   input {
     padding-left: 2rem !important;
   }
+
   .fileSelect {
-    position: absolute;
-    left: 3.8%;
-    top: 50%;
-    transform: translate(0%, -50%);
     cursor: pointer;
     z-index: 10;
   }
@@ -367,6 +380,14 @@ $background-color_7: #5cbfa1;
     top: 55%;
     transform: translate(0%, -50%);
     cursor: pointer;
+    margin-left: 1rem;
+
+    &:disabled {
+      // background-color: #cccccc;
+      // color: #666666;
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
   }
 }
 .fileSelect {
@@ -380,7 +401,6 @@ $background-color_7: #5cbfa1;
   height: 95%;
   width: 100%;
   overflow-y: auto;
-  padding-bottom: 1.7rem;
 }
 .sendButton {
   &:hover {
@@ -560,6 +580,7 @@ $background-color_7: #5cbfa1;
     .image {
       width: 44px;
       height: 44px;
+      margin-left: auto;
 
       img {
         width: 100%;
@@ -568,17 +589,31 @@ $background-color_7: #5cbfa1;
     }
 
     .message {
-      max-width: calc(100% - 44px);
+      max-width: 100%;
       font-size: 0.9rem;
+    }
+
+    .message:nth-child(1) {
+      margin-top: 0.7rem;
     }
   }
 
+  .own {
+    align-self: flex-start;
+  }
+
   .myMessage {
-    gap: 0.8rem;
+    gap: 0.3rem;
+    justify-content: flex-end;
+    padding-left: 12px;
+    margin-bottom: 13px;
+    margin-left: auto;
   }
 
   .chatHeader {
     gap: 0.5rem !important;
+    padding-left: 0.5rem;
+
     .image {
       width: 40px;
       height: 40px;

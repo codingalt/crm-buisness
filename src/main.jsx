@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { store } from "./store/store.js";
 import { PusherProvider } from './context/PusherContext.jsx';
 import { DirectionProvider } from './context/DirectionContext.jsx';
+import "./pusher";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>

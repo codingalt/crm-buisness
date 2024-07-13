@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import {
   useGetConversationsQuery,
   useOneOoneCommunicationQuery,
+  useReadMessagesMutation,
   useSendMessageMutation,
 } from "@/services/api/chat/chatApi";
 import ConversationSkeleton from "./ConversationSkeleton";
@@ -15,7 +16,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { TbMessage } from "react-icons/tb";
 import { useGetBusinessProfileQuery } from "@/services/api/profileApi/profileApi";
 import { useMediaQuery } from "@uidotdev/usehooks";
-import { usePusher } from "@/context/PusherContext";
 import { useDisclosure } from "@nextui-org/react";
 import AssignChatModal from "./AssignChatModal";
 
@@ -23,15 +23,17 @@ const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
-  const chatId = searchParams.get("chatId");
-  const [activeChatMob, setActiveChatMob] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
-  const pusher = usePusher();
+  const chatId = searchParams.get("chatId");
+  const [activeChatMob, setActiveChatMob] = useState(
+    isSmallDevice ? (chatId ? true : false) : false
+  );
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const channelsRef = useRef({});
   const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [filePreviews, setFilePreviews] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
@@ -59,57 +61,85 @@ const Chat = () => {
     isLoading: isLoadingConversations,
     refetch: refetchChats,
     isUninitialized,
-  } = useGetConversationsQuery(props, { skip: !user,refetchOnMountOrArgChange: true });
+  } = useGetConversationsQuery(props, {
+    skip: !user,
+    // refetchOnMountOrArgChange: true,
+  });
 
-  useEffect(()=>{
-    if(conversations){
-      setChats(conversations?.communications);
-    }
-  },[conversations]);
+  // Read Messages Mutation
+  const [readMessages, resp] = useReadMessagesMutation();
 
-  //  useEffect(() => {
-  //    if (conversations && pusher) {
-  //      const handleNewMessage = (data) => {
-  //       //  setMessages((prevMessages) => [...prevMessages, data.message]);
-  //       alert("Listening to pusher event..");
-  //      };
-
-  //      // Subscribe to Pusher channels for each communication
-  //      conversations.communications.forEach((item) => {
-  //        const channelName = `private-channel.1`;
-
-  //        // Check if the channel is already subscribed
-  //        if (!channelsRef.current[channelName]) {
-  //          const channel = pusher.subscribe(channelName);
-  //          channel.bind("private_channel", handleNewMessage);
-  //          channelsRef.current[channelName] = channel; // Store the channel in the ref
-  //        }
-  //      });
-
-  //      // Cleanup function to unsubscribe from all channels
-  //      return () => {
-  //        Object.keys(channelsRef.current).forEach((channelName) => {
-  //          const channel = channelsRef.current[channelName];
-  //          channel.unbind("NewMessage", handleNewMessage);
-  //          pusher.unsubscribe(channelName);
-  //          delete channelsRef.current[channelName]; // Remove the channel from the ref
-  //        });
-  //      };
-  //    }
-  //  }, [conversations, pusher]);
+  const handleReadMessages = async () => {
+    await readMessages({
+      communication_id: selectedChat?.id,
+      user_type: "seller",
+    });
+  };
 
   useEffect(() => {
-    if (pusher) {
-      const channelName = `private-channel.1`;
-      const channel = pusher.subscribe(channelName);
-
-      const handleListen = () => {
-        alert("Listening to pusher event..");
-      };
-
-      channel.bind("private_channel", handleListen);
+    if (conversations) {
+      setChats(conversations?.communications);
     }
-  }, [pusher]);
+  }, [conversations]);
+
+  useEffect(() => {
+    const handleNewMessage = (data) => {
+      setMessages((prevMessages) => [...prevMessages, data.message.body]);
+    };
+
+    const increaseUnreadMessages = (chatId) => {
+      setChats((prevChats) => {
+        return prevChats.map((chat) => {
+          if (chat.id === chatId) {
+            return {
+              ...chat,
+              unread_messages: (chat.unread_messages || 0) + 1,
+            };
+          }
+          return chat;
+        });
+      });
+    };
+
+    // Array to store all subscribed channel names
+    const subscribedChannels = [];
+
+    if (window.Echo && chats) {
+      // Listen to the private channels for the 'private_channel' event
+      // Subscribe to Pusher channels for each communication/chat
+      chats.forEach((item) => {
+        const channelName = `chat.${item.id}`;
+        subscribedChannels.push(channelName);
+
+        window.Echo.private(channelName).listen("NewMessage", (e) => {
+          if (e?.message?.sender_type !== `App\\Models\\Business`) {
+            if (
+              selectedChat &&
+              e.message.communication_id === selectedChat?.id
+            ) {
+              // It means chat is open. process received message
+              handleNewMessage(e);
+
+              // Read Messages
+              handleReadMessages();
+            } else {
+              // It means chat is closed. Increase unread_messages count
+              increaseUnreadMessages(e.message.communication_id);
+            }
+          }
+        });
+      });
+    }
+
+    // Clean up the subscription when the component is unmounted
+    return () => {
+      subscribedChannels.forEach((channelName) => {
+        if (window.Echo) {
+          window.Echo.leave(channelName);
+        }
+      });
+    };
+  }, [chats]);
 
   // Get oneOone Communication | Messages
   const { data: messagesData } = useOneOoneCommunicationQuery(props, {
@@ -117,27 +147,26 @@ const Chat = () => {
     skip: !selectedChat,
   });
 
-  // Send Message
+  // Send Message Mutation
   const [sendMessage, res] = useSendMessageMutation();
+  const { isLoading: isLoadingSendMessage } = res;
 
   useEffect(() => {
     if (messagesData) {
       setMessages(messagesData?.communications?.messages);
       setIsLoadingMessages(false);
     }
-  }, [messagesData]);
+  }, [messagesData, activeChatMob]);
 
   // Check If ChatId is present in the Url
   useEffect(() => {
     if (chatId) {
-      const chat = conversations?.communications?.find(
-        (chat) => chat.id === parseInt(chatId)
-      );
+      const chat = chats?.find((chat) => chat.id === parseInt(chatId));
       if (chat) {
         setSelectedChat(chat);
       }
     }
-  }, [chatId, conversations]);
+  }, [chatId, chats]);
 
   const updateSearchParams = (newChatId) => {
     const searchParams = new URLSearchParams(location.search);
@@ -145,38 +174,83 @@ const Chat = () => {
     navigate({ search: searchParams.toString() });
   };
 
+  // Execute when any chat from left side is clicked
   const handleChatClick = (chat) => {
-    setIsLoadingMessages(true);
+    if (selectedChat && selectedChat?.id != chat.id) {
+      setIsLoadingMessages(true);
+
+      // Read Messages
+      setTimeout(() => {
+        const selectedChatId = chat.id;
+        setChats((prevChats) => {
+          return prevChats.map((chat) => {
+            if (chat.id === selectedChatId) {
+              return {
+                ...chat,
+                unread_messages: 0,
+              };
+            }
+            return chat;
+          });
+        });
+
+        // Send read message Request to api
+        handleReadMessages();
+      }, 1000);
+    }
+
     setSelectedChat(chat);
     updateSearchParams(chat.id);
   };
 
   // Send Message
   const handleSendMessage = async () => {
-    if (newMessage) {
-      setNewMessage("");
+    if (newMessage.trim() !== "" || files.length > 0) {
+      if (files.length === 0) {
+        setNewMessage("");
+      }
 
       const tempId = `temp-${Date.now()}`;
+      let formData = new FormData();
+      if (newMessage?.trim() !== "") {
+        formData.append("body", newMessage.trim());
+      }
+      formData.append("user_type", `seller`);
+
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files[]", files[i]);
+      }
+
       const tempMessage = {
         id: tempId,
         body: newMessage,
         communication_id: selectedChat.id,
         sender_id: businessData?.business?.id,
         sender_type: `App\\Models\\Business`,
+        files: filePreviews,
+        filePreviews: true,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
 
-      setMessages([...messages, tempMessage]);
+      if (files.length === 0) {
+        setMessages([...messages, tempMessage]);
+      }
       const { data } = await sendMessage({
         chatId: selectedChat.id,
-        body: newMessage,
-        user_type: "seller",
+        data: formData,
       });
 
-      if (!data.success) {
+      if (files.length > 0) {
+        setMessages([...messages, tempMessage]);
+      }
+
+      setFiles([]);
+      setFilePreviews([]);
+      setNewMessage("");
+
+      if (!data || !data.success) {
         // If message failed to be sent
-        console.log("Message failed to be sent");
         setMessages((prevMessages) =>
           prevMessages.filter((msg) => msg.id !== tempId)
         );
@@ -197,7 +271,7 @@ const Chat = () => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-  
+
   // Filter conversations based on search query
   const filteredConversations = chats?.filter((chat) =>
     chat.customer.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -213,6 +287,7 @@ const Chat = () => {
         refetchChats={refetchChats}
         isUninitialized={isUninitialized}
       />
+
       <div className="w-full xl:max-w-screen-xl md:max-w-screen-2xl mx-auto px-0 md:px-4 pt-1 md:pt-5 pb-0 max-h-[79.5vh]">
         <div className={css.chatWrapper}>
           <div className={css.chatContainer}>
@@ -255,15 +330,14 @@ const Chat = () => {
                   )}
 
                   {/* No Conversation Message  */}
-                  {!isLoadingConversations &&
-                    conversations?.communications?.length === 0 && (
-                      <div className="w-full h-full flex gap-y-3 items-center justify-center px-20 text-center flex-col">
-                        <TbMessage fontSize={60} color="#01AB8E" />
-                        <p className="text-tiny text-default-500 font-medium">
-                          Messages from your customer will appear here.
-                        </p>
-                      </div>
-                    )}
+                  {!isLoadingConversations && chats?.length === 0 && (
+                    <div className="w-full h-full flex gap-y-3 items-center justify-center px-20 text-center flex-col">
+                      <TbMessage fontSize={60} color="#01AB8E" />
+                      <p className="text-tiny text-default-500 font-medium">
+                        Messages from your customer will appear here.
+                      </p>
+                    </div>
+                  )}
                 </ul>
               </div>
             </div>
@@ -277,7 +351,6 @@ const Chat = () => {
                     ? `${css.chatRight} ${css.active_chat_section}`
                     : css.chatRight
                 }
-                // className={css.chatRight}
               >
                 <ChatHeader
                   selectedChat={selectedChat}
@@ -296,6 +369,11 @@ const Chat = () => {
                     handleSendMessage={handleSendMessage}
                     isLoadingMessages={isLoadingMessages}
                     businessData={businessData}
+                    files={files}
+                    setFiles={setFiles}
+                    filePreviews={filePreviews}
+                    setFilePreviews={setFilePreviews}
+                    isLoadingSendMessage={isLoadingSendMessage}
                   />
                 </div>
                 {/* end of message container div  */}

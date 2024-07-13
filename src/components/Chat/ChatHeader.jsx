@@ -14,19 +14,19 @@ const ChatHeader = ({ selectedChat, activeChatMob, handleChatMob, onOpen }) => {
       {selectedChat && (
         <>
           {/* Mobile Back Button  */}
-          <div className={css.mobileBackButton}>
-            {activeChatMob && (
+          {activeChatMob && (
+            <div
+              className={`cursor-pointer h-10 w-10 -ml-2.5 mr-1 flex items-center justify-center hover:bg-default-100 rounded-full transition-all`}
+            >
               <ai.AiOutlineArrowLeft
                 onClick={() => handleChatMob(false)}
                 style={{
                   fontSize: "1.2rem",
-                  marginLeft: "5px",
-                  marginRight: "15px",
                   color: "#01AB8E",
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
 
           <div className={css.image}>
             <Avvvatars
