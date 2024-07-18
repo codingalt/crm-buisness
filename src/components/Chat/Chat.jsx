@@ -134,17 +134,17 @@ const Chat = () => {
           console.log("recived", e);
           if (e?.message?.sender_type !== `App\\Models\\Business`) {
             console.log(
-              parseInt(e.message.communication_id) === parseInt(selectedChat?.id)
+              parseInt(e.message.communication_id) === parseInt(chatId)
             );
             console.log("selectedChat", selectedChat);
             console.log(
               "reciver commiu id",
               parseInt(e.message.communication_id)
             );
-            console.log("selectedChat Id", parseInt(selectedChat?.id));
+            console.log("selectedChat Id", parseInt(chatId));
             if (
               selectedChat &&
-              parseInt(e.message.communication_id) === parseInt(selectedChat.id)
+              parseInt(e.message.communication_id) === parseInt(chatId)
             ) {
               // Read Messages
               handleReadMessages(parseInt(chatId));
