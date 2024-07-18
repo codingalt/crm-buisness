@@ -134,7 +134,7 @@ const Chat = () => {
           console.log("recived", e);
           if (e?.message?.sender_type !== `App\\Models\\Business`) {
             console.log(
-              parseInt(e.message.communication_id) === parseInt(selectedChat.id)
+              parseInt(e.message.communication_id) === parseInt(selectedChat?.id)
             );
             if (
               selectedChat &&
