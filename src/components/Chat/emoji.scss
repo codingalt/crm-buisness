@@ -3,6 +3,7 @@ $background-color_3: #f5f7fb;
 .react-emoji {
   width: calc(100% - 140px) !important;
   z-index: 100;
+  scrollbar-width: none;
 }
 
 [dir="rtl"] .react-emoji {
@@ -25,12 +26,18 @@ $background-color_3: #f5f7fb;
 
 .react-input-emoji--wrapper {
   height: 3.1rem;
+  scrollbar-width: none;
 }
 .react-input-emoji--container {
   background-color: $background-color_3 !important;
   border-radius: 2rem !important;
   padding-left: .8rem;
   margin-left: 8px;
+  scrollbar-width: none !important;
+}
+
+.react-input-emoji--input{
+  scrollbar-width: none !important;
 }
 
 @media screen and (max-width: 430px) {

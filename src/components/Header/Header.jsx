@@ -22,6 +22,7 @@ import ukFlag from "@/assets/uk.png";
 import pakFlag from "@/assets/pakistan.png";
 import israelFlag from "@/assets/israel.png";
 import i18n from "@/i18n";
+import { removeToken } from "@/utils/helpers/tokenUtils";
 
 const Header = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const Header = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
   const { toggleLanguage } = useContext(DirectionContext);
 
   const handleLogout = () => {
-    localStorage.removeItem("crmBusinessToken");
+    removeToken();
     window.location.reload(false);
   };
 

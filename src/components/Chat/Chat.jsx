@@ -18,10 +18,14 @@ import { useGetBusinessProfileQuery } from "@/services/api/profileApi/profileApi
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { useDisclosure } from "@nextui-org/react";
 import AssignChatModal from "./AssignChatModal";
+import ViewMediaModal from "./ViewMediaModal";
+import { usePusherContext } from "@/context/PusherContext";
+import { debounce } from "lodash";
 
 const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const echo = usePusherContext();
   const searchParams = new URLSearchParams(location.search);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const chatId = searchParams.get("chatId");
@@ -38,6 +42,7 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [isOpenMediaModal, setIsOpenMediaModal] = useState(null);
 
   const handleChatMob = () => {
     if (isSmallDevice) {
@@ -62,16 +67,29 @@ const Chat = () => {
     refetch: refetchChats,
     isUninitialized,
   } = useGetConversationsQuery(props, {
-    skip: !user,
-    // refetchOnMountOrArgChange: true,
+    skip: !user || selectedChat,
   });
 
   // Read Messages Mutation
   const [readMessages, resp] = useReadMessagesMutation();
 
-  const handleReadMessages = async () => {
+  const handleReadMessages = async (selectedChatId) => {
+    // Update State Count First
+    setChats((prevChats) => {
+      return prevChats.map((chatItem) => {
+        if (chatItem.id === selectedChatId) {
+          return {
+            ...chatItem,
+            unread_messages: 0,
+          };
+        }
+        return chatItem;
+      });
+    });
+
+    // Send Request to Api
     await readMessages({
-      communication_id: selectedChat?.id,
+      communication_id: selectedChatId,
       user_type: "seller",
     });
   };
@@ -84,7 +102,7 @@ const Chat = () => {
 
   useEffect(() => {
     const handleNewMessage = (data) => {
-      setMessages((prevMessages) => [...prevMessages, data.message.body]);
+      setMessages((prevMessages) => [...prevMessages, data.message]);
     };
 
     const increaseUnreadMessages = (chatId) => {
@@ -104,24 +122,28 @@ const Chat = () => {
     // Array to store all subscribed channel names
     const subscribedChannels = [];
 
-    if (window.Echo && chats) {
+    if (echo && conversations) {
       // Listen to the private channels for the 'private_channel' event
       // Subscribe to Pusher channels for each communication/chat
-      chats.forEach((item) => {
+      conversations.communications.forEach((item) => {
         const channelName = `chat.${item.id}`;
         subscribedChannels.push(channelName);
 
-        window.Echo.private(channelName).listen("NewMessage", (e) => {
+        echo.private(channelName).listen("NewMessage", (e) => {
           if (e?.message?.sender_type !== `App\\Models\\Business`) {
             if (
               selectedChat &&
               e.message.communication_id === selectedChat?.id
             ) {
+              // Read Messages
+              const debouncedHandleReadMessages = debounce(
+                handleReadMessages,
+                1000
+              );
+              debouncedHandleReadMessages(parseInt(chatId));
+
               // It means chat is open. process received message
               handleNewMessage(e);
-
-              // Read Messages
-              handleReadMessages();
             } else {
               // It means chat is closed. Increase unread_messages count
               increaseUnreadMessages(e.message.communication_id);
@@ -134,12 +156,12 @@ const Chat = () => {
     // Clean up the subscription when the component is unmounted
     return () => {
       subscribedChannels.forEach((channelName) => {
-        if (window.Echo) {
-          window.Echo.leave(channelName);
+        if (echo) {
+          echo.leave(channelName);
         }
       });
     };
-  }, [chats]);
+  }, [conversations, echo]);
 
   // Get oneOone Communication | Messages
   const { data: messagesData } = useOneOoneCommunicationQuery(props, {
@@ -164,6 +186,15 @@ const Chat = () => {
       const chat = chats?.find((chat) => chat.id === parseInt(chatId));
       if (chat) {
         setSelectedChat(chat);
+
+        // Read Messages
+        if (parseInt(chat.unread_messages) > 0) {
+          const debouncedHandleReadMessages = debounce(
+            handleReadMessages,
+            1000
+          );
+          debouncedHandleReadMessages(parseInt(chatId));
+        }
       }
     }
   }, [chatId, chats]);
@@ -176,27 +207,14 @@ const Chat = () => {
 
   // Execute when any chat from left side is clicked
   const handleChatClick = (chat) => {
-    if (selectedChat && selectedChat?.id != chat.id) {
+    if (selectedChat?.id != chat.id) {
       setIsLoadingMessages(true);
+    }
 
-      // Read Messages
-      setTimeout(() => {
-        const selectedChatId = chat.id;
-        setChats((prevChats) => {
-          return prevChats.map((chat) => {
-            if (chat.id === selectedChatId) {
-              return {
-                ...chat,
-                unread_messages: 0,
-              };
-            }
-            return chat;
-          });
-        });
-
-        // Send read message Request to api
-        handleReadMessages();
-      }, 1000);
+    // Read Messages
+    if (parseInt(chat.unread_messages) > 0) {
+      const debouncedHandleReadMessages = debounce(handleReadMessages, 1000);
+      debouncedHandleReadMessages(chat.id);
     }
 
     setSelectedChat(chat);
@@ -280,12 +298,20 @@ const Chat = () => {
   return (
     <>
       {/* Assign Chat to Employee Modal  */}
-      <AssignChatModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        communicationId={selectedChat?.id}
-        refetchChats={refetchChats}
-        isUninitialized={isUninitialized}
+      {isOpen && (
+        <AssignChatModal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          communicationId={selectedChat?.id}
+          refetchChats={refetchChats}
+          isUninitialized={isUninitialized}
+        />
+      )}
+
+      {/* View Media Modal  */}
+      <ViewMediaModal
+        isOpen={isOpenMediaModal}
+        setIsOpen={setIsOpenMediaModal}
       />
 
       <div className="w-full xl:max-w-screen-xl md:max-w-screen-2xl mx-auto px-0 md:px-4 pt-1 md:pt-5 pb-0 max-h-[79.5vh]">
@@ -319,7 +345,14 @@ const Chat = () => {
                     <ConversationSkeleton />
                   ) : (
                     filteredConversations?.map((chat, index) => (
-                      <div key={chat.id} onClick={() => handleChatClick(chat)}>
+                      <div
+                        key={chat.id}
+                        onClick={() =>
+                          chat.id === parseInt(chatId)
+                            ? null
+                            : handleChatClick(chat)
+                        }
+                      >
                         <Conversation
                           chat={chat}
                           chatId={chatId}
@@ -374,6 +407,7 @@ const Chat = () => {
                     filePreviews={filePreviews}
                     setFilePreviews={setFilePreviews}
                     isLoadingSendMessage={isLoadingSendMessage}
+                    setIsOpenMediaModal={setIsOpenMediaModal}
                   />
                 </div>
                 {/* end of message container div  */}

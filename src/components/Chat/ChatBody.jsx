@@ -13,8 +13,8 @@ import Avvvatars from "avvvatars-react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import FileUploader from "./FileUploader";
 import { FaFileAlt } from "react-icons/fa";
-import ViewMediaGallery from "./ViewMediaGallery";
 import { Link } from "react-router-dom";
+import { Image } from "@nextui-org/react";
 
 const ChatBody = ({
   messages,
@@ -30,6 +30,7 @@ const ChatBody = ({
   isLoadingMessages,
   businessData,
   isLoadingSendMessage,
+  setIsOpenMediaModal,
 }) => {
   const { user } = useSelector((state) => state.auth);
   const inputRef = useRef();
@@ -58,14 +59,14 @@ const ChatBody = ({
 
   const chatContainerRef = useRef(null);
 
-    const scrollToBottom = () => {
-      if (lastMessageRef.current) {
-        lastMessageRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
-      }
-    };
+  const scrollToBottom = () => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  };
 
   useEffect(() => {
     scrollToBottom();
@@ -73,11 +74,7 @@ const ChatBody = ({
 
   return (
     <>
-      <div
-        className={`${css.chatBody}`}
-        ref={chatContainerRef}
-        style={{ paddingBottom: "50px" }}
-      >
+      <div className={`${css.chatBody}`} ref={chatContainerRef}>
         {isLoadingMessages ? (
           <MessageSkeleton />
         ) : selectedChat ? (
@@ -92,6 +89,7 @@ const ChatBody = ({
                   message.files && message.files.length > 0 ? "row" : undefined,
                 gap: message.files && message.files.length > 0 ? 0 : undefined,
                 zIndex: 30,
+                paddingBottom: index === messages.length - 1 && "33px",
               }}
               ref={index === messages.length - 1 ? lastMessageRef : null}
             >
@@ -161,15 +159,17 @@ const ChatBody = ({
                         {message?.files?.map((file, index) => (
                           <div key={index} className="w-full h-full">
                             {file.type.startsWith("image/") ? (
-                              <div className="w-full cursor-zoom-in h-full rounded-xl flex items-center justify-center">
-                                {/* <img
-                                    src={file.src}
-                                    alt={file.name}
-                                    className="object-cover align-middle w-full h-full rounded-xl"
-                                    loading="lazy"
-                                    onClick={()=> setSources(message.files)}
-                                  /> */}
-                                <ViewMediaGallery file={file} />
+                              <div className="w-full cursor-zoom-in h-full rounded-xl flex items-center justify-center object-cover">
+                                <Image
+                                  src={file.src}
+                                  alt={file.name}
+                                  className="object-cover align-middle w-full rounded-xl"
+                                  loading="lazy"
+                                  onClick={() =>
+                                    setIsOpenMediaModal(file)
+                                  }
+                                />
+                                {/* <ViewMediaGallery file={file} /> */}
                                 {/* <ViewMediaGallery
                                   galleryID="my-test-gallery"
                                   file={file}

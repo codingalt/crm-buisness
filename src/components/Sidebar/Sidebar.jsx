@@ -15,6 +15,7 @@ import { AiFillHome } from "react-icons/ai";
 import useClickOutside from "../../hooks/useClickOutside";
 import { useSelector } from "react-redux";
 import { TbLogout2 } from "react-icons/tb";
+import { removeToken } from "@/utils/helpers/tokenUtils";
 
 const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
   const sidebarRef = useRef();
@@ -87,7 +88,7 @@ const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
     : menuItems.filter((item) => !item.role || roles.includes(item.role));
 
   const handleLogout = () => {
-    localStorage.removeItem("crmBusinessToken");
+    removeToken();
     window.location.reload(false);
   };
 

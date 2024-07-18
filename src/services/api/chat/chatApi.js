@@ -21,7 +21,6 @@ export const chatApi = createApi({
     oneOoneCommunication: builder.query({
       query: ({ user_type, receiver_id }) =>
         `oneOoneCommunication?user_type=${user_type}&receiver_id=${receiver_id}`,
-      providesTags: ["chatApi"],
     }),
 
     readMessages: builder.mutation({

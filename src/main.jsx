@@ -6,9 +6,8 @@ import { NextUIProvider } from "@nextui-org/react";
 import "./styles/global.scss";
 import { Provider } from "react-redux";
 import { store } from "./store/store.js";
-import { PusherProvider } from './context/PusherContext.jsx';
 import { DirectionProvider } from './context/DirectionContext.jsx';
-import "./pusher";
+import { PusherProvider } from './context/PusherContext.jsx';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>

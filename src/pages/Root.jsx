@@ -24,13 +24,11 @@ const Root = () => {
  
   return (
     <>
-      {/* <PusherProvider> */}
       <wc-toast theme="light"></wc-toast>
       <div className="App w-full h-full" dir={direction}>
         <ScrollRestore />
         <Outlet />
       </div>
-      {/* </PusherProvider>  */}
     </>
   );
 };

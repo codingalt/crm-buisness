@@ -3,6 +3,7 @@ import Pusher from 'pusher-js';
 
 // Make Pusher available globally
 window.Pusher = Pusher;
+console.log(localStorage.getItem("crmBusinessToken"));
 
 // Configure Echo with Pusher
 window.Echo = new Echo({

@@ -11,6 +11,7 @@ import {
 } from "../../../services/api/authApi/authApi";
 import ApiErrorDisplay from "../../../hooks/ApiErrorDisplay";
 import ClipSpinner from "@/components/Loader/ClipSpinner";
+import { setToken } from "@/utils/helpers/tokenUtils";
 
 const Login = () => {
   const token = localStorage.getItem("crmBusinessToken");
@@ -57,7 +58,7 @@ const Login = () => {
     });
 
     if (data?.token) {
-      localStorage.setItem("crmBusinessToken", data.token);
+       setToken(data.token);
 
       navigate("/dashboard");
     }
