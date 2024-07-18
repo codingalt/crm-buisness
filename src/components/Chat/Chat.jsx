@@ -74,6 +74,7 @@ const Chat = () => {
   const [readMessages, resp] = useReadMessagesMutation();
 
   const handleReadMessages = async (selectedChatId) => {
+    console.log(selectedChatId);
     // Update State Count First
     setChats((prevChats) => {
       return prevChats.map((chatItem) => {
@@ -130,18 +131,17 @@ const Chat = () => {
         subscribedChannels.push(channelName);
 
         echo.private(channelName).listen("NewMessage", (e) => {
+          console.log("recived", e);
           if (e?.message?.sender_type !== `App\\Models\\Business`) {
+            console.log(
+              parseInt(e.message.communication_id) === parseInt(selectedChat.id)
+            );
             if (
               selectedChat &&
-              e.message.communication_id === selectedChat?.id
+              parseInt(e.message.communication_id) === parseInt(selectedChat.id)
             ) {
               // Read Messages
-              const debouncedHandleReadMessages = debounce(
-                handleReadMessages,
-                1000
-              );
-              debouncedHandleReadMessages(parseInt(chatId));
-
+              handleReadMessages(parseInt(chatId));
               // It means chat is open. process received message
               handleNewMessage(e);
             } else {
@@ -220,8 +220,6 @@ const Chat = () => {
     setSelectedChat(chat);
     updateSearchParams(chat.id);
   };
-
-  console.log(messages);
 
   // Send Message
   const handleSendMessage = async () => {
