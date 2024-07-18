@@ -175,7 +175,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (messagesData) {
-      setMessages(messagesData?.communications?.messages);
+      setMessages(messagesData?.communication?.messages);
       setIsLoadingMessages(false);
     }
   }, [messagesData, activeChatMob]);
@@ -220,6 +220,8 @@ const Chat = () => {
     setSelectedChat(chat);
     updateSearchParams(chat.id);
   };
+
+  console.log(messages);
 
   // Send Message
   const handleSendMessage = async () => {
