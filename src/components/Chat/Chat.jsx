@@ -136,14 +136,13 @@ const Chat = () => {
             console.log(
               parseInt(e.message.communication_id) === parseInt(chatId)
             );
-            console.log("selectedChat", selectedChat);
             console.log(
               "reciver commiu id",
               parseInt(e.message.communication_id)
             );
             console.log("selectedChat Id", parseInt(chatId));
             if (
-              selectedChat &&
+              chatId &&
               parseInt(e.message.communication_id) === parseInt(chatId)
             ) {
               // Read Messages
