@@ -29,6 +29,7 @@ const Chat = () => {
   const searchParams = new URLSearchParams(location.search);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const chatId = searchParams.get("chatId");
+  const chatIdRef = useRef(chatId);
   const [activeChatMob, setActiveChatMob] = useState(
     isSmallDevice ? (chatId ? true : false) : false
   );
@@ -43,6 +44,11 @@ const Chat = () => {
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isOpenMediaModal, setIsOpenMediaModal] = useState(null);
+
+  // Update refs whenever these states change
+  useEffect(() => {
+    chatIdRef.current = chatId;
+  }, [chatId]);
 
   const handleChatMob = () => {
     if (isSmallDevice) {
@@ -68,13 +74,13 @@ const Chat = () => {
     isUninitialized,
   } = useGetConversationsQuery(props, {
     skip: !user || selectedChat,
+    refetchOnMountOrArgChange: true,
   });
 
   // Read Messages Mutation
   const [readMessages, resp] = useReadMessagesMutation();
 
   const handleReadMessages = async (selectedChatId) => {
-    console.log(selectedChatId);
     // Update State Count First
     setChats((prevChats) => {
       return prevChats.map((chatItem) => {
@@ -131,22 +137,19 @@ const Chat = () => {
         subscribedChannels.push(channelName);
 
         echo.private(channelName).listen("NewMessage", (e) => {
-          console.log("recived", e);
+          console.log(e);
+          const currentChatId = chatIdRef.current;
           if (e?.message?.sender_type !== `App\\Models\\Business`) {
             console.log(
-              parseInt(e.message.communication_id) === parseInt(chatId)
+              parseInt(e.message.communication_id) === parseInt(currentChatId)
             );
-            console.log(
-              "reciver commiu id",
-              parseInt(e.message.communication_id)
-            );
-            console.log("selectedChat Id", parseInt(chatId));
+            console.log(currentChatId);
             if (
               chatId &&
-              parseInt(e.message.communication_id) === parseInt(chatId)
+              parseInt(e.message.communication_id) === parseInt(currentChatId)
             ) {
               // Read Messages
-              handleReadMessages(parseInt(chatId));
+              handleReadMessages(parseInt(currentChatId));
               // It means chat is open. process received message
               handleNewMessage(e);
             } else {
