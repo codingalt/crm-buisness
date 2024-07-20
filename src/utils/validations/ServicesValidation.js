@@ -9,4 +9,5 @@ export const addServiceSchema = Yup.object({
   category: Yup.string().required("Category is Required"),
   subCategory: Yup.string().required("Sub Category is Required"),
   gender: Yup.string().required("Gender is Required"),
+  image: Yup.mixed().nullable().required("Please Select Service Image"),
 });

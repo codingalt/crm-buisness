@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useMemo, useRef, useState } from "react";
 import css from "./Services.module.scss";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
@@ -12,7 +12,6 @@ import {
   Slider,
   Switch,
 } from "@nextui-org/react";
-import { FaCamera, FaUser } from "react-icons/fa6";
 import { MdOutlineAccessTimeFilled } from "react-icons/md";
 import { BiSolidPencil } from "react-icons/bi";
 import { RiUser3Fill } from "react-icons/ri";
@@ -31,6 +30,8 @@ import ApiErrorDisplay from "../../hooks/ApiErrorDisplay";
 import { toastSuccess } from "../Toast/Toast";
 import { useApiErrorHandling } from "../../hooks/useApiErrors";
 import { DirectionContext } from "@/context/DirectionContext";
+import { FiUploadCloud } from "react-icons/fi";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
 
 const genderData = [
   { id: 0, name: "General" },
@@ -55,7 +56,9 @@ const AddService = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-   const [ageGroup, setAgeGroup] = useState([0, 60]);
+  const [ageGroup, setAgeGroup] = useState([0, 60]);
+  const [image, setImage] = useState(null);
+  const imageRef = useRef();
 
   const { data: categories, isLoading: isLoadingCategories } =
     useGetServiceCategoriesQuery();
@@ -81,8 +84,7 @@ const AddService = () => {
   const apiErrors = useApiErrorHandling(error);
 
   const handleSubmit = async (values, { resetForm }) => {
-
-    const {data} = await addService({
+    const { data } = await addService({
       name: values.name,
       employees: selectedEmployees,
       category_id: values.subCategory,
@@ -92,6 +94,7 @@ const AddService = () => {
       price: values.price,
       ageGroup: ageGroup,
       has_parking: values.has_parking,
+      image: image,
     });
 
     resetForm({
@@ -124,6 +127,16 @@ const AddService = () => {
       .filter((value) => value !== "");
 
     setSelectedTags(selectedValues);
+  };
+
+  const openImage = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      let img = e.target.files[0];
+      setImage({
+        image: URL.createObjectURL(img),
+      });
+      setIsChanged(true);
+    }
   };
 
   const { direction } = useContext(DirectionContext);
@@ -536,6 +549,53 @@ const AddService = () => {
                     component="div"
                     className={css.errorSpan}
                   />
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full mb-8 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
+              <div className={css.inputContainer}>
+                <div className={css.input}>
+                  <div className={css.profilePic}>
+                    <div className={css.detail}>
+                      <div className={css.left}>
+                        <h4>Choose Image</h4>
+                        <span>
+                          Select your service image to display on the platform.
+                        </span>
+                      </div>
+                      <div className={css.right}>
+                        <div className={css.profilePreview}>
+                          {image ? (
+                            <img src={image.image} />
+                          ) : (
+                            <p className="block">Image Preview</p>
+                          )}
+                        </div>
+                        <div
+                          className={css.upload}
+                          onClick={() => imageRef.current.click()}
+                        >
+                          <input
+                            ref={imageRef}
+                            type="file"
+                            id="profilePic"
+                            name="profilePic"
+                            accept="image/*"
+                            onChange={(event) => openImage(event)}
+                            style={{ display: "none" }}
+                          />
+                          <div className={css.icon}>
+                            <FiUploadCloud />
+                          </div>
+                          <p>
+                            <span>Click to upload</span>
+                            <span>SVG, PNG, JPG (max. 800x400px)</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

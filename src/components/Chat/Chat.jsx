@@ -140,12 +140,9 @@ const Chat = () => {
           console.log(e);
           const currentChatId = chatIdRef.current;
           if (e?.message?.sender_type !== `App\\Models\\Business`) {
-            console.log(
-              parseInt(e.message.communication_id) === parseInt(currentChatId)
-            );
             console.log(currentChatId);
             if (
-              chatId &&
+              currentChatId &&
               parseInt(e.message.communication_id) === parseInt(currentChatId)
             ) {
               // Read Messages

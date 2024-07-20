@@ -196,7 +196,7 @@
         }
       }
 
-      .cards{
+      .cards {
         margin-top: 2.1rem;
         gap: 1.2rem;
         padding-bottom: 5rem;
@@ -243,6 +243,137 @@
         position: relative;
         width: 100%;
       }
+
+      // Choose Profile Pic
+      .profilePic {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 0.5rem;
+
+        .detail {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          flex-direction: column;
+
+          .left {
+            width: 100%;
+            h4 {
+              font-size: 18px;
+              font-weight: 500;
+              color: #212121;
+              margin-bottom: 0px;
+            }
+
+            span {
+              color: gray;
+              font-weight: 500;
+              font-size: 0.84rem;
+              letter-spacing: 0.3px;
+            }
+          }
+
+          .right {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1rem;
+
+            .profilePreview {
+              background-color: #e8e6e6;
+              width: 7rem;
+              height: 7rem;
+              border-radius: 50%;
+              font-size: 0.7rem;
+              text-align: center;
+              font-weight: 500;
+              color: #212121;
+              letter-spacing: 0.9px;
+              @include flexCenter;
+              border: 2px solid #fff;
+              box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+              position: relative;
+              object-fit: cover;
+
+              p{
+                max-width: 85%;
+                margin: auto;
+              }
+
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+              }
+
+              svg {
+                position: absolute;
+                bottom: -2.3%;
+                right: 3.5%;
+                font-size: 1.55rem;
+                color: #000;
+              }
+            }
+
+            .upload {
+              width: calc(100% - 10rem);
+              height: 9rem;
+              margin-left: auto;
+              border-radius: 14px;
+              border: 1px solid #e8e6e6;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              cursor: pointer;
+              transition: all 0.3s;
+              padding: 10px 0;
+
+              &:hover {
+                background-color: #f7f7f7;
+                transition: all 0.3s;
+              }
+
+              .icon {
+                width: 2.5rem;
+                height: 2.5rem;
+                background-color: #e8e6e6;
+                border-radius: 50%;
+                @include flexCenter;
+
+                svg {
+                  font-size: 1.1rem;
+                }
+              }
+
+              p {
+                font-size: 0.71rem;
+                color: gray;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                max-width: 80%;
+                margin: 10px auto;
+                margin-top: 5px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+
+                span:nth-child(1) {
+                  font-weight: 700;
+                  color: #3a3a3a;
+                  font-size: 0.86rem;
+                  text-decoration: underline;
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     .buttons {
@@ -257,28 +388,48 @@
         @include button($width: 10.5rem, $height: 2.7rem);
         font-size: 16px;
         gap: 10px;
-
       }
     }
   }
 
-  @media (max-width: 768px){
-    &{
-
-      form{
+  @media (max-width: 768px) {
+    & {
+      form {
         max-width: 95%;
         margin-left: auto;
         margin-right: auto;
-        
-        .inputContainer{
+
+        .inputContainer {
           gap: 0.8rem;
 
-          label{
+          label {
             font-size: 17px;
+          }
+
+          .profilePic{
+            .detail{
+              .right{
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+
+                .profilePreview{
+                  width: 5.5rem;
+                  height: 5.5rem;
+                }
+
+                  .upload{
+                    width: 100%;
+                    height: 7.5rem;
+                    margin-left: 0;
+                  }
+                
+              }
+            }
           }
         }
 
-        .buttons{
+        .buttons {
           margin-top: 3.6rem;
         }
       }
