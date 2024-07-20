@@ -27,11 +27,12 @@ import {
   useGetServiceTagsQuery,
 } from "../../services/api/servicesApi/servicesApi";
 import ApiErrorDisplay from "../../hooks/ApiErrorDisplay";
-import { toastSuccess } from "../Toast/Toast";
+import { toastError, toastSuccess } from "../Toast/Toast";
 import { useApiErrorHandling } from "../../hooks/useApiErrors";
 import { DirectionContext } from "@/context/DirectionContext";
 import { FiUploadCloud } from "react-icons/fi";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 const genderData = [
   { id: 0, name: "General" },
@@ -49,6 +50,7 @@ const AddService = () => {
     gender: "",
     time: "",
     price: "",
+    image: "",
     has_parking: false,
   };
 
@@ -59,6 +61,7 @@ const AddService = () => {
   const [ageGroup, setAgeGroup] = useState([0, 60]);
   const [image, setImage] = useState(null);
   const imageRef = useRef();
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
   const { data: categories, isLoading: isLoadingCategories } =
     useGetServiceCategoriesQuery();
@@ -84,26 +87,46 @@ const AddService = () => {
   const apiErrors = useApiErrorHandling(error);
 
   const handleSubmit = async (values, { resetForm }) => {
-    const { data } = await addService({
-      name: values.name,
-      employees: selectedEmployees,
-      category_id: values.subCategory,
-      tags: selectedTags,
-      gender: values.gender,
-      time: values.time,
-      price: values.price,
-      ageGroup: ageGroup,
-      has_parking: values.has_parking,
-      image: image,
+    const formData = new FormData();
+
+    const [start_age, end_age] = ageGroup;
+
+    let isParking;
+    if(values.has_parking){
+      isParking = 1;
+    }else{
+      isParking = 0;
+    }
+
+    formData.append("name", values.name);
+    formData.append("category_id", values.subCategory);
+    formData.append("gender", values.gender);
+    formData.append("time", values.time);
+    formData.append("price", values.price);
+    formData.append("start_age", start_age);
+    formData.append("end_age", end_age);
+    formData.append("has_parking", isParking);
+    formData.append("image", values.image);
+
+    selectedEmployees?.map((item) => {
+      formData.append("employees[]", item);
     });
+
+    selectedTags?.map((item) => {
+      formData.append("tags[]", item);
+    });
+
+    const { data } = await addService(formData);
 
     resetForm({
       values: initialValues,
     });
+
     setSelectedEmployees([]);
     setSelectedTags([]);
     setSelectedCategory("");
     setIsParking(false);
+    setImage(null);
   };
 
   const handleChange = (e, setFieldValue) => {
@@ -129,13 +152,18 @@ const AddService = () => {
     setSelectedTags(selectedValues);
   };
 
-  const openImage = (e) => {
+  const openImage = (e, setFieldValue) => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
+      if (img.size > 2 * 1024 * 1024) {
+        // 2MB in bytes
+        toastError("File size exceeds 2MB. Please upload a smaller file.");
+        return;
+      }
       setImage({
         image: URL.createObjectURL(img),
       });
-      setIsChanged(true);
+      setFieldValue("image", img);
     }
   };
 
@@ -536,6 +564,7 @@ const AddService = () => {
                       className="max-w-xxl"
                       showTooltip={true}
                       color="success"
+                      size="sm"
                     />
                     <p className="text-default-500 font-medium text-small">
                       Selected age group:{" "}
@@ -579,10 +608,12 @@ const AddService = () => {
                           <input
                             ref={imageRef}
                             type="file"
-                            id="profilePic"
-                            name="profilePic"
+                            id="image"
+                            name="image"
                             accept="image/*"
-                            onChange={(event) => openImage(event)}
+                            onChange={(event) =>
+                              openImage(event, setFieldValue)
+                            }
                             style={{ display: "none" }}
                           />
                           <div className={css.icon}>
@@ -591,6 +622,12 @@ const AddService = () => {
                           <p>
                             <span>Click to upload</span>
                             <span>SVG, PNG, JPG (max. 800x400px)</span>
+                            <ErrorMessage
+                              name="image"
+                              component="div"
+                              className={css.errorSpan}
+                              style={{ marginTop: "0px", fontWeight: "normal" }}
+                            />
                           </p>
                         </div>
                       </div>

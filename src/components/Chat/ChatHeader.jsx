@@ -16,14 +16,14 @@ const ChatHeader = ({ selectedChat, activeChatMob, handleChatMob, onOpen }) => {
           {/* Mobile Back Button  */}
           {activeChatMob && (
             <div
-              className={`cursor-pointer h-10 w-10 -ml-2.5 mr-1 flex items-center justify-center hover:bg-default-100 rounded-full transition-all`}
+              className={`cursor-pointer w-9 h-9 md:h-10 md:w-10 -ml-2.5 mr-1 flex items-center justify-center hover:bg-default-100 rounded-full transition-all`}
             >
               <ai.AiOutlineArrowLeft
                 onClick={() => handleChatMob(false)}
                 style={{
-                  fontSize: "1.2rem",
                   color: "#01AB8E",
                 }}
+                className="text-lg md:text-xl"
               />
             </div>
           )}
@@ -31,7 +31,7 @@ const ChatHeader = ({ selectedChat, activeChatMob, handleChatMob, onOpen }) => {
           <div className={css.image}>
             <Avvvatars
               value={selectedChat?.customer?.name}
-              size={isSmallDevice ? 37 : 45}
+              size={isSmallDevice ? 30 : 45}
             />
             {/* <Image
               src={null}
