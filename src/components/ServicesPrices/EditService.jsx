@@ -1,8 +1,7 @@
-import React, { useContext, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import css from "./Services.module.scss";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
 import {
-  Avatar,
   Button,
   Chip,
   Input,
@@ -20,19 +19,19 @@ import { MdCategory } from "react-icons/md";
 import { IoWallet } from "react-icons/io5";
 import { addServiceSchema } from "../../utils/validations/ServicesValidation";
 import {
-  useAddServiceMutation,
+  useGetEditServiceQuery,
   useGetEmployeesQuery,
   useGetServiceCategoriesQuery,
   useGetServiceSubCategoriesQuery,
   useGetServiceTagsQuery,
+  useUpdateServiceMutation,
 } from "../../services/api/servicesApi/servicesApi";
 import ApiErrorDisplay from "../../hooks/ApiErrorDisplay";
 import { toastError, toastSuccess } from "../Toast/Toast";
 import { useApiErrorHandling } from "../../hooks/useApiErrors";
 import { DirectionContext } from "@/context/DirectionContext";
 import { FiUploadCloud } from "react-icons/fi";
-import { RiVerifiedBadgeFill } from "react-icons/ri";
-import { useMediaQuery } from "@uidotdev/usehooks";
+import { useParams } from "react-router-dom";
 
 const genderData = [
   { id: 0, name: "General" },
@@ -41,8 +40,8 @@ const genderData = [
   { id: 3, name: "Other" },
 ];
 
-const AddService = () => {
-  const initialValues = {
+const EditService = () => {
+  const [initialValues, setInitialValues] = useState({
     name: "",
     category: "",
     subCategory: "",
@@ -52,16 +51,49 @@ const AddService = () => {
     price: "",
     image: "",
     has_parking: false,
-  };
+  });
 
-  const [isParking, setIsParking] = useState(false);
+  const { serviceId } = useParams();
+
+  const { data,error: errorEditData } = useGetEditServiceQuery(serviceId);
+
+  useEffect(()=>{
+    if(errorEditData){
+      toastError("Something went wrong. Please try again")
+    }
+  },[errorEditData]);
+
+  const [isParking, setIsParking] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [ageGroup, setAgeGroup] = useState([0, 60]);
   const [image, setImage] = useState(null);
   const imageRef = useRef();
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
+
+  useEffect(() => {
+    if (data) {
+      const res = data.service;
+
+      setInitialValues({
+        name: res.name,
+        category: res.category.category.id,
+        subCategory: res.category.id,
+        tags: res.tags,
+        gender: res.gender,
+        time: res.time,
+        price: res.price,
+        image: res.image,
+        has_parking: res.has_parking,
+      });
+
+      setSelectedEmployees(res.employees.map((emp) => emp.id));
+      setSelectedTags(res.tags.map((tag) => tag.id));
+      setIsParking(res.has_parking);
+      setSelectedCategory(parseInt(res.category.category.id));
+      setAgeGroup([parseInt(res.start_age), parseInt(res.end_age)]);
+    }
+  }, [data]);
 
   const {
     data: categories,
@@ -88,12 +120,12 @@ const AddService = () => {
     skip: !selectedCategory,
   });
 
-  const [addService, res] = useAddServiceMutation();
+  const [updateService, res] = useUpdateServiceMutation();
   const { isLoading, isSuccess, error } = res;
 
   useMemo(() => {
     if (isSuccess) {
-      toastSuccess("Service added successfully");
+      toastSuccess("Service updated successfully");
     }
   }, [isSuccess]);
 
@@ -105,9 +137,9 @@ const AddService = () => {
     const [start_age, end_age] = ageGroup;
 
     let isParking;
-    if(values.has_parking){
+    if (values.has_parking) {
       isParking = 1;
-    }else{
+    } else {
       isParking = 0;
     }
 
@@ -119,7 +151,10 @@ const AddService = () => {
     formData.append("start_age", start_age);
     formData.append("end_age", end_age);
     formData.append("has_parking", isParking);
-    formData.append("image", values.image);
+
+    if (image) {
+      formData.append("image", values.image);
+    }
 
     selectedEmployees?.map((item) => {
       formData.append("employees[]", item);
@@ -129,17 +164,7 @@ const AddService = () => {
       formData.append("tags[]", item);
     });
 
-    const { data } = await addService(formData);
-
-    resetForm({
-      values: initialValues,
-    });
-
-    setSelectedEmployees([]);
-    setSelectedTags([]);
-    setSelectedCategory("");
-    setIsParking(false);
-    setImage(null);
+    await updateService({ data: formData, serviceId: serviceId });
   };
 
   const handleChange = (e, setFieldValue) => {
@@ -173,9 +198,7 @@ const AddService = () => {
         toastError("File size exceeds 2MB. Please upload a smaller file.");
         return;
       }
-      setImage({
-        image: URL.createObjectURL(img),
-      });
+      setImage(URL.createObjectURL(img));
       setFieldValue("image", img);
     }
   };
@@ -185,7 +208,7 @@ const AddService = () => {
   return (
     <div className={`${css.addService} max-w-screen-lg`}>
       <div className={css.heading}>
-        <p>Adding a new service</p>
+        <p>Edit service</p>
       </div>
 
       {/* Display Errors  */}
@@ -195,6 +218,7 @@ const AddService = () => {
         initialValues={initialValues}
         validationSchema={addServiceSchema}
         onSubmit={handleSubmit}
+        enableReinitialize
       >
         {({ errors, setFieldValue, touched, values }) => (
           <Form>
@@ -252,7 +276,7 @@ const AddService = () => {
                       renderValue={(items) => {
                         return (
                           <div className="flex flex-wrap gap-2">
-                            {items.map((item) => (
+                            {items?.map((item) => (
                               <Chip
                                 className="py-2"
                                 style={{
@@ -260,10 +284,10 @@ const AddService = () => {
                                   color: "#fff",
                                   marginBottom: "10px",
                                 }}
-                                key={item.key}
+                                key={item?.key}
                                 dir={direction}
                               >
-                                {item.data.user.name}
+                                {item?.data?.user?.name}
                               </Chip>
                             ))}
                           </div>
@@ -608,8 +632,16 @@ const AddService = () => {
                       </div>
                       <div className={css.right}>
                         <div className={css.profilePreview}>
-                          {image ? (
-                            <img src={image.image} />
+                          {image || data ? (
+                            <img
+                              src={
+                                image
+                                  ? image
+                                  : import.meta.env.VITE_SERVICE_IMAGE +
+                                    data?.service?.image
+                              }
+                              alt=""
+                            />
                           ) : (
                             <p className="block">Image Preview</p>
                           )}
@@ -672,7 +704,7 @@ const AddService = () => {
 
             <div className={css.buttons}>
               <Button isLoading={isLoading} type="submit" dir={direction}>
-                Add Service
+                Update Service
               </Button>
             </div>
           </Form>
@@ -682,4 +714,4 @@ const AddService = () => {
   );
 };
 
-export default AddService;
+export default EditService;

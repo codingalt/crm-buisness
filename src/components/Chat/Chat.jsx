@@ -36,6 +36,7 @@ const Chat = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [chats, setChats] = useState([]);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const [files, setFiles] = useState([]);
   const [filePreviews, setFilePreviews] = useState([]);
@@ -104,6 +105,7 @@ const Chat = () => {
   useEffect(() => {
     if (conversations) {
       setChats(conversations?.communications);
+      setIsInitialLoading(false);
     }
   }, [conversations]);
 
@@ -140,7 +142,6 @@ const Chat = () => {
           console.log(e);
           const currentChatId = chatIdRef.current;
           if (e?.message?.sender_type !== `App\\Models\\Business`) {
-            console.log(currentChatId);
             if (
               currentChatId &&
               parseInt(e.message.communication_id) === parseInt(currentChatId)
@@ -272,6 +273,8 @@ const Chat = () => {
       setFilePreviews([]);
       setNewMessage("");
 
+      console.log(data);
+
       if (!data || !data.success) {
         // If message failed to be sent
         setMessages((prevMessages) =>
@@ -368,14 +371,16 @@ const Chat = () => {
                   )}
 
                   {/* No Conversation Message  */}
-                  {!isLoadingConversations && chats?.length === 0 && (
-                    <div className="w-full h-full flex gap-y-3 items-center justify-center px-20 text-center flex-col">
-                      <TbMessage fontSize={60} color="#01AB8E" />
-                      <p className="text-tiny text-default-500 font-medium">
-                        Messages from your customer will appear here.
-                      </p>
-                    </div>
-                  )}
+                  {!isInitialLoading &&
+                    !isLoadingConversations &&
+                    chats?.length === 0 && (
+                      <div className="w-full h-full flex gap-y-3 items-center justify-center px-20 text-center flex-col">
+                        <TbMessage fontSize={60} color="#01AB8E" />
+                        <p className="text-tiny text-default-500 font-medium">
+                          Messages from your customer will appear here.
+                        </p>
+                      </div>
+                    )}
                 </ul>
               </div>
             </div>

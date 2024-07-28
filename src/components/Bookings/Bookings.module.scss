@@ -240,7 +240,96 @@
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1240px) {
+    & {
+      .bookingsTable {
+
+        .table {
+          gap: 0rem;
+
+          .hoursCol {
+            gap: 0rem;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1140px) {
+    & {
+      .top {
+        max-width: 100%;
+        margin-top: 14px;
+      }
+
+      .cards {
+        max-width: 100%;
+        width: calc(100% - 9px);
+      }
+    }
+  }
+
+  @media (max-width: 1040px) {
+    & {
+      .bookingsTable {
+
+        .table {
+
+           .tableData {
+            width: calc(100% - 80px);
+
+            .employeesTable {
+              overflow-x: auto;
+              scrollbar-width: none;
+
+              .tableHeader {
+                gap: 1.7rem;
+                padding: 11px 18px;
+                overflow-x: auto;
+                scrollbar-width: none;
+                width: max-content;
+
+                .item {
+                  font-size: 13px;
+                  width: 70px;
+
+                  &:nth-child(4) {
+                    width: 350px;
+                  }
+                }
+              }
+
+              .tableBody {
+                overflow-x: auto;
+                scrollbar-width: none;
+                width: max-content;
+
+                .tableRow {
+                  padding: 11px 18px;
+                  gap: 1.7rem;
+                  scrollbar-width: none;
+
+                  .item {
+                    font-size: 13px;
+                    width: 70px;
+
+                    &:nth-child(4) {
+                      width: 350px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 900px) {
+  }
+
+  @media (max-width: 860px) {
     & {
       margin: 0.8rem 0;
       margin-top: 0.6rem;
@@ -251,6 +340,7 @@
         gap: 1.2rem;
         flex-direction: column-reverse;
         align-items: flex-start;
+        margin-left: 6px;
 
         button {
           height: 2.5rem;
@@ -261,7 +351,7 @@
         }
 
         h1 {
-          font-size: 28px;
+          font-size: 26px;
         }
       }
 
@@ -278,9 +368,8 @@
             font-size: 20px;
           }
 
-          .card{
-
-            .details{
+          .card {
+            .details {
               margin-top: 8px;
             }
           }

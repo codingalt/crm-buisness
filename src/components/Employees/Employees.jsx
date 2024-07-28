@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import css from "./Employees.module.scss";
 import { FaPlus } from "react-icons/fa";
 import { IoStatsChart } from "react-icons/io5";
@@ -6,15 +6,19 @@ import { useNavigate } from "react-router-dom";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useGetEmployeesQuery } from "../../services/api/employeesApi/employeesApi";
 import { ClipLoader } from "react-spinners";
-import empty from "../../assets/empty.png"
-import { Image } from "@nextui-org/react";
+import empty from "../../assets/empty.png";
+import { Image, useDisclosure } from "@nextui-org/react";
 import { truncateText } from "@/utils/helpers/helpers";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import DeleteEmployeeModal from "./DeleteEmployeeModal";
+import { Tooltip } from "@mui/material";
 
 const Employees = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useGetEmployeesQuery();
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
 
   return (
     <div className={`${css.wrapper} mx-auto`}>
@@ -35,12 +39,8 @@ const Employees = () => {
         {/* Table Header  */}
         <div className={css.tableHeader}>
           <div className={css.item}>Employee Name</div>
-          <div className={css.item}>
-            Employee Email
-          </div>
-          <div className={css.item}>
-            Employee Contact
-          </div>
+          <div className={css.item}>Employee Email</div>
+          <div className={css.item}>Employee Contact</div>
           <div className={css.item}>Action</div>
         </div>
 
@@ -55,7 +55,7 @@ const Employees = () => {
         {!isLoading && data?.employees?.length === 0 && (
           <div className="w-full h-[400px] flex flex-col gap-0 items-center justify-center">
             <Image src={empty} alt="" width={170} />
-            <p className="font-medium text-blue-600">No Record Found!</p>
+            <p className="font-medium text-[#01ab8e]">No Record Found!</p>
           </div>
         )}
 
@@ -83,14 +83,29 @@ const Employees = () => {
                     <IoStatsChart />
                   </div>
                   <div className="w-[30px] h-[2px] rotate-90 bg-[#AFACAC]"></div>
-                  <div className={css.delete}>
-                    <FaRegTrashAlt />
-                  </div>
+                  <Tooltip title="Delete Record">
+                    <div
+                      className={css.delete}
+                      onClick={() => {
+                        setSelectedEmployeeId(item.id);
+                        onOpen();
+                      }}
+                    >
+                      <FaRegTrashAlt className="text-red-400" />
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
             ))}
         </div>
       </div>
+
+      {/* Delete Service Modal  */}
+      <DeleteEmployeeModal
+        employeeId={selectedEmployeeId}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      />
     </div>
   );
 };

@@ -4,63 +4,59 @@ import TopCard from "./TopCard";
 import BottomCard from "./BottomCard";
 import Graph from "./Graph";
 import { useTrail, animated as a } from "@react-spring/web";
-
-const topData = [
-  {
-    name: "Queue Time",
-    time: "23 min",
-  },
-  {
-    name: "Total Cancelation",
-    time: "12",
-  },
-  {
-    name: "Total Visits",
-    time: "232",
-  },
-  {
-    name: "Avg Visit Cost",
-    time: "120 Nis",
-  },
-  {
-    name: "Total Revenue",
-    time: "120 Nis",
-  },
-];
-
-const bottomData = [
-  {
-    heading: "Percent",
-    subHeading: "Cancellations",
-    value: "5%",
-  },
-  {
-    heading: "Appointment Cancelled",
-    subHeading: "Most",
-    value: "Haircut For a Man",
-  },
-  {
-    heading: "Best Turn",
-    subHeading: "Sold",
-    value: "Queue Description",
-  },
-  {
-    heading: "The Fast Queue",
-    subHeading: "Most",
-    value: "Queue Description",
-  },
-  {
-    heading: "The Space Queue",
-    subHeading: "Most",
-    value: "Queue Description",
-  },
-];
+import { useGetBusinessStatisticsQuery } from "@/services/api/profileApi/profileApi";
 
 const config = { mass: 15, tension: 5000, friction: 300 };
 
 const Statistics = () => {
   const [toggle, set] = useState(true);
   const [toggle2, set2] = useState(false);
+
+  const [topData, setTopData] = useState([
+    {
+      name: "Queue Time",
+    },
+    {
+      name: "Total Cancelation",
+    },
+    {
+      name: "Total Visits",
+    },
+    {
+      name: "Avg Visit Cost",
+    },
+    {
+      name: "Total Revenue",
+    },
+  ]);
+
+  const [bottomData, setBottomData] = useState([
+    {
+      heading: "Percent",
+      subHeading: "Cancellations",
+      value: "5%",
+    },
+    {
+      heading: "Appointment Cancelled",
+      subHeading: "Most",
+      value: "Haircut For a Man",
+    },
+    {
+      heading: "Best Turn",
+      subHeading: "Sold",
+      value: "Queue Description",
+    },
+    {
+      heading: "The Fast Queue",
+      subHeading: "Most",
+      value: "Queue Description",
+    },
+    {
+      heading: "The Space Queue",
+      subHeading: "Most",
+      value: "Queue Description",
+    },
+  ]);
 
   const trail = useTrail(topData ? topData.length : 0, {
     config,
@@ -78,11 +74,83 @@ const Statistics = () => {
     from: { opacity: 0, y: 50, height: 0 },
   });
 
-  useEffect(()=>{
+  // Get Business Statistics
+  const { data, isLoading, error } = useGetBusinessStatisticsQuery();
+  const [isInitialized, setIsInitialized] = useState(false);
+  console.log(data);
+
+  useEffect(() => {
     setTimeout(() => {
       set2(true);
     }, 30);
-  },[]);
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      // Set Top Data
+      const res = data.data;
+      
+      setTopData([
+        {
+          name: "Queue Time",
+          value: "23 min",
+        },
+        {
+          name: "Total Cancelation",
+          value: res?.cancelledAppointmentsCount,
+        },
+        {
+          name: "Total Visits",
+          value: res?.totalAppointments,
+        },
+        {
+          name: "Avg Visit Cost",
+          value: new Intl.NumberFormat("he-IL", {
+            style: "currency",
+            currency: "ILS",
+          }).format(res?.averageAppointmentCost),
+        },
+        {
+          name: "Total Revenue",
+          value: new Intl.NumberFormat("he-IL", {
+            style: "currency",
+            currency: "ILS",
+          }).format(res?.totalRevenue),
+        },
+      ]);
+
+      // Set Bottom Data
+      setBottomData([
+        {
+          heading: "Percent",
+          subHeading: "Cancellations",
+          value: res?.percentageCancellations,
+        },
+        {
+          heading: "Appointment Cancelled",
+          subHeading: "Most",
+          value: "Haircut for a Man",
+        },
+        {
+          heading: "Best Turn",
+          subHeading: "Sold",
+          value: "Queue Description",
+        },
+        {
+          heading: "The Fast Queue",
+          subHeading: "Most",
+          value: "Queue Description",
+        },
+        {
+          heading: "The Space Queue",
+          subHeading: "Most",
+          value: "Queue Description",
+        },
+      ]);
+
+      setIsInitialized(true);
+    }
+  }, [data]);
 
   return (
     <div className={`${css.wrapper}`}>
@@ -107,7 +175,7 @@ const Statistics = () => {
                 transform: x ? x.to((x) => `translate3d(0,${x}px,0)`) : "none",
               }}
             >
-              <TopCard key={index} data={item} />
+              <TopCard key={index} data={item} isInitialized={isInitialized} />
             </a.div>
           );
         })}
@@ -133,7 +201,12 @@ const Statistics = () => {
                 transform: x ? x.to((x) => `translate3d(0,${x}px,0)`) : "none",
               }}
             >
-              <BottomCard key={index} index={index} data={item} />
+              <BottomCard
+                key={index}
+                index={index}
+                data={item}
+                isInitialized={isInitialized}
+              />
             </a.div>
           );
         })}

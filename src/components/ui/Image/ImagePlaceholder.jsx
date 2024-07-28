@@ -68,7 +68,7 @@ const ImagePlaceholder = ({
       }}
     >
       <div
-        className="relative z-0 overflow-hidden rounded-inherit rounded-small"
+        className="w-full h-full relative z-0 overflow-hidden rounded-inherit rounded-small"
         style={{ borderRadius: radius ? radius : 0 }}
       >
         <img

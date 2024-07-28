@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import css from "./Services.module.scss";
 import Card from "./Card";
 import { FaPlus } from "react-icons/fa6";
@@ -6,11 +6,14 @@ import { useNavigate } from "react-router-dom";
 import { useGetServicesQuery } from "../../services/api/servicesApi/servicesApi";
 import { ClipLoader } from "react-spinners";
 import empty from "../../assets/empty.png";
-import { Image } from "@nextui-org/react";
+import { Image, useDisclosure } from "@nextui-org/react";
+import DeleteServiceModal from "./DeleteServiceModal";
 
 const Services = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useGetServicesQuery();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
 
   return (
     <div className={css.services}>
@@ -44,8 +47,22 @@ const Services = () => {
         className={`${css.cards} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 gap-y-7`}
       >
         {!isLoading &&
-          data?.services?.map((item) => <Card key={item.id} item={item} />)}
+          data?.services?.map((item) => (
+            <Card
+              key={item.id}
+              item={item}
+              onOpen={onOpen}
+              setSelectedServiceId={setSelectedServiceId}
+            />
+          ))}
       </div>
+
+      {/* Delete Service Modal  */}
+      <DeleteServiceModal
+        serviceId={selectedServiceId}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      />
     </div>
   );
 };

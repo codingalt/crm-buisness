@@ -19,6 +19,7 @@ import NotFound from "@/components/NotFound/NotFound";
 import DiaryPage from "@/pages/DiaryPage";
 import EmployeeSetPasswordPage from "@/pages/EmployeeSetPasswordPage";
 import AddAppointmentPage from "@/pages/AddAppointmentPage";
+import EditServicePage from "@/pages/EditServicePage";
 
 export const router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ export const router = createBrowserRouter([
       {
         path: "/newService",
         element: <Protected Component={AddNewServicePage} />,
+      },
+      {
+        path: "/service/:serviceId/edit",
+        element: <Protected Component={EditServicePage} />,
       },
       {
         path: "/employees",

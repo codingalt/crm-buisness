@@ -39,6 +39,14 @@ export const employeesApi = createApi({
       }),
     }),
 
+    deleteEmployee: builder.mutation({
+      query: (employeeId) => ({
+        url: `business/employees/${employeeId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Employees"],
+    }),
+
     addEmployee: builder.mutation({
       query: (data) => ({
         url: "business/employees",
@@ -55,5 +63,6 @@ export const {
   useAddEmployeeMutation,
   useGetEmployeeRolesQuery,
   useValidateInvitationMutation,
-  useAcceptInvitationMutation
+  useAcceptInvitationMutation,
+  useDeleteEmployeeMutation
 } = employeesApi;

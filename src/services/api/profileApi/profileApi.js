@@ -19,6 +19,10 @@ export const profileApi = createApi({
       providesTags: ["Profile"],
     }),
 
+    getBusinessStatistics: builder.query({
+      query: () => `business/stats`,
+    }),
+
     updateBusinessInfo: builder.mutation({
       query: (data) => ({
         url: "business/businessInfo",
@@ -42,5 +46,6 @@ export const profileApi = createApi({
 export const {
   useGetBusinessProfileQuery,
   useUpdateOpeningHoursMutation,
-  useUpdateBusinessInfoMutation
+  useUpdateBusinessInfoMutation,
+  useGetBusinessStatisticsQuery
 } = profileApi;

@@ -13,7 +13,7 @@ import { Avatar, Badge, Empty } from "antd";
 import { LuUser2 } from "react-icons/lu";
 import { Button, useDisclosure } from "@nextui-org/react";
 import UpcomingBookingsModal from "./UpcomingBookingsModal";
-import { Skeleton } from "@mui/material";
+import { Skeleton, Tooltip } from "@mui/material";
 import ActiveBookingsModal from "./ActiveBookingsModal";
 import { MdOutlineDone } from "react-icons/md";
 import { toastSuccess } from "../Toast/Toast";
@@ -24,6 +24,8 @@ import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaCreditCard } from "react-icons/fa";
 import { IoWallet } from "react-icons/io5";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+import ViewActiveAppointment from "./ViewActiveAppointment";
 
 const Bookings = () => {
   const navigate = useNavigate();
@@ -37,6 +39,12 @@ const Bookings = () => {
     isOpen: isOpen2,
     onOpen: onOpen2,
     onOpenChange: onOpenChange2,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpen3,
+    onOpen: onOpen3,
+    onOpenChange: onOpenChange3,
   } = useDisclosure();
 
   const { t } = useTranslation();
@@ -133,14 +141,27 @@ const Bookings = () => {
             ) : (
               data?.active?.length > 0 && (
                 <div className={css.card}>
-                  <div className="absolute top-3 md:top-4 right-3 text-default-500 text-xs font-normal flex items-center gap-2">
+                  {/* <div className="absolute top-3 md:top-4 right-3 text-default-500 text-xs font-normal flex items-center gap-2">
                     {data?.active[0]?.payment_method?.code == "card" ? (
                       <FaCreditCard />
                     ) : (
                       <IoWallet />
                     )}
                     <span>{data?.active[0]?.payment_method?.name}</span>
-                  </div>
+                  </div> */}
+
+                  {/* More Information Icon  */}
+                  <Tooltip title="Appointment Details" placement="right">
+                    <div
+                      onClick={() => {
+                        setClickedBooking(data?.active[0]);
+                        onOpen3();
+                      }}
+                      className="w-10 h-10 rounded-full hover:bg-default-100 absolute top-3 md:top-1 cursor-pointer right-2 text-2xl text-[#13D3B3] font-normal flex items-center justify-center"
+                    >
+                      <IoMdInformationCircleOutline />
+                    </div>
+                  </Tooltip>
                   <div className={css.details}>
                     <Avatar
                       icon={<LuUser2 fontSize={22} />}
@@ -188,7 +209,7 @@ const Bookings = () => {
 
             {/* Show Empty Card when no data  */}
             {!isLoading && data?.active?.length === 0 && (
-              <div className="flex gap-2 items-center h-[139px] border rounded-lg justify-center">
+              <div className="flex gap-2 items-center h-[139px] border rounded-lg justify-center px-4">
                 <Empty
                   description={false}
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -273,14 +294,18 @@ const Bookings = () => {
                         : data?.upComing[0]?.service?.name}
                     </p>
                     <Button
-                      isLoading={isLoadingActivateBooking}
+                      isLoading={
+                        clickedBooking === data?.upComing[0]?.id &&
+                        isLoadingActivateBooking
+                      }
                       size="sm"
                       className="w-24 h-8 text-sm"
                       color="primary"
                       variant="ghost"
-                      onClick={() =>
-                        handleActivateBooking(data?.upComing[0]?.id)
-                      }
+                      onClick={() => {
+                        setClickedBooking(data?.upComing[0]?.id);
+                        handleActivateBooking(data?.upComing[0]?.id);
+                      }}
                     >
                       Activate
                     </Button>
@@ -291,7 +316,7 @@ const Bookings = () => {
 
             {/* Show Empty Card when no data  */}
             {!isLoading && data?.upComing?.length === 0 && (
-              <div className="w-full flex gap-2 items-center h-[139px] border rounded-lg justify-center">
+              <div className="w-full flex gap-2 items-center h-[139px] border rounded-lg justify-center px-4">
                 <Empty
                   description={false}
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -315,6 +340,7 @@ const Bookings = () => {
           handleMarkAsCompleteBooking={handleMarkAsCompleteBooking}
           isLoadingCompleteBooking={isLoadingCompleteBooking}
           clickedBooking={clickedBooking}
+          setClickedBooking={setClickedBooking}
         />
 
         {/* Filter Modal  */}
@@ -333,6 +359,15 @@ const Bookings = () => {
         isOpen={isOpen2}
         onOpenChange={onOpenChange2}
         bookings={data?.active}
+        handleMarkAsCompleteBooking={handleMarkAsCompleteBooking}
+        isLoadingCompleteBooking={isLoadingCompleteBooking}
+      />
+
+      {/* View Active Booking Details Modal  */}
+      <ViewActiveAppointment
+        isOpen={isOpen3}
+        onOpenChange={onOpenChange3}
+        data={clickedBooking}
       />
     </>
   );

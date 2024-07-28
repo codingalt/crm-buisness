@@ -7,19 +7,64 @@ import moment from "moment";
 import { Button } from "@nextui-org/react";
 import { truncateText } from "@/utils/helpers/helpers";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import { useApiErrorHandling } from "@/hooks/useApiErrors";
+import {
+  useActivateBookingMutation,
+  useMarkAsCompleteBookingMutation,
+} from "@/services/api/bookingsApi/bookingsApi";
+import { toastSuccess } from "../Toast/Toast";
 
 const BookingsTable = ({
   setIsModal,
   data,
   isLoading,
-  handleActivateBooking,
-  isLoadingActivateBooking,
-  handleMarkAsCompleteBooking,
-  isLoadingCompleteBooking,
   clickedBooking,
+  setClickedBooking,
 }) => {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const [hours, setHours] = useState();
+
+  // Activate Booking
+  const [activateBooking, res1] = useActivateBookingMutation();
+  const {
+    isLoading: isLoadingActivateBooking,
+    isSuccess: isSuccessActivateBooking,
+    error: activateBookingError,
+  } = res1;
+
+  const handleActivateBooking = async (id) => {
+    setClickedBooking(id);
+    await activateBooking(id);
+  };
+
+  useEffect(() => {
+    if (isSuccessActivateBooking) {
+      toastSuccess("Booking Activated.");
+    }
+  }, [isSuccessActivateBooking]);
+
+  const apiErrors1 = useApiErrorHandling(activateBookingError);
+
+  // Mark as Complete Booking
+  const [markASComplete, res2] = useMarkAsCompleteBookingMutation();
+  const {
+    isLoading: isLoadingCompleteBooking,
+    isSuccess: isSuccessCompleteBooking,
+    error: completeBookingError,
+  } = res2;
+
+  const handleMarkAsCompleteBooking = async (id) => {
+    setClickedBooking(id);
+    await markASComplete(id);
+  };
+
+  useEffect(() => {
+    if (isSuccessCompleteBooking) {
+      toastSuccess("Booking Activated.");
+    }
+  }, [isSuccessCompleteBooking]);
+
+  const apiErrors2 = useApiErrorHandling(completeBookingError);
 
   useEffect(() => {
     const hoursTemp = [];
@@ -108,11 +153,11 @@ const BookingsTable = ({
                       {moment(item?.appointment_date).format("MMMM D, h:mm a")}
                     </div>
                     <div
-                      className={`${css.item} flex text-nowrap items-center gap-1`}
+                      className={`${css.item} flex flex-col xl:flex-row xl:text-nowrap items-center gap-0 xl:gap-1`}
                     >
                       <span>{item.price} Nis</span>
                       <span className="text-tiny text-[#01ab8e]">
-                        | {item.payment_method?.name}
+                       <span className="hidden xl:inline-block">|</span> {item.payment_method?.name}
                       </span>
                     </div>
                     <div className={css.item}>

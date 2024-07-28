@@ -14,8 +14,14 @@ import moment from "moment";
 import { DirectionContext } from "@/context/DirectionContext";
 import { FaCreditCard } from "react-icons/fa";
 import { IoWallet } from "react-icons/io5";
+import { MdOutlineDone } from "react-icons/md";
 
-const ActiveBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
+const ActiveBookingsModal = ({
+  isOpen,
+  onOpenChange,
+  bookings,
+  handleMarkAsCompleteBooking,
+}) => {
   const { direction } = useContext(DirectionContext);
 
   return (
@@ -50,13 +56,14 @@ const ActiveBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
                   </div>
                 </div>
               </ModalHeader>
+
               <ModalBody className="min-h-56">
                 <div className="w-full gap-5 grid grid-cols-1 md:grid-cols-2">
                   {bookings?.slice(1).map((item) => (
                     <div
                       key={item.id}
                       className={css.card}
-                      style={{ backgroundColor: "#ECF3F9" }}
+                      style={{ backgroundColor: "#fdf3f1" }}
                     >
                       <div className="absolute top-3 md:top-4 right-3 text-default-500 text-xs font-normal flex items-center gap-2">
                         {item?.payment_method?.code == "card" ? (
@@ -96,11 +103,14 @@ const ActiveBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
                         </p>
                         <Button
                           size="sm"
-                          className="w-24 h-8 text-sm"
-                          color="primary"
+                          className="w-24 h-8 text-sm border-[#01AB8E] text-[#01AB8E] hover:bg-[#01AB8E]"
                           variant="ghost"
+                          startContent={<MdOutlineDone fontSize={30} />}
+                          onClick={() =>
+                            handleMarkAsCompleteBooking(item?.id)
+                          }
                         >
-                          Activate
+                          Complete
                         </Button>
                       </div>
                     </div>

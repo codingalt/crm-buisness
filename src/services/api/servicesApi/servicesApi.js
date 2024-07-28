@@ -16,27 +16,45 @@ export const servicesApi = createApi({
   endpoints: (builder) => ({
     getServiceCategories: builder.query({
       query: () => `customer/categories`,
-      // providesTags: ["Services"],
     }),
 
     getServiceSubCategories: builder.query({
       query: (id) => `customer/category/${id}`,
-      // providesTags: ["Services"],
     }),
 
     getServiceTags: builder.query({
       query: () => `customer/tags`,
-      // providesTags: ["Services"],
     }),
 
     getEmployees: builder.query({
       query: () => `business/employees`,
-      // providesTags: ["Services"],
     }),
 
     getServices: builder.query({
       query: () => `business/services`,
       providesTags: ["Services"],
+    }),
+
+    getEditService: builder.query({
+      query: (serviceId) => `business/services/${serviceId}/edit`,
+      providesTags: ["Services"],
+    }),
+
+    updateService: builder.mutation({
+      query: ({ data, serviceId }) => ({
+        url: `business/services/${serviceId}?_method=PUT`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Services"],
+    }),
+
+    deleteService: builder.mutation({
+      query: (serviceId) => ({
+        url: `business/services/${serviceId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Services"],
     }),
 
     addService: builder.mutation({
@@ -56,5 +74,8 @@ export const {
   useGetEmployeesQuery,
   useGetServiceSubCategoriesQuery,
   useAddServiceMutation,
-  useGetServicesQuery
+  useGetServicesQuery,
+  useGetEditServiceQuery,
+  useUpdateServiceMutation,
+  useDeleteServiceMutation
 } = servicesApi;

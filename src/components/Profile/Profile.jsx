@@ -163,7 +163,7 @@ export const Profile = () => {
           </div>
         )}
       </div>
-      <p className="text-default-600 mt-1 text-center md:text-start">{data?.email}</p>
+      <p className={`${css.emailText} text-default-600 mt-1 text-center md:text-start`}>{data?.email}</p>
 
       {isLoading ? (
         <div className="h-[75%] w-full flex items-center justify-center">
@@ -190,7 +190,7 @@ export const Profile = () => {
                           name="name"
                           id="name"
                           value={values.name}
-                          placeholder="Arya Stark"
+                          placeholder="Business name"
                           className={
                             errors.name && touched.name && "inputBottomBorder"
                           }
@@ -240,7 +240,7 @@ export const Profile = () => {
                           name="address"
                           id="address"
                           value={values.address}
-                          placeholder="Northern Bypass bossan road gulgasht, Multan"
+                          placeholder="Business address"
                           className={
                             errors.address &&
                             touched.address &&
@@ -267,7 +267,7 @@ export const Profile = () => {
                           name="description"
                           id="description"
                           value={values.description}
-                          placeholder="This is a test description for the test"
+                          placeholder="Business description"
                           className={
                             errors.description &&
                             touched.description &&

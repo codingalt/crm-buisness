@@ -54,7 +54,12 @@ const Services = ({ selectedService, setSelectedService,data,isLoading }) => {
               }
             >
               <div className={css.image}>
-                <ImagePlaceholder src={item.image} radius={"50%"} />
+                <ImagePlaceholder
+                  src={
+                    import.meta.env.VITE_SERVICE_IMAGE + item.image
+                  }
+                  radius={"50%"}
+                />
               </div>
               <p>{item.name}</p>
             </div>

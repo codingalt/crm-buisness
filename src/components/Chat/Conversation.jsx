@@ -29,7 +29,7 @@ const Conversation = ({ chat, chatId, handleChatMob }) => {
             className="py-1.5 mb-[14px] bg-[#ECFAFE] w-fit px-2.5 rounded-full text-[#989898] text-[10px] font-medium"
           >
             Assigned to{" "}
-            <span className="text-[#1F84A3] font-medium ml-[3px]">
+            <span className="text-[#1F84A3] font-medium ml-[3px] leading-3">
               {truncateText(
                 chat.assigned_to.employee.user.name,
                 isSmallDevice ? 16 : isMediumDevice || isLargeDevice ? 6 : 18

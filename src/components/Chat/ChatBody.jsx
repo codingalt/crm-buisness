@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import InputEmoji from "react-input-emoji";
 import * as fi from "react-icons/fi";
 import noChat from "@/assets/nochat.png";
-import ScrollableFeed from "react-scrollable-feed";
 import css from "./chat.module.scss";
 import "./emoji.scss";
 import { useSelector } from "react-redux";
@@ -15,6 +14,13 @@ import FileUploader from "./FileUploader";
 import { FaFileAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Image } from "@nextui-org/react";
+import { saveAs } from "file-saver";
+import axios from "axios";
+
+const getFileExtension = (url) => {
+  const parts = url.split(".");
+  return parts.length > 1 ? parts.pop() : "";
+};
 
 const ChatBody = ({
   messages,
@@ -35,7 +41,6 @@ const ChatBody = ({
   const { user } = useSelector((state) => state.auth);
   const inputRef = useRef();
   const lastMessageRef = useRef();
-  const [sources, setSources] = useState(null);
 
   const { direction } = useContext(DirectionContext);
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
@@ -60,17 +65,31 @@ const ChatBody = ({
   const chatContainerRef = useRef(null);
 
   const scrollToBottom = () => {
-    if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
+    setTimeout(() => {
+      if (lastMessageRef.current) {
+        lastMessageRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
+      }
+    }, 100);
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages, selectedChat]);
+
+  const saveFile = (link) => {
+    const extension = getFileExtension(link);
+
+    axios
+      .get(link, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        saveAs(res.data, `Document.${extension}`);
+      });
+  };
 
   return (
     <>
@@ -89,7 +108,7 @@ const ChatBody = ({
                   message.files && message.files.length > 0 ? "row" : undefined,
                 gap: message.files && message.files.length > 0 ? 0 : undefined,
                 zIndex: 30,
-                paddingBottom: index === messages.length - 1 && "23px",
+                paddingBottom: index === messages.length - 1 && "0px",
               }}
               ref={index === messages.length - 1 ? lastMessageRef : null}
             >
@@ -155,25 +174,18 @@ const ChatBody = ({
                         paddingRight: 0,
                       }}
                     >
-                      <div className="w-full mt-1 min-h-52 min-w-52 flex flex-wrap flex-col items-center justify-end gap-x-3 gap-y-4">
+                      <div className="w-full mt-1 min-w-52 flex flex-wrap flex-col items-center justify-end gap-x-3 gap-y-4">
                         {message?.files?.map((file, index) => (
                           <div key={index} className="w-full h-full">
                             {file.type.startsWith("image/") ? (
-                              <div className="w-full cursor-zoom-in z-0 h-full rounded-xl flex items-center justify-center object-cover">
+                              <div className="w-full cursor-zoom-in min-h-52 z-0 h-full rounded-xl flex items-center justify-center object-cover">
                                 <Image
                                   src={file.src}
                                   alt={file.name}
                                   className="object-cover align-middle w-full rounded-xl z-0"
                                   loading="lazy"
-                                  onClick={() =>
-                                    setIsOpenMediaModal(file)
-                                  }
+                                  onClick={() => setIsOpenMediaModal(file)}
                                 />
-                                {/* <ViewMediaGallery file={file} /> */}
-                                {/* <ViewMediaGallery
-                                  galleryID="my-test-gallery"
-                                  file={file}
-                                /> */}
                               </div>
                             ) : file.type.startsWith("video/") ? (
                               <div className="w-full md:h-full rounded-xl flex items-center justify-center">
@@ -186,9 +198,10 @@ const ChatBody = ({
                               </div>
                             ) : (
                               <Link
-                                to={file.src}
-                                target="_blank"
-                                download={file.src}
+                                to={"#"}
+                                // target="_blank"
+                                // download={file.src}
+                                onClick={() => saveFile(file.src)}
                               >
                                 <div className="w-full max-w-sm flex items-center gap-x-3 py-2.5 px-4 pr-6 rounded-xl shadow border bg-slate-50 text-default-800 hover:text-blue-600 transition-all">
                                   <div className="w-12 h-12 bg-blue-500 text-2xl flex items-center justify-center rounded-xl">

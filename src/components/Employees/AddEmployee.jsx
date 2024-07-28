@@ -33,6 +33,8 @@ const AddEmployee = () => {
 
   const [checkedRoles, setCheckedRoles] = useState([]);
 
+  console.log(checkedRoles);
+
   // Get Employee Roles
   const { data: roles, isLoading: isLoadingRoles } = useGetEmployeeRolesQuery();
 
@@ -48,18 +50,20 @@ const AddEmployee = () => {
   const apiErrors = useApiErrorHandling(error);
 
   const handleSubmit = async (values, { resetForm }) => {
-    console.log(values);
 
-    await addEmployee({
+    const { data } = await addEmployee({
       name: values.name,
       contact: values.contact,
       email: values.email,
       roles: checkedRoles,
     });
 
-    resetForm({
-      values: initialValues,
-    });
+    if (data && data.success) {
+      resetForm({
+        values: initialValues,
+      });
+      setCheckedRoles([]);
+    }
   };
 
   const handleChange = (e, setFieldValue) => {
@@ -191,7 +195,7 @@ const AddEmployee = () => {
                       <Skeleton width={280} height={28} className="mb-2" />
                     </div>
                   ) : (
-                    roles?.roles?.map((item) => (
+                    roles?.roles?.map((item, index) => (
                       <Checkbox
                         key={item.id}
                         onValueChange={() => handleCheckedRoles(item.id)}
