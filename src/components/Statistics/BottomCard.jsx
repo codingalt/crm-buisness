@@ -1,64 +1,65 @@
 import React from "react";
 import css from "./Statistics.module.scss";
 import { ScaleLoader } from "react-spinners";
+import { Button } from "@nextui-org/react";
+import { IoMdRefresh } from "react-icons/io";
 
-const BottomCard = ({ data, index, isInitialized }) => {
+const BottomCard = ({
+  data,
+  index,
+  isInitialized,
+  error,
+  refetch,
+  isLoading,
+}) => {
   return (
     <>
       {/* First Main Card  */}
-      <>
-        <h3>{data?.heading}</h3>
-        <span>{data?.subHeading}</span>
-        <div className={css.line}></div>
-        <div className={css.value}>
-          {!isInitialized ? (
-            <div className="py-[1px]">
-              <ScaleLoader
-                color="#555"
-                height={18}
-                width={3}
-                speedMultiplier={0.75}
-              />
-            </div>
-          ) : (
-            <p
-              style={index === 0 ? { fontSize: "20px", fontWeight: "600" } : {}}
+      <h3>{data?.heading}</h3>
+      <span>{data?.subHeading}</span>
+      <div className={css.line}></div>
+      <div className={css.value}>
+        {!error && !isInitialized ? (
+          <div className="py-[1px]">
+            <ScaleLoader
+              color="#555"
+              height={18}
+              width={3}
+              speedMultiplier={0.75}
+            />
+          </div>
+        ) : (
+          <p style={index === 0 ? { fontSize: "20px", fontWeight: "600" } : {}}>
+            {data?.value}
+          </p>
+        )}
+
+        {/* Show Error If data failed to load  */}
+        {!isLoading && error && (
+          <div className="flex">
+            <Button
+              startContent={<IoMdRefresh />}
+              variant="ghost"
+              size="sm"
+              onClick={refetch}
             >
-              {data?.value}
-            </p>
-          )}
-        </div>
-      </>
-
-      {/* Second Main Card  */}
-      {/* <div className={css.cardBottom}>
-        <div className={css.subCard}>
-          <h3>Best Turn </h3>
-          <span>Sold</span>
-          <div className={css.line}></div>
-          <div className={css.value}>
-            <p>Queue Description</p>
+              Try Again
+            </Button>
           </div>
-        </div>
+        )}
 
-        <div className={css.subCard}>
-          <h3>The Fast Queue</h3>
-          <span>Most</span>
-          <div className={css.line}></div>
-          <div className={css.value}>
-            <p>Queue Description</p>
+        {/* Error and Loader for try again  */}
+        {error && isLoading && (
+          <div className="py-[1px]">
+            <ScaleLoader
+              color="#555"
+              height={18}
+              width={3}
+              speedMultiplier={0.75}
+            />
           </div>
-        </div>
-
-        <div className={css.subCard}>
-          <h3>The Space Queue</h3>
-          <span>Most</span>
-          <div className={css.line}></div>
-          <div className={css.value}>
-            <p>Queue Description</p>
-          </div>
-        </div>
-      </div> */}
+        )}
+      </div>
     </>
   );
 };

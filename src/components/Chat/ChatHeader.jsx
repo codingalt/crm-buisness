@@ -5,8 +5,10 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import Avvvatars from "avvvatars-react";
 import { LuUserPlus2 } from "react-icons/lu";
 import { Tooltip } from "@nextui-org/react";
+import { useTranslation } from "react-i18next";
 
 const ChatHeader = ({ selectedChat, activeChatMob, handleChatMob, onOpen }) => {
+  const {t} = useTranslation()
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
   return (
@@ -46,19 +48,21 @@ const ChatHeader = ({ selectedChat, activeChatMob, handleChatMob, onOpen }) => {
           </div>
           <div className={css.chatProfile}>
             <div className={css.name}>{selectedChat?.customer?.name}</div>
-            <div className={css.onlineStatus}>Online</div>
+            {/* <div className={css.onlineStatus}>
+              {selectedChat?.customer?.email}
+            </div> */}
           </div>
 
           {/* Assign Chat to Employee Icon  */}
           {selectedChat.assigned_to ? (
             <div className="hidden absolute right-3 top-1/2 ml-auto transform -translate-y-1/2 md:flex items-center justify-center px-3 py-1 text-[#989898] text-[12px] font-medium bg-[#ECFAFE] rounded-full">
-              Assigned to{" "}
+              {t("assignedTo")}{" "}
               <span className="text-[#1F84A3] font-medium ml-[3px]">
                 {selectedChat.assigned_to.employee.user.name}
               </span>
             </div>
           ) : (
-            <Tooltip size="sm" content="Assign chat to employee">
+            <Tooltip size="sm" content={t("assignChatToEmployees")}>
               <div
                 onClick={onOpen}
                 className="absolute -right-1 md:right-1 top-1/2 text-default-700 text-[20px] md:text-[21px] cursor-pointer w-9 h-9 md:w-10 md:h-10 transform -translate-x-1/2 -translate-y-1/2 border flex items-center justify-center hover:bg-default-100 rounded-full transition-all"

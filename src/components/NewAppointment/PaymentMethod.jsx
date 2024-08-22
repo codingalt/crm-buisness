@@ -64,13 +64,13 @@ const PaymentMethod = ({ paymentMethod, setPaymentMethod,isLoading, refetch,erro
           <div className="flex flex-col gap-2 justify-center items-center mx-auto">
             <MdErrorOutline className="text-[#01ABAB] text-[35px]" />
             <p className="text-medium text-default-900 font-medium">
-              Failed to fetch payment methods
+              {t("failedToFetchPaymentMethods")}
             </p>
             <Button
               className="bg-[#01ABAB] text-white mt-4"
               onClick={() => refetch()}
             >
-              Try again
+              {t("tryAgain")}
             </Button>
           </div>
         )}

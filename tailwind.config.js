@@ -10,5 +10,28 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [nextui()],
+  plugins: [
+    nextui({
+      themes: {
+        light: {
+          layout: {},
+          colors: {
+            primary: {
+              DEFAULT: "#01ab8e",
+              foreground: "#FFFFFF",
+            },
+          },
+        },
+        dark: {
+          layout: {},
+          colors: {
+            primary: {
+              DEFAULT: "#01ab8e",
+              foreground: "#FFFFFF",
+            },
+          },
+        },
+      },
+    }),
+  ],
 };

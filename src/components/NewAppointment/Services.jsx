@@ -3,10 +3,16 @@ import css from "./NewAppointment.module.scss";
 import { useGetServicesQuery } from "@/services/api/servicesApi/servicesApi";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import ImagePlaceholder from "../ui/Image/ImagePlaceholder";
-import { Skeleton } from "@nextui-org/react";
+import { Button, Skeleton } from "@nextui-org/react";
+import { Empty } from "antd";
+import { FaPlus } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const Services = ({ selectedService, setSelectedService,data,isLoading }) => {
+const Services = ({ selectedService, setSelectedService, data, isLoading }) => {
+  const {t} = useTranslation();
   const [value, setValue] = useState(0);
+  const navigate = useNavigate();
 
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const isMediumDevice = useMediaQuery(
@@ -55,15 +61,37 @@ const Services = ({ selectedService, setSelectedService,data,isLoading }) => {
             >
               <div className={css.image}>
                 <ImagePlaceholder
-                  src={
-                    import.meta.env.VITE_SERVICE_IMAGE + item.image
-                  }
+                  src={import.meta.env.VITE_SERVICE_IMAGE + item.image}
                   radius={"50%"}
                 />
               </div>
               <p>{item.name}</p>
             </div>
           ))}
+
+      {/* No Data Message  */}
+      {!isLoading && data?.services?.length === 0 && (
+        <div className="w-full py-4 flex gap-3 items-center justify-center">
+          <Empty
+            description={
+              <span className="inline-block text-xs max-w-[170px] text-center">
+                {t("noServiceCreated")}
+              </span>
+            }
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          >
+            <Button
+              size="sm"
+              className="border-[#01AB8E] text-[#01AB8E]"
+              variant="bordered"
+              startContent={<FaPlus />}
+              onClick={() => navigate("/newService")}
+            >
+              {t("createNow")}
+            </Button>
+          </Empty>
+        </div>
+      )}
     </div>
   );
 };

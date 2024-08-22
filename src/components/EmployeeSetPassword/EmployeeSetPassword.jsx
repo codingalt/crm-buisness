@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import css from "./EmployeeSetPassword.module.scss";
 import { HiMiniRocketLaunch } from "react-icons/hi2";
-import ImageComponent from "../ui/Image/ImagePostsComponent";
 import passwordSvg from "@/assets/p1.svg";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input, Snippet } from "@nextui-org/react";
 import { setEmployeePasswordSchema } from "@/utils/validations/EmployeesValidation";
 import { useLocation } from "react-router-dom";
 import ClipSpinner from "../Loader/ClipSpinner";
-import { useAcceptInvitationMutation, useValidateInvitationMutation } from "@/services/api/employeesApi/employeesApi";
+import {
+  useAcceptInvitationMutation,
+  useValidateInvitationMutation,
+} from "@/services/api/employeesApi/employeesApi";
 import SuccessModal from "./SuccessModal";
 import { useApiErrorHandling } from "@/hooks/useApiErrors";
 import { toastError } from "../Toast/Toast";
+import { useTranslation } from "react-i18next";
 
 const EmployeeSetPassword = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get("token");
@@ -26,18 +30,26 @@ const EmployeeSetPassword = () => {
     confirmPass: "",
   };
 
-  // Validate Invitation 
+  // Validate Invitation
   const [validateInvitation, res] = useValidateInvitationMutation();
   const { isLoading, error, isSuccess } = res;
 
-  // Accept Invitation 
+  // Accept Invitation
   const [acceptInvitation, res2] = useAcceptInvitationMutation();
-  const { isLoading: isLoadingAccept, error: errorAccept, isSuccess: successAccept } = res2;
+  const {
+    isLoading: isLoadingAccept,
+    error: errorAccept,
+    isSuccess: successAccept,
+  } = res2;
 
   const apiErrors = useApiErrorHandling(errorAccept);
 
   useEffect(() => {
-    if (errorAccept && errorAccept.status !== 500 && errorAccept.status != "FETCH_ERROR") {
+    if (
+      errorAccept &&
+      errorAccept.status !== 500 &&
+      errorAccept.status != "FETCH_ERROR"
+    ) {
       toastError(
         errorAccept?.data?.message
           ? errorAccept?.data?.message
@@ -46,18 +58,18 @@ const EmployeeSetPassword = () => {
     }
   }, [errorAccept]);
 
-  const handleValidateToken = async() =>{
-      await validateInvitation({
-        id: id,
-        invitation_token: token,
-      });
-  }
+  const handleValidateToken = async () => {
+    await validateInvitation({
+      id: id,
+      invitation_token: token,
+    });
+  };
 
-  useEffect(()=>{
-    if(token && id){
+  useEffect(() => {
+    if (token && id) {
       handleValidateToken();
     }
-  },[token,id]);
+  }, [token, id]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -66,8 +78,12 @@ const EmployeeSetPassword = () => {
   }, [isSuccess]);
 
   const handleSubmit = async (values, { resetForm }) => {
-
-    await acceptInvitation({ id: id, invitation_token: token,email: email, password: values.password });
+    await acceptInvitation({
+      id: id,
+      invitation_token: token,
+      email: email,
+      password: values.password,
+    });
 
     resetForm({
       values: initialValues,
@@ -90,9 +106,11 @@ const EmployeeSetPassword = () => {
   if (!isLoading && error) {
     return (
       <div className="w-full h-screen overflow-hidden flex flex-col gap-y-2 items-center justify-center">
-        <h3 className="text-3xl font-bold text-center text-red-500">Link Expired.</h3>
-        <p className="text-default-600 font-medium text-sm max-w-[95%] md:max-w-[80%] mx-auto mt-2 text-center">
-          Please contact your business manager to Re invite you.
+        <Snippet hideCopyButton color="danger" className="px-6 py-3 font-medium" radius="sm" hideSymbol>
+          {t("linkExpired")}
+        </Snippet>
+        <p className="text-default-600 font-medium text-sm max-w-[80%] md:max-w-[80%] mx-auto mt-2 text-center">
+          {t("contactBusinessManager")}
         </p>
       </div>
     );
@@ -106,11 +124,11 @@ const EmployeeSetPassword = () => {
       {show && !isLoading && (
         <div className={css.wrapper}>
           <header className="flex justify-center items-center w-full h-12 bg-[#01ab8e] text-white text-tiny md:text-sm font-medium space-x-2">
-            <span>Setup your password on our platform to continue.</span>
+            <span>{t("setupPassword")}</span>
             <HiMiniRocketLaunch className="text-red-400 text-sm md:text-medium" />
           </header>
-          <div className="w-full h-screen overflow-hidden px-7 md:px-0 mt-10 pb-6 md:pb-0 md:mt-0 flex flex-col md:flex-row max-w-screen-2xl mx-auto scrollbar-hide">
-            <div className="flex-1 flex justify-center items-center scrollbar-hide">
+          <div className="w-full min-h-[calc(100vh-48px)] overflow-hidden px-7 md:px-10 xl:px-0 mt-10 pb-10 md:pb-0 md:mt-0 flex flex-col gap-8 md:gap-0 md:flex-row max-w-screen-2xl mx-auto scrollbar-hide">
+            <div className="flex-1 shrink flex justify-center items-center scrollbar-hide">
               <Formik
                 initialValues={initialValues}
                 validationSchema={setEmployeePasswordSchema}
@@ -118,16 +136,15 @@ const EmployeeSetPassword = () => {
               >
                 {({ errors, setFieldValue, touched, values }) => (
                   <Form>
-                    <h3 className="text-2xl text-[#01ab8e] font-bold text-center">
-                      Setup your Password
+                    <h3 className="text-xl md:text-2xl text-[#01ab8e] font-bold text-center">
+                      {t("setupYourPassword")}
                     </h3>
-                    <p className="text-default-500 font-medium text-sm max-w-[95%] md:max-w-[80%] mx-auto mt-3 text-center">
-                      This password will be used to login your account on our
-                      platform.
+                    <p className="text-default-500 font-medium text-xs md:mb-10 md:text-sm max-w-[95%] md:max-w-[80%] mx-auto mt-3 text-center">
+                      {t("passwordDescription")}
                     </p>
 
                     <div className={css.inputContainer}>
-                      <label htmlFor="password">Email</label>
+                      <label htmlFor="email">{t("email")}</label>
                       <div className={css.input}>
                         <Input
                           type="email"
@@ -135,12 +152,14 @@ const EmployeeSetPassword = () => {
                           disabled
                           readOnly
                           size="lg"
+                          radius="sm"
+                          className="mb-0"
                         />
                       </div>
                     </div>
 
                     <div className={css.inputContainer}>
-                      <label htmlFor="password">New Password</label>
+                      <label htmlFor="password">{t("newPassword")}</label>
                       <div className={css.input}>
                         <Input
                           type="password"
@@ -148,7 +167,8 @@ const EmployeeSetPassword = () => {
                           name="password"
                           id="password"
                           size="lg"
-                          placeholder="Enter your password"
+                          radius="sm"
+                          placeholder={t("enterPassword")}
                           onChange={(e) => handleChange(e, setFieldValue)}
                         />
                       </div>
@@ -160,7 +180,9 @@ const EmployeeSetPassword = () => {
                     </div>
 
                     <div className={css.inputContainer}>
-                      <label htmlFor="confirmPass">Confirm Password</label>
+                      <label htmlFor="confirmPass">
+                        {t("confirmPassword")}
+                      </label>
                       <div className={css.input}>
                         <Input
                           type="password"
@@ -168,7 +190,8 @@ const EmployeeSetPassword = () => {
                           name="confirmPass"
                           id="confirmPass"
                           size="lg"
-                          placeholder="Confirm password"
+                          radius="sm"
+                          placeholder={t("confirmPassword")}
                           onChange={(e) => handleChange(e, setFieldValue)}
                         />
                       </div>
@@ -180,14 +203,14 @@ const EmployeeSetPassword = () => {
                     </div>
 
                     <Button isLoading={isLoadingAccept} type="submit">
-                      Submit
+                      {t("submit")}
                     </Button>
                   </Form>
                 )}
               </Formik>
             </div>
-            <div className="flex-1 w-full flex justify-center items-center">
-              <div className="w-[80%] flex justify-center items-center">
+            <div className="flex-1 shrink-0 w-full flex justify-center items-center">
+              <div className="w-[80%] max-w-xl flex justify-center items-center">
                 <img className="w-full" src={passwordSvg} alt="Password svg" />
               </div>
             </div>

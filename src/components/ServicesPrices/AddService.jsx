@@ -31,8 +31,8 @@ import { toastError, toastSuccess } from "../Toast/Toast";
 import { useApiErrorHandling } from "../../hooks/useApiErrors";
 import { DirectionContext } from "@/context/DirectionContext";
 import { FiUploadCloud } from "react-icons/fi";
-import { RiVerifiedBadgeFill } from "react-icons/ri";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import { useTranslation } from "react-i18next";
 
 const genderData = [
   { id: 0, name: "General" },
@@ -42,6 +42,8 @@ const genderData = [
 ];
 
 const AddService = () => {
+  const {t} = useTranslation();
+
   const initialValues = {
     name: "",
     category: "",
@@ -93,7 +95,7 @@ const AddService = () => {
 
   useMemo(() => {
     if (isSuccess) {
-      toastSuccess("Service added successfully");
+      toastSuccess(t("serviceAddedSuccessfully"));
     }
   }, [isSuccess]);
 
@@ -170,7 +172,7 @@ const AddService = () => {
       let img = e.target.files[0];
       if (img.size > 2 * 1024 * 1024) {
         // 2MB in bytes
-        toastError("File size exceeds 2MB. Please upload a smaller file.");
+        toastError(t("fileSizeExceeds"));
         return;
       }
       setImage({
@@ -185,7 +187,7 @@ const AddService = () => {
   return (
     <div className={`${css.addService} max-w-screen-lg`}>
       <div className={css.heading}>
-        <p>Adding a new service</p>
+        <p>{t("addingNewService")}</p>
       </div>
 
       {/* Display Errors  */}
@@ -200,16 +202,16 @@ const AddService = () => {
           <Form>
             <div className="w-full mb-8 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
               <div className={css.inputContainer}>
-                <label htmlFor="name">Service Name</label>
+                <label htmlFor="name">{t("serviceName")}</label>
                 <div className={css.input}>
                   <Input
                     type="text"
                     name="name"
                     id="name"
-                    value={values.name}
+                    value={values.name || ""}
                     isRequired
                     variant="underlined"
-                    placeholder="Enter Queue name"
+                    placeholder={t("enterServiceName")}
                     dir={direction}
                     startContent={
                       <BiSolidPencil className="text-[25px] text-[#01AB8E] mr-2 pointer-events-none flex-shrink-0" />
@@ -228,7 +230,9 @@ const AddService = () => {
               </div>
 
               <div className={css.inputContainer}>
-                <label htmlFor="employeeName">Service Giver Employees</label>
+                <label htmlFor="employeeName">
+                  {t("serviceGiverEmployees")}
+                </label>
                 <div className={css.input}>
                   {isLoadingEmployees || errorEmployees ? (
                     <Skeleton className="h-10 w-full rounded-lg" />
@@ -241,7 +245,7 @@ const AddService = () => {
                       selectionMode="multiple"
                       name="employeeName"
                       id="employeeName"
-                      placeholder="Select Employee"
+                      placeholder={t("selectEmployees")}
                       dir={direction}
                       labelPlacement="outside"
                       selectedKeys={selectedEmployees}
@@ -302,7 +306,7 @@ const AddService = () => {
 
             <div className="w-full mb-8 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
               <div className={css.inputContainer}>
-                <label htmlFor="category">Category</label>
+                <label htmlFor="category">{t("category")}</label>
                 <div className={css.input}>
                   {isLoadingCategories || errorCategorries ? (
                     <Skeleton className="h-10 w-full rounded-lg" />
@@ -310,7 +314,7 @@ const AddService = () => {
                     <Select
                       isRequired
                       variant="underlined"
-                      placeholder="Select Category"
+                      placeholder={t("selectCategory")}
                       name="category"
                       id="category"
                       selectedKeys={[selectedCategory]}
@@ -349,7 +353,7 @@ const AddService = () => {
               </div>
 
               <div className={css.inputContainer}>
-                <label htmlFor="subCategory">Sub Category</label>
+                <label htmlFor="subCategory">{t("subCategory")}</label>
                 <div className={css.input}>
                   {isLoadingSubCategories || errorSubCategories ? (
                     <Skeleton className="h-10 w-full rounded-lg" />
@@ -357,7 +361,7 @@ const AddService = () => {
                     <Select
                       isRequired
                       variant="underlined"
-                      placeholder="Select Sub Category"
+                      placeholder={t("selectSubCategory")}
                       name="subCategory"
                       id="subCategory"
                       selectedKeys={[values.subCategory]}
@@ -394,7 +398,7 @@ const AddService = () => {
 
             <div className="w-full mb-8 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
               <div className={css.inputContainer}>
-                <label htmlFor="tags">Select Tags</label>
+                <label htmlFor="tags">{t("selectTags")}</label>
                 <div className={css.input}>
                   {isLoadingTags || errorTags ? (
                     <Skeleton className="h-10 w-full rounded-lg" />
@@ -407,7 +411,7 @@ const AddService = () => {
                       selectionMode="multiple"
                       name="tags"
                       id="tags"
-                      placeholder="Select tags"
+                      placeholder={t("selectTags")}
                       labelPlacement="outside"
                       selectedKeys={selectedTags}
                       dir={direction}
@@ -464,7 +468,7 @@ const AddService = () => {
               </div>
 
               <div className={css.inputContainer}>
-                <label htmlFor="gender">Gender</label>
+                <label htmlFor="gender">{t("gender")}</label>
                 <div className={css.input}>
                   <Select
                     isRequired
@@ -472,7 +476,7 @@ const AddService = () => {
                     placeholder="Select gender"
                     name="gender"
                     id="gender"
-                    selectedKeys={[values.gender]}
+                    selectedKeys={values.gender ? [values.gender] : []}
                     startContent={
                       <RiUser3Fill className="text-[21px] text-[#01AB8E] mr-2 pointer-events-none flex-shrink-0" />
                     }
@@ -505,7 +509,7 @@ const AddService = () => {
 
             <div className="w-full mb-8 flex flex-col md:flex-row justify-between items-center gap-7 md:gap-16">
               <div className={css.inputContainer}>
-                <label htmlFor="time">Length of service</label>
+                <label htmlFor="time">{t("lengthOfService")}</label>
                 <div className={css.input}>
                   <Input
                     type="number"
@@ -513,9 +517,9 @@ const AddService = () => {
                     id="time"
                     isRequired
                     min={0}
-                    value={values.time}
+                    value={values.time || ""}
                     variant="underlined"
-                    placeholder="Enter service time in minutes Eg: 30"
+                    placeholder={t("enterServiceTime")}
                     dir={direction}
                     startContent={
                       <MdOutlineAccessTimeFilled className="text-[21px] text-[#01AB8E] mr-2 pointer-events-none flex-shrink-0" />
@@ -534,17 +538,17 @@ const AddService = () => {
               </div>
 
               <div className={css.inputContainer}>
-                <label htmlFor="price">Price</label>
+                <label htmlFor="price">{t("price")}</label>
                 <div className={css.input}>
                   <Input
                     type="number"
                     name="price"
                     id="price"
                     isRequired
-                    value={values.price}
+                    value={values.price || ""}
                     min={0}
                     variant="underlined"
-                    placeholder="Enter service price"
+                    placeholder={t("enterServicePrice")}
                     dir={direction}
                     startContent={
                       <IoWallet className="text-[21px] text-[#01AB8E] mr-2 pointer-events-none flex-shrink-0" />
@@ -568,7 +572,7 @@ const AddService = () => {
                 <div className={css.input}>
                   <div className="flex flex-col gap-2 w-full h-full max-w-xxl items-start justify-center">
                     <Slider
-                      label="Select age group"
+                      label={t("selectAgeGroup")}
                       step={1}
                       maxValue={100}
                       minValue={0}
@@ -576,11 +580,11 @@ const AddService = () => {
                       onChange={setAgeGroup}
                       className="max-w-xxl"
                       showTooltip={true}
-                      color="success"
+                      color="primary"
                       size="sm"
                     />
                     <p className="text-default-500 font-medium text-small">
-                      Selected age group:{" "}
+                      {t("selectedAgeGroup")}:{" "}
                       {Array.isArray(ageGroup) &&
                         ageGroup.map((b) => `${b}`).join(" – ")}
                     </p>
@@ -601,17 +605,15 @@ const AddService = () => {
                   <div className={css.profilePic}>
                     <div className={css.detail}>
                       <div className={css.left}>
-                        <h4>Choose Image</h4>
-                        <span>
-                          Select your service image to display on the platform.
-                        </span>
+                        <h4>{t("chooseImage")}</h4>
+                        <span>{t("selectServiceImage")}</span>
                       </div>
                       <div className={css.right}>
                         <div className={css.profilePreview}>
                           {image ? (
                             <img src={image.image} />
                           ) : (
-                            <p className="block">Image Preview</p>
+                            <p className="block">{t("imagePreview")}</p>
                           )}
                         </div>
                         <div
@@ -633,8 +635,8 @@ const AddService = () => {
                             <FiUploadCloud />
                           </div>
                           <p>
-                            <span>Click to upload</span>
-                            <span>SVG, PNG, JPG (max. 800x400px)</span>
+                            <span>{t("clickToUpload")}</span>
+                            <span>SVG, PNG, JPG (recommended. 300x250px)</span>
                             <ErrorMessage
                               name="image"
                               component="div"
@@ -659,20 +661,20 @@ const AddService = () => {
                   }}
                   isSelected={isParking}
                   size="sm"
-                  color="success"
+                  color="primary"
                   aria-label="Has Parking"
                   name="has_parking"
                   id="has_parking"
                   dir={direction}
                 >
-                  Has the service associated with parking?
+                  {t("parkingAssociation")}
                 </Switch>
               </div>
             </div>
 
             <div className={css.buttons}>
               <Button isLoading={isLoading} type="submit" dir={direction}>
-                Add Service
+                {t("addService")}
               </Button>
             </div>
           </Form>

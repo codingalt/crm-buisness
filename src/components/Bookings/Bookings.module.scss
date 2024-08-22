@@ -99,7 +99,7 @@
           p {
             font-size: 15px;
             font-weight: 400;
-            color: #a1aebf;
+            color: #7a8aa0;
           }
         }
       }
@@ -128,19 +128,19 @@
   //   Table
   .bookingsTable {
     width: 100%;
-    margin-top: 2.3rem;
+    margin-top: 3.5rem;
     padding-bottom: 4rem;
     position: relative;
 
     .hoursHeading {
       position: absolute;
       left: 10px;
-      top: 5.7rem;
+      top: 6.45rem;
       font-weight: 600;
     }
 
     h3 {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 600;
     }
 
@@ -153,6 +153,7 @@
         flex-direction: column;
         gap: 0.9rem;
         width: 90px;
+        margin-top: 2.42rem;
 
         .item {
           font-size: 15px;
@@ -166,12 +167,17 @@
           display: flex;
           align-items: center;
           justify-content: center;
+
+          &:nth-child(1) {
+            display: none;
+          }
         }
       }
 
       .tableData {
         width: calc(100% - 90px);
         max-width: 86.5%;
+        overflow-x: auto;
 
         .employeesTable {
           margin-top: 1.9rem;
@@ -243,7 +249,6 @@
   @media (max-width: 1240px) {
     & {
       .bookingsTable {
-
         .table {
           gap: 0rem;
 
@@ -272,14 +277,11 @@
   @media (max-width: 1040px) {
     & {
       .bookingsTable {
-
         .table {
-
-           .tableData {
+          .tableData {
             width: calc(100% - 80px);
 
             .employeesTable {
-              overflow-x: auto;
               scrollbar-width: none;
 
               .tableHeader {
@@ -290,17 +292,22 @@
                 width: max-content;
 
                 .item {
-                  font-size: 13px;
+                  font-size: 12px;
+                  flex: 1;
                   width: 70px;
 
                   &:nth-child(4) {
-                    width: 350px;
+                    width: 330px;
+
+                    span {
+                      margin-left: 30px;
+                    }
                   }
                 }
               }
 
               .tableBody {
-                overflow-x: auto;
+                overflow-x: hidden;
                 scrollbar-width: none;
                 width: max-content;
 
@@ -310,11 +317,12 @@
                   scrollbar-width: none;
 
                   .item {
-                    font-size: 13px;
+                    font-size: 12px;
+                    flex: 1;
                     width: 70px;
 
                     &:nth-child(4) {
-                      width: 350px;
+                      width: 330px;
                     }
                   }
                 }
@@ -390,20 +398,31 @@
         margin-top: 3.3rem;
 
         h3 {
-          font-size: 25px;
+          font-size: 20px;
+        }
+
+        .hoursHeading {
+          top: 9.37rem;
         }
 
         .table {
           gap: 0rem;
+          margin-top: 12px;
 
           .hoursCol {
             width: 80px;
-            gap: 0.7rem;
+            gap: 0rem;
+            margin-top: 1.9rem;
 
             .item {
               color: $primary;
               font-size: 13px;
               font-weight: 400;
+              margin-bottom: 2.4rem;
+
+              &:nth-child(1) {
+                display: none;
+              }
             }
           }
 
@@ -411,7 +430,6 @@
             width: calc(100% - 80px);
 
             .employeesTable {
-              overflow-x: auto;
               scrollbar-width: none;
 
               .tableHeader {
@@ -422,17 +440,22 @@
                 width: max-content;
 
                 .item {
-                  font-size: 13px;
+                  font-size: 12px;
+                  flex: 1;
                   width: 70px;
 
                   &:nth-child(4) {
-                    width: 350px;
+                    width: 330px;
+
+                    span {
+                      margin-left: 30px;
+                    }
                   }
                 }
               }
 
               .tableBody {
-                overflow-x: auto;
+                overflow-x: hidden;
                 scrollbar-width: none;
                 width: max-content;
 
@@ -442,11 +465,12 @@
                   scrollbar-width: none;
 
                   .item {
-                    font-size: 13px;
+                    font-size: 12px;
+                    flex: 1;
                     width: 70px;
 
                     &:nth-child(4) {
-                      width: 350px;
+                      width: 330px;
                     }
                   }
                 }

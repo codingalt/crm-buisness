@@ -36,15 +36,21 @@ const FilterByDateModal = ({ isModal, setIsModal }) => {
                   onClick={() => setIsModal(false)}
                 >
                   {" "}
-                  <RxCross2 className="text-[19px] md:text-[22px]" color="#222" />
+                  <RxCross2
+                    className="text-[19px] md:text-[22px]"
+                    color="#222"
+                  />
                 </div>
               </div>
-              
+
               <div className={`${css.calendarWrapper} max-w-3xl`}>
-                <Calendar />
+                {/* <Calendar />  */}
+                <DateRangePickerCalendar />
               </div>
 
-              <div className={`${css.button} max-w-3xl mx-auto flex justify-end items-center`}>
+              <div
+                className={`${css.button} max-w-3xl mx-auto flex justify-end items-center`}
+              >
                 <button>Apply Filters</button>
               </div>
             </motion.div>

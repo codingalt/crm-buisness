@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import i18n from "../i18n";
 
-const rtlLanguages = ["pk", "israel"];
+const rtlLanguages = ["he"];
 
 export const DirectionContext = createContext();
 
@@ -9,14 +9,23 @@ export const DirectionProvider = ({ children }) => {
   const storedLanguage = localStorage.getItem("language") || i18n.language;
   const [direction, setDirection] = useState(
     storedLanguage === "en" ? "ltr" : "rtl"
-  );
+  );  
+
+  function sendMessageToFlutter(message) {
+    if (
+      window.Language &&
+      typeof window.Language.postMessage === "function"
+    ) {
+      window.Language.postMessage(message);
+    }
+  }
 
   const toggleLanguage = (language) => {
-    // const newLanguage = i18n.language === "en" ? "ar" : "en";
     const newLanguage = language;
     i18n.changeLanguage(newLanguage);
     localStorage.setItem("language", newLanguage);
-    window.Language.postMessage(newLanguage);
+    sendMessageToFlutter(newLanguage);
+    window.location.reload();
   };
 
   useEffect(() => {

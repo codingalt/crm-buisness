@@ -3,8 +3,10 @@ import css from "./chat.module.scss";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import Avvvatars from "avvvatars-react";
 import { truncateText } from "@/utils/helpers/helpers";
+import { useTranslation } from "react-i18next";
 
 const Conversation = ({ chat, chatId, handleChatMob }) => {
+  const {t} = useTranslation()
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const isMediumDevice = useMediaQuery(
     "only screen and (min-width : 769px) and (max-width : 992px)"
@@ -28,7 +30,7 @@ const Conversation = ({ chat, chatId, handleChatMob }) => {
             style={{ lineHeight: "9px" }}
             className="py-1.5 mb-[14px] bg-[#ECFAFE] w-fit px-2.5 rounded-full text-[#989898] text-[10px] font-medium"
           >
-            Assigned to{" "}
+            {t("assignedTo")}{" "}
             <span className="text-[#1F84A3] font-medium ml-[3px] leading-3">
               {truncateText(
                 chat.assigned_to.employee.user.name,
@@ -45,9 +47,7 @@ const Conversation = ({ chat, chatId, handleChatMob }) => {
       {parseInt(chat?.unread_messages) > 0 && (
         <div className="absolute top-8 right-2.5 -mt-2">
           <div className="flex items-center justify-center w-[24px] h-[24px] shadow-lg rounded-full bg-blue-500 text-white text-xs">
-            {parseInt(chat.unread_messages) > 9
-              ? `9+`
-              : chat.unread_messages}
+            {parseInt(chat.unread_messages) > 9 ? `9+` : chat.unread_messages}
           </div>
         </div>
       )}

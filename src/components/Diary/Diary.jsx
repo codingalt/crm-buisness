@@ -4,8 +4,10 @@ import SchedulerCalendar from "./Scheduler";
 import { useGetBookingsQuery } from "@/services/api/bookingsApi/bookingsApi";
 import moment from "moment";
 import ClipSpinner from "../Loader/ClipSpinner";
+import { useTranslation } from "react-i18next";
 
 const Diary = () => {
+  const {t} = useTranslation();
   const [currentView, setCurrentView] = useState("month");
   const [filterDate, setFilterDate] = useState({
     startDate: moment().startOf("month").format("YYYY-MM-DD"),
@@ -20,7 +22,7 @@ const Diary = () => {
   return (
     <div className={`${css.wrapper}`}>
       <div className={`${css.headingTop} max-w-screen-xl mx-auto `}>
-        <h1 className="capitalize">Diary - {currentView}</h1>
+        <h1 className="capitalize">{t("diary")} - {currentView == "month" ? t("month") : currentView == "week" ? t("week") : currentView == "day" ? t("day") : ""}</h1>
       </div>
 
       <div className={`max-w-screen-xl w-full mx-auto my-5 md:my-5 pb-24`}>

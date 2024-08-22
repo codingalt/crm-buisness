@@ -7,18 +7,21 @@ import { MdAccessTime } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
+import { truncateText } from "@/utils/helpers/helpers";
+import { useTranslation } from "react-i18next";
 
 const Card = ({ item, onOpen, setSelectedServiceId }) => {
+  const {t} = useTranslation();
   const navigate = useNavigate();
 
   return (
     <div className={`${css.card} shadow-md border`}>
       <header>
         <div className={css.left}>
-          <p>{item.name}</p>
-          <Tooltip title="Edit" placement="right">
+          <p>{truncateText(item.name, 18)}</p>
+          <Tooltip title={t("edit")} placement="right">
             <p>
-          <HiPencil onClick={() => navigate(`/service/${item.id}/edit`)} />
+              <HiPencil onClick={() => navigate(`/service/${item.id}/edit`)} />
             </p>
           </Tooltip>
         </div>
@@ -38,20 +41,29 @@ const Card = ({ item, onOpen, setSelectedServiceId }) => {
 
       <div className={css.user}>
         <FaUser />
-        <p>{item.employees[0] && item.employees[0].name}</p>
+        <p>
+          {item.employees?.map(
+            (emp, index) =>
+              `${emp?.user?.name}${
+                index !== item.employees.length - 1 ? "," : ""
+              }`
+          )}
+        </p>
       </div>
 
       <div className={css.timeInfo}>
         <div className={css.left}>
           <MdAccessTime />
-          <span>{item.time} mints</span>
+          <span>
+            {item.time} {t("minutes")}
+          </span>
         </div>
         <div className={css.right}>{item.price} Nis</div>
       </div>
 
       <div className={css.actions}>
-        <p>{item.category.name}</p>
-        <Tooltip title="Delete Record">
+        <p>{truncateText(item.category.name, 18)}</p>
+        <Tooltip title={t("deleteRecord")}>
           <div
             onClick={() => {
               setSelectedServiceId(item.id);

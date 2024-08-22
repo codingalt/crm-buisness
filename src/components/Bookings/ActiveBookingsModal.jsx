@@ -15,13 +15,17 @@ import { DirectionContext } from "@/context/DirectionContext";
 import { FaCreditCard } from "react-icons/fa";
 import { IoWallet } from "react-icons/io5";
 import { MdOutlineDone } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 const ActiveBookingsModal = ({
   isOpen,
   onOpenChange,
   bookings,
+  data,
   handleMarkAsCompleteBooking,
+  isLoadingCompleteBooking,
 }) => {
+  const { t } = useTranslation();
   const { direction } = useContext(DirectionContext);
 
   return (
@@ -29,18 +33,19 @@ const ActiveBookingsModal = ({
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        size="3xl"
+        size="4xl"
         placement="center"
         backdrop="blur"
-        className="max-w-[90%] md:max-w-3xl"
+        className="max-w-[90%] md:max-w-4xl"
         dir={direction}
+        scrollBehavior="inside"
       >
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <div className="flex items-center gap-3">
-                  <span>Active Appointments</span>
+                <div className="flex items-center gap-3 pt-4 md:pt-1">
+                  <span>{t("activeAppointments")}</span>
                   <div>
                     {bookings?.length != 0 && (
                       <Badge
@@ -106,11 +111,12 @@ const ActiveBookingsModal = ({
                           className="w-24 h-8 text-sm border-[#01AB8E] text-[#01AB8E] hover:bg-[#01AB8E]"
                           variant="ghost"
                           startContent={<MdOutlineDone fontSize={30} />}
-                          onClick={() =>
-                            handleMarkAsCompleteBooking(item?.id)
+                          isLoading={
+                            isLoadingCompleteBooking && item.id === data?.id
                           }
+                          onClick={() => handleMarkAsCompleteBooking(item)}
                         >
-                          Complete
+                          {t("complete")}
                         </Button>
                       </div>
                     </div>
@@ -123,7 +129,7 @@ const ActiveBookingsModal = ({
                   onPress={onClose}
                   className="bg-[#01AB8E]"
                 >
-                  Done
+                  {t("done")}
                 </Button>
               </ModalFooter>
             </>

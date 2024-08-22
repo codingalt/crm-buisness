@@ -105,18 +105,19 @@
         display: flex;
         gap: 11px;
         align-items: center;
-        margin: 17px 0;
-        margin-bottom: 13px;
+        margin: 21px 0;
+        margin-bottom: 16px;
 
         svg {
-          font-size: 20px;
+          font-size: 18px;
           color: $primaryLight;
         }
 
         p {
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 400;
           letter-spacing: 0.3px;
+          @include limitText(200px);
         }
       }
 

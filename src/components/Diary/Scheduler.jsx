@@ -4,6 +4,7 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import "./bigCalendar.scss"
 import { useMediaQuery } from '@uidotdev/usehooks';
+import { useTranslation } from 'react-i18next';
 
 const localizer = momentLocalizer(moment);
 
@@ -15,6 +16,7 @@ const Scheduler = ({
   setFilterDate,
   isLoading,
 }) => {
+  const {t} = useTranslation();
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
   const [appointments, setAppointments] = useState([]);
@@ -110,6 +112,19 @@ const Scheduler = ({
         onView={(view) => setCurrentView(view)}
         eventPropGetter={eventPropGetter}
         onRangeChange={handleRangeChange}
+        messages={{
+          noEventsInRange: t("noAppointmentsInRange"),
+          agenda: t("agenda"),
+          day: t("day"),
+          month: t("month"),
+          week: t("week"),
+          today: t("today"),
+          previous: t("back"),
+          next: t("next"),
+          date: t("date"),
+          time: t("time"),
+          event: t("appointments"),
+        }}
       />
     </div>
   );

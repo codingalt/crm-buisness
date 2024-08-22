@@ -11,8 +11,10 @@ import { AiOutlineCamera } from "react-icons/ai";
 import avatar from "../../../assets/loadingProfile.png"
 import { useSelector } from "react-redux";
 import BusinessLocation from "./BusinessLocation";
+import { useTranslation } from "react-i18next";
 
 const PersonalInformation = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const imageRef = useRef();
@@ -30,9 +32,14 @@ const PersonalInformation = () => {
     profileImg: "",
   };
 
+  console.log(user);
+  
+
   useEffect(()=>{
     if (user && user.employee) {
       navigate("/login");
+    }else if (user && user.profile_setup) {
+        navigate("/dashboard");
     }else{
       setShow(true);
     }
@@ -63,7 +70,7 @@ const PersonalInformation = () => {
     formData.append("latLng", values.latLng);
     formData.append("city", values.city);
     formData.append("country", values.country);
-    formData.append("profile_pic", values.profileImg);
+    formData.append("profile_picture", values.profileImg);
 
     await storeBusinessInformation(formData);
   };
@@ -80,10 +87,10 @@ const PersonalInformation = () => {
   return (
     <>
       {show && (
-        <div className="w-full min-h-[99vh] flex justify-center items-center max-w-screen-sm mx-auto">
+        <div className="w-full pb-28 pt-4 min-h-[99vh] flex justify-center items-center max-w-screen-sm mx-auto">
           <div className={`${css.wrapper} ${css.businessWrapper}`}>
             <div className={css.top}>
-              <p className="text-center">Business Information</p>
+              <p className="text-center">{t("businessInformation")}</p>
             </div>
 
             {/* Display Errors  */}
@@ -101,7 +108,7 @@ const PersonalInformation = () => {
                 <Form className={`${css.personalInfoForm} mt-14`}>
                   <div className={css.inputContainer}>
                     <label className="text-center mb-3" htmlFor="name">
-                      Business Profile
+                      {t("businessProfile")}
                     </label>
                     <div className={css.userProfile}>
                       <div
@@ -133,12 +140,12 @@ const PersonalInformation = () => {
                   />
 
                   <div className={css.inputContainer}>
-                    <label htmlFor="name">Business Name</label>
+                    <label htmlFor="name">{t("businessName")}</label>
                     <Field
                       type="text"
                       name="name"
                       id="name"
-                      placeholder="Enter business name"
+                      placeholder={t("enterBusinessName")}
                       className={
                         errors.name && touched.name && "inputBottomBorder"
                       }
@@ -151,12 +158,14 @@ const PersonalInformation = () => {
                   </div>
 
                   <div className={css.inputContainer}>
-                    <label htmlFor="description">Business Description</label>
+                    <label htmlFor="description">
+                      {t("businessDescription")}
+                    </label>
                     <Field
                       type="text"
                       name="description"
                       id="description"
-                      placeholder="Enter short description of your business "
+                      placeholder={t("enterBusinessDescription")}
                       className={
                         errors.description &&
                         touched.description &&
@@ -171,7 +180,7 @@ const PersonalInformation = () => {
                   </div>
 
                   <div className={css.inputContainer}>
-                    <label htmlFor="address">Address</label>
+                    <label htmlFor="address">{t("address")}</label>
                     <BusinessLocation
                       errors={errors}
                       touched={touched}
@@ -187,7 +196,7 @@ const PersonalInformation = () => {
 
                   <div className={css.button}>
                     <Button isLoading={isLoading} type="submit">
-                      Next
+                      {t("next")}
                     </Button>
                   </div>
                 </Form>

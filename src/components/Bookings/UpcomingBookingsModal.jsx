@@ -14,28 +14,38 @@ import moment from "moment";
 import { DirectionContext } from "@/context/DirectionContext";
 import { FaCreditCard } from "react-icons/fa";
 import { IoWallet } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
-const UpcomingBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
+const UpcomingBookingsModal = ({
+  isOpen,
+  onOpenChange,
+  bookings,
+  data,
+  handleActivateBooking,
+  isLoadingActivateBooking,
+}) => {
   const { direction } = useContext(DirectionContext);
+  const { t } = useTranslation();
 
   return (
     <div className={css.wrapper}>
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        size="3xl"
+        size="5xl"
         placement="center"
         backdrop="blur"
-        className="max-w-[90%] md:max-w-3xl"
+        className="max-w-[90%] md:max-w-5xl"
         style={{ zIndex: "9999999" }}
         dir={direction}
+        scrollBehavior="inside"
       >
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <div className="flex items-center gap-3">
-                  <span>Upcoming Appointments</span>
+                <div className="flex items-center gap-3 pt-4 md:pt-1">
+                  <span>{t("upcomingAppointments")}</span>
                   <div>
                     {bookings?.length != 0 && (
                       <Badge
@@ -101,8 +111,12 @@ const UpcomingBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
                           className="w-24 h-8 text-sm"
                           color="primary"
                           variant="ghost"
+                          isLoading={
+                            isLoadingActivateBooking && item.id === data?.id
+                          }
+                          onClick={() => handleActivateBooking(item)}
                         >
-                          Activate
+                          {t("activate")}
                         </Button>
                       </div>
                     </div>
@@ -115,7 +129,7 @@ const UpcomingBookingsModal = ({ isOpen, onOpenChange, bookings }) => {
                   onPress={onClose}
                   className="bg-[#01AB8E]"
                 >
-                  Done
+                  {t("done")}
                 </Button>
               </ModalFooter>
             </>

@@ -16,13 +16,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { TbMessage } from "react-icons/tb";
 import { useGetBusinessProfileQuery } from "@/services/api/profileApi/profileApi";
 import { useMediaQuery } from "@uidotdev/usehooks";
-import { useDisclosure } from "@nextui-org/react";
+import { Button, useDisclosure } from "@nextui-org/react";
 import AssignChatModal from "./AssignChatModal";
 import ViewMediaModal from "./ViewMediaModal";
 import { usePusherContext } from "@/context/PusherContext";
 import { debounce } from "lodash";
+import { useGetEmployeesQuery } from "@/services/api/servicesApi/servicesApi";
+import { useTranslation } from "react-i18next";
 
 const Chat = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const echo = usePusherContext();
@@ -67,12 +70,17 @@ const Chat = () => {
   // Get Business Profile
   const { data: businessData } = useGetBusinessProfileQuery();
 
+  // Get Employees
+  const { data: employees, isLoading: isLoadingEmployees } =
+    useGetEmployeesQuery();
+
   // Get Conversations
   const {
     data: conversations,
     isLoading: isLoadingConversations,
     refetch: refetchChats,
     isUninitialized,
+    error: conversationError,
   } = useGetConversationsQuery(props, {
     skip: !user || selectedChat,
     refetchOnMountOrArgChange: true,
@@ -313,6 +321,8 @@ const Chat = () => {
           communicationId={selectedChat?.id}
           refetchChats={refetchChats}
           isUninitialized={isUninitialized}
+          data={employees}
+          isLoading={isLoadingEmployees}
         />
       )}
 
@@ -330,14 +340,14 @@ const Chat = () => {
               style={activeChatMob ? { display: "none" } : { display: "block" }}
             >
               <div className={css.cLeftHeading}>
-                <span>Chats</span>
+                <span>{t("chats")}</span>
               </div>
               <div className={`${css.chatSearch}`}>
                 <bi.BiSearch />
                 <input
                   type="text"
                   value={searchQuery}
-                  placeholder="SEARCH"
+                  placeholder={t("search")}
                   onChange={handleSearchChange}
                 />
               </div>
@@ -377,16 +387,35 @@ const Chat = () => {
                       <div className="w-full h-full flex gap-y-3 items-center justify-center px-20 text-center flex-col">
                         <TbMessage fontSize={60} color="#01AB8E" />
                         <p className="text-tiny text-default-500 font-medium">
-                          Messages from your customer will appear here.
+                          {t("messagesFromCustomer")}
                         </p>
                       </div>
                     )}
+
+                  {/* Show Error If data fails to load  */}
+                  {!isLoadingConversations && conversationError && (
+                    <div className="px-4 mx-auto pt-32 w-full flex justify-center flex-col gap-2 items-center">
+                      <p className="font-medium text-[15px] text-[#01ab8e]">
+                        {t("letsTryAgain")}
+                      </p>
+                      <span className="px-6 text-xs text-default-600 text-center max-w-xs">
+                        {t("fetchError")}
+                      </span>
+                      <Button
+                        size="sm"
+                        radius="sm"
+                        className="mt-2 px-6 text-white bg-[#01ab8e]"
+                        onClick={refetchChats}
+                      >
+                        {t("tryAgain")}
+                      </Button>
+                    </div>
+                  )}
                 </ul>
               </div>
             </div>
 
             {/* Messages  */}
-
             {
               <div
                 className={

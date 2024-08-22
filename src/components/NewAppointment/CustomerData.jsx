@@ -17,6 +17,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import { Tooltip } from "@mui/material";
 import { useApiErrorHandling } from "@/hooks/useApiErrors";
 import { toastError } from "../Toast/Toast";
+import { useTranslation } from "react-i18next";
 
 const CustomerData = ({
   handleNext,
@@ -28,6 +29,7 @@ const CustomerData = ({
   isCustomer,
   setIsCustomer,
 }) => {
+  const { t } = useTranslation();
   const [isError, setIsError] = useState(null);
   const [isValid, setIsValid] = useState(null);
   const [getCustomerData, res] = useGetCustomerDataByEmailMutation();
@@ -50,7 +52,7 @@ const CustomerData = ({
         }));
       } else {
         // Set Error
-        if(isCustomer){
+        if (isCustomer) {
           setIsError(true);
         }
       }
@@ -58,8 +60,7 @@ const CustomerData = ({
   }, [data]);
 
   const handleSubmit = async (values) => {
-
-    const {data: resp} = await getCustomerData({ email: values.email });
+    const { data: resp } = await getCustomerData({ email: values.email });
     const res = resp?.customer;
 
     setInitialValues({
@@ -70,9 +71,9 @@ const CustomerData = ({
 
     if (isCustomer && !res) {
       setIsError(true);
-      toastError("Please enter a valid email address");
+      toastError(t("enterValidEmail"));
     } else if (!isCustomer && res) {
-      toastError("Customer with this email is already registered.");
+      toastError(t("customerAlreadyRegistered"));
       return;
     } else {
       handleNext();
@@ -84,12 +85,12 @@ const CustomerData = ({
     // Get Customer Data when email is valid
     setIsError(null);
     setIsValid(null);
-    if(isCustomer){
+    if (isCustomer) {
       if (value.trim() !== "") {
         // Validate email format
         if (Yup.string().email().isValidSync(value)) {
           await getCustomerData({ email: value });
-        } 
+        }
       }
     }
 
@@ -113,7 +114,7 @@ const CustomerData = ({
             onClick={handleBack}
             className="mr-1 mt-1 bg-transparent"
           >
-            Back
+            {t("back")}
           </Button>
         </div>
       </div>
@@ -140,27 +141,24 @@ const CustomerData = ({
                   radius="sm"
                   size={isSmallDevice ? "sm" : "lg"}
                 >
-                  The client is a customer on this platform
+                  {t("clientIsCustomer")}
                 </Checkbox>
               </div>
 
               <div className="flex gap-1 mb-10 md:mb-11 text-tiny md:text-sm font-normal text-[#01ab8e]">
                 <MdErrorOutline className="text-[26px] -mt-0.5 md:mt-0 md:text-[19px]" />
-                <span>
-                  Registered Customers Will Need To Confirm The Appointment
-                </span>
+                <span>{t("registeredCustomersConfirmation")}</span>
               </div>
               <div className={`${css.inputContainer} relative`}>
-                <label htmlFor="email">Customer's Email</label>
+                <label htmlFor="email">{t("customerEmail")}</label>
                 <Field
                   required={true}
                   type="email"
                   name="email"
                   id="email"
-                  placeholder="Please Enter Email of Customer"
+                  placeholder={t("enterCustomerEmail")}
                   className={errors.email && touched.email && "redBorder"}
                   onKeyUp={(e) => handleEmailValidation(e, setFieldValue)}
-                  // disabled={isLoading}
                   style={{ paddingRight: "2.7rem" }}
                 />
                 <ErrorMessage
@@ -189,12 +187,12 @@ const CustomerData = ({
               </div>
 
               <div className={css.inputContainer}>
-                <label htmlFor="name">Customer's Name</label>
+                <label htmlFor="name">{t("customerName")}</label>
                 <Field
                   type="text"
                   name="name"
                   id="name"
-                  placeholder="Please Enter Name of Customer"
+                  placeholder={t("enterCustomerName")}
                   className={errors.name && touched.name && "redBorder"}
                   readOnly={isCustomer}
                   disabled={isCustomer}
@@ -207,12 +205,12 @@ const CustomerData = ({
               </div>
 
               <div className={css.inputContainer}>
-                <label htmlFor="contact">Customer's Contact</label>
+                <label htmlFor="contact">{t("customerContact")}</label>
                 <Field
                   type="text"
                   name="contact"
                   id="contact"
-                  placeholder="Please Enter Contact Number of Customer"
+                  placeholder={t("enterCustomerContact")}
                   className={errors.contact && touched.contact && "redBorder"}
                   readOnly={isCustomer}
                   disabled={isCustomer}

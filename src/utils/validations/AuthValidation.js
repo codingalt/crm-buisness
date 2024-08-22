@@ -51,10 +51,6 @@ export const businessProfileSchema = Yup.object({
     .max(255, "Maximun characters are 255")
     .min(3, "Minimum characters are 3")
     .required("Name is Required"),
-  email: Yup.string()
-    .max(255, "Maximun characters are 255")
-    .email("Please Enter a valid email address")
-    .required("Email is Required"),
   address: Yup.string()
     .max(255, "Maximun characters are 255")
     .required("Buisness Address is Required"),

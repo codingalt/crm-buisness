@@ -1,8 +1,10 @@
 import React from "react";
 import css from "./Statistics.module.scss";
 import ReactApexChart from "react-apexcharts";
+import { useTranslation } from "react-i18next";
 
 const Graph = () => {
+  const {t} = useTranslation();
   const series = [
     {
       name: "series1",
@@ -42,7 +44,7 @@ const Graph = () => {
 
   return (
     <div className={css.graph}>
-      <h3>Rush Hours</h3>
+      <h3>{t("earningsOverview")}</h3>
 
       {/* Graph  */}
       <div className={css.graphContainer}>
@@ -51,7 +53,6 @@ const Graph = () => {
             options={options}
             series={series}
             type="area"
-            // height={500}
           />
         </div>
         <div id="html-dist"></div>

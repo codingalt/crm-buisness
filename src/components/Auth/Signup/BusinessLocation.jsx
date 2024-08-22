@@ -15,6 +15,7 @@ import pin from "@/assets/pin.png";
 import { ErrorMessage, Field } from "formik";
 import { Button } from "@nextui-org/react";
 import _ from "lodash";
+import { useTranslation } from "react-i18next";
 
 const bounds = {
   east: -110,
@@ -43,12 +44,13 @@ const BusinessLocation = ({
   setFieldValue,
   setIsAddressError,
 }) => {
+  const { t } = useTranslation();
   const { isLoaded } = useSelector((state) => state.auth);
   const [searchBox, setSearchBox] = useState(null);
   const [searchBoxBounds, setSearchBoxBounds] = useState(null);
   const [selectedVal, setSelectedVal] = useState("");
   const [infoWindow, setInfoWindow] = useState(null);
-  const [mapCenter, setMapCenter] = useState();
+  const [mapCenter, setMapCenter] = useState(null);
   const [mapRef, setMapRef] = useState(defaultLocation);
   const inputRef = useRef();
   const [isConfirmButton, setIsConfirmButton] = useState(false);
@@ -65,6 +67,7 @@ const BusinessLocation = ({
        },
        () => {
          setLocationError(true);
+         setMapCenter(defaultLocation);
        }
      );
    };
@@ -79,17 +82,6 @@ const BusinessLocation = ({
 
      return () => clearInterval(intervalId);
    }, []);
-
-//   useEffect(
-//     () =>
-//       navigator.geolocation.getCurrentPosition((position) => {
-//         setMapCenter({
-//           lat: position?.coords?.latitude,
-//           lng: position?.coords?.longitude,
-//         });
-//       }),
-//     []
-//   );
 
   const onLoadSearchBox = (ref) => {
     setSearchBox(ref);
@@ -165,7 +157,7 @@ const BusinessLocation = ({
             type="text"
             id="address"
             name="address"
-            placeholder="Enter business address"
+            placeholder={t("enterBusinessAddress")}
             className={errors.address && touched.address && "inputBottomBorder"}
             value={selectedVal}
             onChange={(e) => {
@@ -210,7 +202,7 @@ const BusinessLocation = ({
                   color="primary"
                   size="sm"
                 >
-                  Confirm Location
+                  {t("confirmLocation")}
                 </Button>
               </div>
             )}

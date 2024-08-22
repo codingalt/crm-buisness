@@ -8,10 +8,10 @@ import {
 } from "@nextui-org/react";
 import { IoClose } from "react-icons/io5";
 import EmployeesDropdown from "./EmployeesDropdown";
-import { useGetEmployeesQuery } from "@/services/api/servicesApi/servicesApi";
 import { useAssignChatToEmployeeMutation } from "@/services/api/chat/chatApi";
 import { useApiErrorHandling } from "@/hooks/useApiErrors";
 import { toastError, toastSuccess } from "../Toast/Toast";
+import { useTranslation } from "react-i18next";
 
 const AssignChatModal = ({
   isOpen,
@@ -19,9 +19,12 @@ const AssignChatModal = ({
   communicationId,
   refetchChats,
   isUninitialized,
+  data,
+  isLoading
 }) => {
+  const {t} = useTranslation();
   const [selected, setSelected] = useState(null);
-  const { data, isLoading } = useGetEmployeesQuery();
+  
   const [refreshKey, setRefreshKey] = useState(0);
 
   const [assignChat, res] = useAssignChatToEmployeeMutation();
@@ -31,7 +34,7 @@ const AssignChatModal = ({
 
   const handleAssignChat = () => {
     if (!selected || !communicationId) {
-      toastError("Please select employee first");
+      toastError(t("pleaseSelectEmployeeFirst"));
       return;
     }
 
@@ -49,10 +52,11 @@ const AssignChatModal = ({
   useEffect(() => {
     if (isSuccess) {
       onOpenChange(false);
-      toastSuccess("Chat Assigned.");
+      toastSuccess(t("chatAssigned"));
       handleRefetchChats();
     }
   }, [isSuccess]);
+  
 
   return (
     <Modal
@@ -67,9 +71,9 @@ const AssignChatModal = ({
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center pt-2.5 md:pt-0">
                 <div className="flex items-center gap-1 mb-4">
-                  <p>Choose Employee</p>
+                  <p>{t("chooseEmployee")}</p>
                 </div>
 
                 <div
@@ -96,7 +100,7 @@ const AssignChatModal = ({
                     onClick={handleAssignChat}
                     className="bg-[#01ab8e] text-white"
                   >
-                    Assign Chat
+                    {t("assignChat")}
                   </Button>
                 </div>
               </div>

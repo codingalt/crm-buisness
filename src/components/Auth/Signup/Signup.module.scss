@@ -3,10 +3,6 @@
 .businessWrapper {
   padding: 1.4rem 0 !important;
 
-  form{
-    margin-top: 2.5rem;
-  }
-
   @media (max-width: 768px) {
     & {
       padding: 3rem 0 !important;
@@ -22,12 +18,13 @@
 .wrapper {
   width: 100%;
   margin: 0 auto;
-  padding: 4rem 0;
+  padding: 2.2rem 0;
+  padding-bottom: 4rem;
 
   .top {
     p {
-      font-size: 40px;
-      font-weight: normal;
+      font-size: 1.9rem;
+      font-weight: 500;
       color: #000;
     }
   }
@@ -50,6 +47,7 @@
 
       &::placeholder {
         font-size: 24px !important;
+        color: rgb(169, 168, 168) !important;
       }
     }
 
@@ -64,7 +62,6 @@
   }
 
   form {
-    // margin-top: 6rem;
 
     .errorSpan {
       font-size: 0.82rem;
@@ -80,7 +77,7 @@
       margin-bottom: 1.9rem;
 
       label {
-        font-size: 21px;
+        font-size: 19px;
         font-weight: 500;
       }
 
@@ -95,7 +92,7 @@
 
         &::placeholder {
           color: $textSecondary;
-          font-size: 16px;
+          font-size: 15px;
         }
       }
 
@@ -192,7 +189,7 @@
 
       .top {
         p {
-          font-size: 33px;
+          font-size: 1.6rem;
           text-align: center;
           line-height: 46px;
           font-weight: 500;

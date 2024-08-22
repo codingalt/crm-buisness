@@ -30,6 +30,7 @@ const Protected = ({ Component }) => {
           flags: token?.flags,
           employee: token?.employee,
           owner: token?.business_owner,
+          profile_setup: token?.profile_setup
         };
         dispatch(setAuth(user));
 

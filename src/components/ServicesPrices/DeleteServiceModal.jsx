@@ -10,8 +10,10 @@ import {
 import { useDeleteServiceMutation } from '@/services/api/servicesApi/servicesApi';
 import { toastSuccess } from '../Toast/Toast';
 import { useApiErrorHandling } from '@/hooks/useApiErrors';
+import { useTranslation } from 'react-i18next';
 
 const DeleteServiceModal = ({ isOpen, onOpenChange,serviceId }) => {
+  const {t} =useTranslation();
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
   const [deleteService, res] = useDeleteServiceMutation();
@@ -22,7 +24,7 @@ const DeleteServiceModal = ({ isOpen, onOpenChange,serviceId }) => {
   useEffect(()=>{
     if(isSuccess){
       onOpenChange(false);
-      toastSuccess("Successfully deleted");
+      toastSuccess(t("successfullyDeleted"));
     }
   },[isSuccess]);
 
@@ -44,11 +46,10 @@ const DeleteServiceModal = ({ isOpen, onOpenChange,serviceId }) => {
             <ModalHeader>
               <div className="w-full py-6 mx-auto px-1 md:px-3 flex flex-col items-center justify-center gap-3">
                 <h2 className="text-xl md:text-2xl max-w-xs font-medium text-default-800 text-center">
-                  Are you sure you want to delete the service?
+                  {t("confirmDeleteService")}
                 </h2>
                 <p className="text-sm max-w-xs font-normal text-default-600 text-center">
-                  The service will be permanently deleted. This action cannot be
-                  undone
+                  {t("deleteWarning")}
                 </p>
 
                 <div className="w-full md:px-5 mt-9 mx-auto flex items-center gap-3">
@@ -58,7 +59,7 @@ const DeleteServiceModal = ({ isOpen, onOpenChange,serviceId }) => {
                     onClick={onClose}
                     className="bg-transparent font-medium flex-1 border border-[#01ab8e] text-[#01ab8e] uppercase"
                   >
-                    Cancel
+                    {t("cancel")}
                   </Button>
                   <Button
                     size="lg"
@@ -68,7 +69,7 @@ const DeleteServiceModal = ({ isOpen, onOpenChange,serviceId }) => {
                     onClick={handleDeleteService}
                     className="font-medium flex-1 uppercase"
                   >
-                    Delete
+                    {t("delete")}
                   </Button>
                 </div>
               </div>

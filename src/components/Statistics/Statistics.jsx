@@ -5,55 +5,57 @@ import BottomCard from "./BottomCard";
 import Graph from "./Graph";
 import { useTrail, animated as a } from "@react-spring/web";
 import { useGetBusinessStatisticsQuery } from "@/services/api/profileApi/profileApi";
+import { useTranslation } from "react-i18next";
 
 const config = { mass: 15, tension: 5000, friction: 300 };
 
 const Statistics = () => {
+  const { t } = useTranslation();
   const [toggle, set] = useState(true);
   const [toggle2, set2] = useState(false);
 
   const [topData, setTopData] = useState([
     {
-      name: "Queue Time",
+      name: t("queueTime"),
     },
     {
-      name: "Total Cancelation",
+      name: t("totalCancellation"),
     },
     {
-      name: "Total Visits",
+      name: t("totalVisits"),
     },
     {
-      name: "Avg Visit Cost",
+      name: t("avgVisitCost"),
     },
     {
-      name: "Total Revenue",
+      name: t("totalRevenue"),
     },
   ]);
 
   const [bottomData, setBottomData] = useState([
     {
-      heading: "Percent",
-      subHeading: "Cancellations",
+      heading: t("percent"),
+      subHeading: t("cancellations"),
       value: "5%",
     },
     {
-      heading: "Appointment Cancelled",
-      subHeading: "Most",
+      heading: t("appointmentCancelled"),
+      subHeading: t("most"),
       value: "Haircut For a Man",
     },
     {
-      heading: "Best Turn",
-      subHeading: "Sold",
+      heading: t("bestTurn"),
+      subHeading: t("sold"),
       value: "Queue Description",
     },
     {
-      heading: "The Fast Queue",
-      subHeading: "Most",
+      heading: t("fastQueue"),
+      subHeading: t("most"),
       value: "Queue Description",
     },
     {
-      heading: "The Space Queue",
-      subHeading: "Most",
+      heading: t("spaceQueue"),
+      subHeading: t("most"),
       value: "Queue Description",
     },
   ]);
@@ -75,9 +77,8 @@ const Statistics = () => {
   });
 
   // Get Business Statistics
-  const { data, isLoading, error } = useGetBusinessStatisticsQuery();
+  const { data, isLoading, error, refetch } = useGetBusinessStatisticsQuery();
   const [isInitialized, setIsInitialized] = useState(false);
-  console.log(data);
 
   useEffect(() => {
     setTimeout(() => {
@@ -89,29 +90,29 @@ const Statistics = () => {
     if (data) {
       // Set Top Data
       const res = data.data;
-      
+
       setTopData([
         {
-          name: "Queue Time",
+          name: t("queueTime"),
           value: "23 min",
         },
         {
-          name: "Total Cancelation",
+          name: t("totalCancellation"),
           value: res?.cancelledAppointmentsCount,
         },
         {
-          name: "Total Visits",
+          name: t("totalVisits"),
           value: res?.totalAppointments,
         },
         {
-          name: "Avg Visit Cost",
+          name: t("avgVisitCost"),
           value: new Intl.NumberFormat("he-IL", {
             style: "currency",
             currency: "ILS",
           }).format(res?.averageAppointmentCost),
         },
         {
-          name: "Total Revenue",
+          name: t("totalRevenue"),
           value: new Intl.NumberFormat("he-IL", {
             style: "currency",
             currency: "ILS",
@@ -122,28 +123,28 @@ const Statistics = () => {
       // Set Bottom Data
       setBottomData([
         {
-          heading: "Percent",
-          subHeading: "Cancellations",
-          value: res?.percentageCancellations,
+          heading: t("percent"),
+          subHeading: t("cancellations"),
+          value: `${res?.percentageCancellations?.toFixed(1)}%`,
         },
         {
-          heading: "Appointment Cancelled",
-          subHeading: "Most",
+          heading: t("appointmentCancelled"),
+          subHeading: t("most"),
           value: "Haircut for a Man",
         },
         {
-          heading: "Best Turn",
-          subHeading: "Sold",
+          heading: t("bestTurn"),
+          subHeading: t("sold"),
           value: "Queue Description",
         },
         {
-          heading: "The Fast Queue",
-          subHeading: "Most",
+          heading: t("fastQueue"),
+          subHeading: t("most"),
           value: "Queue Description",
         },
         {
-          heading: "The Space Queue",
-          subHeading: "Most",
+          heading: t("spaceQueue"),
+          subHeading: t("most"),
           value: "Queue Description",
         },
       ]);
@@ -155,9 +156,9 @@ const Statistics = () => {
   return (
     <div className={`${css.wrapper}`}>
       <div className={css.headingTop}>
-        <h1>Statistics</h1>
+        <h1>{t("statistics")}</h1>
         <div className={css.bottom}>
-          <p>Visits</p>
+          <p>{t("visits")}</p>
         </div>
       </div>
 
@@ -175,7 +176,14 @@ const Statistics = () => {
                 transform: x ? x.to((x) => `translate3d(0,${x}px,0)`) : "none",
               }}
             >
-              <TopCard key={index} data={item} isInitialized={isInitialized} />
+              <TopCard
+                key={index}
+                data={item}
+                isInitialized={isInitialized}
+                error={error}
+                refetch={refetch}
+                isLoading={isLoading}
+              />
             </a.div>
           );
         })}
@@ -186,7 +194,7 @@ const Statistics = () => {
         className="mt-10 -mb-1 md:hidden"
         style={{ fontSize: "23px", fontWeight: "500", color: "#3c3b3b" }}
       >
-        Metrics Overview
+        {t("metricsOverview")}
       </h3>
       <div
         className={`${css.cardBottom} mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-4 gap-x-3 md:gap-x-5 md:gap-y-5`}
@@ -206,6 +214,9 @@ const Statistics = () => {
                 index={index}
                 data={item}
                 isInitialized={isInitialized}
+                error={error}
+                refetch={refetch}
+                isLoading={isLoading}
               />
             </a.div>
           );

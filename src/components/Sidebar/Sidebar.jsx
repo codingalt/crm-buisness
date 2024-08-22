@@ -3,12 +3,10 @@ import css from "./Sidebar.module.scss";
 import { NavLink } from "react-router-dom";
 import { Grid, Tooltip } from "@mui/material";
 import {
-  FaLightbulb,
   FaUserFriends,
   FaUserCircle,
   FaCalendarCheck,
 } from "react-icons/fa";
-import { LuClock4 } from "react-icons/lu";
 import { MdMedicalServices } from "react-icons/md";
 import { IoStatsChart, IoChatboxEllipses } from "react-icons/io5";
 import { AiFillHome } from "react-icons/ai";
@@ -16,8 +14,11 @@ import useClickOutside from "../../hooks/useClickOutside";
 import { useSelector } from "react-redux";
 import { TbLogout2 } from "react-icons/tb";
 import { removeToken } from "@/utils/helpers/tokenUtils";
+import { useTranslation } from "react-i18next";
+
 
 const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
+  const {t} = useTranslation();
   const sidebarRef = useRef();
   const { user } = useSelector((store) => store.auth);
   const [roles, setRoles] = useState([]);
@@ -42,41 +43,41 @@ const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
     {
       to: "/dashboard",
       icon: <AiFillHome />,
-      title: "Dashboard",
+      title: t("dashboard"),
     },
     {
       to: "/statistics",
       icon: <IoStatsChart />,
-      title: "Statistics",
+      title: t("statistics"),
       role: "can_view_statistics",
     },
     {
       to: "/services",
       icon: <MdMedicalServices />,
-      title: "Services",
+      title: t("services"),
       role: "can_services",
     },
     {
       to: "/employees",
       icon: <FaUserFriends />,
-      title: "Employees",
+      title: t("employees"),
       role: "can_employees",
     },
     {
       to: "/chat",
       icon: <IoChatboxEllipses />,
-      title: "Messages",
+      title: t("messages"),
       role: "can_chat",
     },
     {
       to: "/diary",
       icon: <FaCalendarCheck />,
-      title: "Diary",
+      title: t("diary"),
     },
     {
       to: "/profile",
       icon: <FaUserCircle />,
-      title: "Profile",
+      title: t("profile"),
       role: "can_profile",
     },
   ];
@@ -99,7 +100,7 @@ const Sidebar = ({ activeSidebar, setActiveSidebar, buttonRef }) => {
       }
       ref={sidebarRef}
     >
-      <Tooltip title="Logout" placement="right">
+      <Tooltip title={t("logout")} placement="right">
         <div className={css.sidebarProfile}>
           <TbLogout2 onClick={handleLogout} />
         </div>

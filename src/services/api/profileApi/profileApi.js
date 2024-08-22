@@ -25,8 +25,8 @@ export const profileApi = createApi({
 
     updateBusinessInfo: builder.mutation({
       query: (data) => ({
-        url: "business/businessInfo",
-        method: "PUT",
+        url: "business/updateBusinessInfo",
+        method: "POST",
         body: data,
       }),
       invalidatesTags: ["Profile"],

@@ -4,19 +4,17 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useApiErrorHandling } from "../../../hooks/useApiErrors";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { signupEmailSchema } from "../../../utils/validations/AuthValidation";
-import {
-  useRegisterUserMutation,
-  useValidateTokenQuery,
-} from "../../../services/api/authApi/authApi";
-import { Button } from "@nextui-org/react";
+import { useRegisterUserMutation } from "../../../services/api/authApi/authApi";
+import { Button,Image } from "@nextui-org/react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import ApiErrorDisplay from "../../../hooks/ApiErrorDisplay";
 import { useDispatch } from "react-redux";
-import { setAuth } from "../../../services/slices/auth/authSlice";
-import ClipSpinner from "@/components/Loader/ClipSpinner";
+import logo from "../../../assets/logo.svg";
+import { useTranslation } from "react-i18next";
 
 const Email = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isContactErr, setIsContactErr] = useState(false);
@@ -48,6 +46,7 @@ const Email = () => {
 
     if (data?.token) {
       localStorage.setItem("crmBusinessToken", data.token);
+      localStorage.setItem("businessContact", values.contact);
       navigate("/verificationCode");
     }
   };
@@ -57,7 +56,10 @@ const Email = () => {
       <div className="w-full min-h-[99vh] flex justify-center items-center max-w-screen-sm mx-auto">
         <div className={css.wrapper}>
           <div className={css.top}>
-            <p>Business Registration</p>
+            <div className="w-14 md:w-16 mb-7 md:mb-9 mx-auto">
+              <Image src={logo} width="100%" height="100%" />
+            </div>
+            <p>{t("businessRegistration")}</p>
           </div>
 
           {/* Display Errors  */}
@@ -69,14 +71,14 @@ const Email = () => {
             onSubmit={handleSubmit}
           >
             {({ errors, setFieldValue, touched }) => (
-              <Form className={`${css.emailForm} mt-12`}>
+              <Form className={`${css.emailForm} mt-10`}>
                 <div className={css.inputContainer}>
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">{t("email")}</label>
                   <Field
                     type="email"
                     name="email"
                     id="email"
-                    placeholder="Enter your email address"
+                    placeholder={t("enterEmail")}
                     className={
                       errors.email && touched.email && "inputBottomBorder"
                     }
@@ -89,7 +91,7 @@ const Email = () => {
                 </div>
 
                 <div className={css.inputContainer}>
-                  <label htmlFor="contact">Contact</label>
+                  <label htmlFor="contact">{t("contact")}</label>
                   <PhoneInput
                     country={"us"}
                     inputClass={
@@ -103,11 +105,13 @@ const Email = () => {
                     value=""
                     containerStyle={{
                       height: "3rem",
-                      marginTop: "27px",
+                      marginTop: "17px",
+                      marginBottom: "2px",
                     }}
                     inputStyle={{
                       height: "3rem",
                       width: "100%",
+                      borderRadius: 0,
                     }}
                     buttonStyle={{
                       borderTopRightRadius: "0",
@@ -131,12 +135,12 @@ const Email = () => {
                 </div>
 
                 <div className={css.inputContainer}>
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">{t("password")}</label>
                   <Field
                     type="password"
                     name="password"
                     id="password"
-                    placeholder="Enter your password"
+                    placeholder={t("enterPassword")}
                     className={
                       errors.password && touched.password && "inputBottomBorder"
                     }
@@ -149,12 +153,12 @@ const Email = () => {
                 </div>
 
                 <div className={css.inputContainer}>
-                  <label htmlFor="confirmPass">Confirm Password</label>
+                  <label htmlFor="confirmPass">{t("confirmPassword")}</label>
                   <Field
                     type="password"
                     name="confirmPass"
                     id="confirmPass"
-                    placeholder="Confirm Password"
+                    placeholder={t("confirmPassword")}
                     className={
                       errors.confirmPass &&
                       touched.confirmPass &&
@@ -173,14 +177,14 @@ const Email = () => {
                   style={{ justifyContent: "center" }}
                 >
                   <Button isLoading={isLoading} type="submit">
-                    Next
+                    {t("next")}
                   </Button>
                 </div>
 
                 <p className="text-sm text-center font-medium text-default-600 mt-10">
-                  <span>Already have an account?</span>{" "}
+                  <span>{t("alreadyHaveAccount")}</span>{" "}
                   <NavLink className="text-blue-400" to={"/"}>
-                    Login
+                    {t("login")}
                   </NavLink>
                 </p>
               </Form>

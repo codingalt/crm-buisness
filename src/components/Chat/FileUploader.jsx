@@ -8,8 +8,8 @@ import {
 } from "react-icons/fa";
 import css from "./chat.module.scss";
 import { IoClose } from "react-icons/io5";
-import ClipSpinner from "../Loader/ClipSpinner";
 import { Oval } from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 const FileUploader = ({
   setFiles,
@@ -17,6 +17,7 @@ const FileUploader = ({
   setFilePreviews,
   isLoadingSendMessage,
 }) => {
+  const {t} = useTranslation()
   const fileRef = useRef();
 
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -103,7 +104,7 @@ const FileUploader = ({
       >
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl text-default-800 font-semibold">
-            Files Preview
+            {t("filesPreview")}
           </h3>
           <button
             onClick={() => {

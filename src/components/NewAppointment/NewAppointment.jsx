@@ -15,6 +15,7 @@ import { useApiErrorHandling } from "@/hooks/useApiErrors";
 import { useNavigate } from "react-router-dom";
 import ChooseDateTime from "./ChooseDateTime";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 const formatDate = (selectedDate, selectedTime) => {
   const date = moment(selectedDate);
@@ -29,6 +30,7 @@ const formatDate = (selectedDate, selectedTime) => {
 };
 
 const NewAppointment = () => {
+  const {t} = useTranslation();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const stepsLength = 4;
@@ -56,7 +58,7 @@ const NewAppointment = () => {
 
   useEffect(() => {
     if (isSuccessManualAppointment) {
-      toastSuccess("Appointment Successfull.");
+      toastSuccess(t("appointmentSuccessfull"));
 
       setTimeout(() => {
         navigate("/dashboard");
@@ -102,7 +104,7 @@ const NewAppointment = () => {
 
   const handleNext = () => {
     if (activeStep === 0 && !selectedService) {
-      toastError("Please select a service");
+      toastError(t("pleaseSelectService"));
       return;
     }
 
@@ -126,19 +128,19 @@ const NewAppointment = () => {
             size="lg"
             radius="sm"
             onClick={handleNext}
-            className="mr-3 mt-1 bg-[#01ab8e] text-white"
+            className="mr-3 py-7 mt-1 bg-[#01ab8e] text-white"
             isLoading={isLoadingManualAppointment}
           >
             {activeStep === stepsLength - 1
-              ? "Confirm Appointment"
-              : "Continue"}
+              ? t("confirmAppointment")
+              : t("continue")}
           </Button>
           <Button
             disabled={activeStep === 0}
             onClick={handleBack}
             className="mr-1 mt-1 bg-transparent"
           >
-            Back
+            {t("back")}
           </Button>
         </div>
       </div>
@@ -147,7 +149,7 @@ const NewAppointment = () => {
 
   return (
     <div className={`${css.wrapper} max-w-screen-2xl xl:px-2`}>
-      <h3>Add an appointment for your Customer</h3>
+      <h3>{t("addAppointmentForCustomer")}</h3>
 
       {/* Stepper  */}
       <div className={css.card}>
@@ -175,7 +177,7 @@ const NewAppointment = () => {
                   },
                 }}
               >
-                Select a Service
+                {t("selectService")}
               </StepLabel>
               <StepContent
                 sx={{
@@ -219,7 +221,7 @@ const NewAppointment = () => {
                   },
                 }}
               >
-                Choose Date & Time
+                {t("chooseDateTime")}
               </StepLabel>
               <StepContent
                 sx={{
@@ -264,7 +266,8 @@ const NewAppointment = () => {
                   },
                 }}
               >
-                Provide Customer's Data <span className={css.sec_text}></span>
+                {t("provideCustomerData")}{" "}
+                <span className={css.sec_text}></span>
               </StepLabel>
               <StepContent
                 sx={{
@@ -311,7 +314,7 @@ const NewAppointment = () => {
                   },
                 }}
               >
-                Select Payment Method
+                {t("selectPaymentMethod")}
               </StepLabel>
               <StepContent
                 sx={{

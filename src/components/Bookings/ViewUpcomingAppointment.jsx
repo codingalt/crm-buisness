@@ -20,12 +20,12 @@ import { truncateText } from "@/utils/helpers/helpers";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 
-const ViewActiveAppointment = ({
+const ViewUpcomingAppointment = ({
   isOpen,
   onOpenChange,
   data,
-  handleMarkAsCompleteBooking,
-  isLoadingCompleteBooking,
+  handleActivateBooking,
+  isLoadingActivateBooking,
   setIsApproveAppoinmentFromViewModal,
   handleCancelBooking,
   isLoadingCancelBooking,
@@ -62,17 +62,18 @@ const ViewActiveAppointment = ({
                     </Avatar>
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-xl md:text-2xl font-bold">
+                    <h2 className="text-lg md:text-2xl font-bold">
                       {data?.customer?.name}
                     </h2>
                     <p className="text-sm text-gray-500 flex items-center gap-1 md:gap-1.5 mt-0.5 md:mt-1">
-                      <IoCallOutline className="text-[#13D3B3] text-lg" />
+                      <IoCallOutline className="text-[#13D3B3] text-medium md:text-lg" />
                       <span>{data?.customer?.phone_number}</span>
                     </p>
                   </div>
                 </div>
 
-                {/* Time and Date  */}
+                {/* Service Image  */}
+
                 <div className="w-full flex flex-wrap justify-between gap-1 rounded-2xl py-7 bg-[#F4F6F8] mt-5">
                   <div className="w-full flex justify-between gap-4">
                     <div className="flex-1 flex flex-col items-center gap-3 text-center">
@@ -132,16 +133,16 @@ const ViewActiveAppointment = ({
                 </Button>
                 <Button
                   color="primary"
-                  isLoading={isLoadingCompleteBooking}
+                  isLoading={isLoadingActivateBooking}
                   onClick={() => {
                     setIsApproveAppoinmentFromViewModal(true);
-                    handleMarkAsCompleteBooking(data, onClose);
+                    handleActivateBooking(data, onClose);
                   }}
                   className="bg-[#01AB8E] w-full py-4 md:py-7 flex-1 uppercase font-medium"
                   size="lg"
                   radius="sm"
                 >
-                  {t("completeAppointment")}
+                  {t("activateAppointment")}
                 </Button>
               </div>
             </ModalFooter>
@@ -152,4 +153,4 @@ const ViewActiveAppointment = ({
   );
 };
 
-export default ViewActiveAppointment;
+export default ViewUpcomingAppointment;

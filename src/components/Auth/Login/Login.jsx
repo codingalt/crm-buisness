@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useApiErrorHandling } from "../../../hooks/useApiErrors";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { loginSchema } from "../../../utils/validations/AuthValidation";
-import { Button } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import {
   useLoginUserMutation,
   useValidateTokenQuery,
@@ -12,8 +12,11 @@ import {
 import ApiErrorDisplay from "../../../hooks/ApiErrorDisplay";
 import ClipSpinner from "@/components/Loader/ClipSpinner";
 import { setToken } from "@/utils/helpers/tokenUtils";
+import logo from "../../../assets/logo.svg";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
+  const { t } = useTranslation();
   const token = localStorage.getItem("crmBusinessToken");
   const navigate = useNavigate();
   const {
@@ -88,7 +91,10 @@ const Login = () => {
         <div className="w-full h-[99vh] flex justify-center items-center max-w-screen-sm mx-auto">
           <div className={css.wrapper}>
             <div className={css.top}>
-              <p>Sign in</p>
+              <div className="w-[52px] md:w-16 mb-9 md:mb-10 mx-auto">
+                <Image src={logo} width="100%" height="100%" />
+              </div>
+              <p>{t("signIn")}</p>
             </div>
 
             {/* Display Errors  */}
@@ -102,12 +108,12 @@ const Login = () => {
               {({ errors, setFieldValue, touched }) => (
                 <Form className={css.loginForm}>
                   <div className={css.inputContainer}>
-                    <label htmlFor="name">Email</label>
+                    <label htmlFor="name">{t("email")}</label>
                     <Field
                       type="email"
                       name="email"
                       id="email"
-                      placeholder="Enter your email address"
+                      placeholder={t("enterEmail")}
                       className={
                         errors.email && touched.email && "inputBottomBorder"
                       }
@@ -120,12 +126,12 @@ const Login = () => {
                   </div>
 
                   <div className={css.inputContainer}>
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password">{t("password")}</label>
                     <Field
                       type="password"
                       name="password"
                       id="password"
-                      placeholder="Enter your password"
+                      placeholder={t("enterPassword")}
                       className={
                         errors.password &&
                         touched.password &&
@@ -149,17 +155,17 @@ const Login = () => {
                         fontSize: "18px",
                       }}
                     >
-                      Forgot Password?
+                      {t("forgotPassword")}
                     </button>
                     <Button isLoading={isLoading} type="submit">
-                      Enter
+                      {t("enter")}
                     </Button>
                   </div>
 
                   <p className="text-sm text-center lg:text-right font-medium text-default-600 mt-14">
-                    <span>Don't have an account?</span>{" "}
+                    <span>{t("dontHaveAccount")}</span>{" "}
                     <NavLink className="text-blue-400" to={"/signup"}>
-                      Register
+                      {t("register")}
                     </NavLink>
                   </p>
                 </Form>

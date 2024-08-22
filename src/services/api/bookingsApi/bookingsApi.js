@@ -25,7 +25,7 @@ export const bookingsApi = createApi({
     }),
 
     addManualAppointment: builder.mutation({
-      query: ({serviceId,data}) => ({
+      query: ({ serviceId, data }) => ({
         url: `business/manualAppointment/${serviceId}`,
         method: "POST",
         body: data,
@@ -37,7 +37,6 @@ export const bookingsApi = createApi({
       query: (bookingId) => ({
         url: `business/startTheService/${bookingId}`,
         method: "POST",
-        body: bookingId,
       }),
       invalidatesTags: ["Bookings"],
     }),
@@ -46,7 +45,14 @@ export const bookingsApi = createApi({
       query: (bookingId) => ({
         url: `business/finishTheService/${bookingId}`,
         method: "POST",
-        body: bookingId,
+      }),
+      invalidatesTags: ["Bookings"],
+    }),
+
+    cancelBooking: builder.mutation({
+      query: (bookingId) => ({
+        url: `business/cancelTheService/${bookingId}`,
+        method: "POST",
       }),
       invalidatesTags: ["Bookings"],
     }),
@@ -58,5 +64,6 @@ export const {
   useActivateBookingMutation,
   useMarkAsCompleteBookingMutation,
   useGetPaymentMethodsQuery,
-  useAddManualAppointmentMutation
+  useAddManualAppointmentMutation,
+  useCancelBookingMutation
 } = bookingsApi;

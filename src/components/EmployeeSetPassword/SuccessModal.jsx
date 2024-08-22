@@ -1,10 +1,12 @@
 import React from "react";
 import { Modal, ModalContent, ModalBody, Button } from "@nextui-org/react";
-import done from "@/assets/done2.png"
+import done from "@/assets/done2.png";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SuccessModal = () => {
-    const navigate = useNavigate();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -27,18 +29,18 @@ const SuccessModal = () => {
                     <img src={done} alt="" className="w-full" />
                   </div>
                   <h3 className="text-xl font-bold text-[#01AB8E]">
-                    Congratulations
+                    {t("congratulations")}
                   </h3>
                   <p className="text-sm text-default-500 font-medium max-w-[100%] md:max-w-[75%] text-center">
-                    Awesome, you have successfully setup your password.
+                    {t("passwordSetupSuccess")}
                   </p>
 
                   <Button
                     color="primary"
-                    onClick={()=> navigate("/login")}
+                    onClick={() => navigate("/login")}
                     className="bg-[#01AB8E] mt-9 w-[84%]"
                   >
-                    Go to login
+                    {t("goToLogin")}
                   </Button>
                 </div>
               </ModalBody>

@@ -10,6 +10,7 @@ import {
 } from "@internationalized/date";
 import moment from "moment";
 import { LuClock } from "react-icons/lu";
+import { useTranslation } from "react-i18next";
 
 const ChooseDateTime = ({
   handleNext,
@@ -19,6 +20,7 @@ const ChooseDateTime = ({
   dateTimeValues,
   setDateTimeValues,
 }) => {
+  const {t} = useTranslation();
   const [date, setDate] = useState(parseDate(dateTimeValues.date));
   const [time, setTime] = useState(parseAbsoluteToLocal(dateTimeValues.time));
 
@@ -59,7 +61,7 @@ const ChooseDateTime = ({
             onClick={handleBack}
             className="mr-1 mt-1 bg-transparent"
           >
-            Back
+            {t("back")}
           </Button>
         </div>
       </div>
@@ -77,12 +79,11 @@ const ChooseDateTime = ({
           {({ errors, setFieldValue, touched }) => (
             <Form className={css.formData}>
               <div className={`${css.inputContainer} relative`}>
-                <label htmlFor="email">Appointment Date</label>
+                <label htmlFor="appointmentDate">{t("appointmentDate")}</label>
                 <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
                   <DatePicker
                     isRequired
-                    label="Choose Date"
-                    // variant="bordered"
+                    label={t("chooseDate")}
                     value={date}
                     onChange={setDate}
                   />
@@ -90,11 +91,10 @@ const ChooseDateTime = ({
               </div>
 
               <div className={`${css.inputContainer} relative`}>
-                <label htmlFor="email">Appointment Time</label>
+                <label htmlFor="appointmentTime">{t("appointmentTime")}</label>
                 <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
                   <TimeInput
-                    label="Choose Time"
-                    // variant="bordered"
+                    label={t("chooseTime")}
                     isRequired
                     placeholderValue={new Time(9)}
                     value={time}

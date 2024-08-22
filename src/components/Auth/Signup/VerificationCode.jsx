@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useApiErrorHandling } from "../../../hooks/useApiErrors";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { verificationCodeSchema } from "../../../utils/validations/AuthValidation";
-import { Button } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import {
   useReSendVerificationCodeMutation,
   useValidateCodeMutation,
@@ -13,12 +13,16 @@ import ApiErrorDisplay from "../../../hooks/ApiErrorDisplay";
 import { formatTime } from "../../../utils/helpers/helpers";
 import { toastError, toastSuccess } from "../../Toast/Toast";
 import { useSelector } from "react-redux";
+import logo from "../../../assets/logo.svg";
+import { useTranslation } from "react-i18next";
 
 const VerificationCode = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const { user } = useSelector((store) => store.auth);
+  const businessContact = localStorage.getItem("businessContact");
   
   useEffect(()=>{
   
@@ -103,7 +107,10 @@ const VerificationCode = () => {
       {show && (
         <div className={css.wrapper}>
           <div className={css.top}>
-            <p>Verification Code</p>
+            <div className="w-14 md:w-16 mb-14 mx-auto">
+              <Image src={logo} width="100%" height="100%" />
+            </div>
+            <p>{t("verificationCode")}</p>
           </div>
 
           {/* Display Errors  */}
@@ -119,7 +126,7 @@ const VerificationCode = () => {
             onSubmit={handleSubmit}
           >
             {({ errors, setFieldValue, touched }) => (
-              <Form className={`${css.verificationFotm} mt-12`}>
+              <Form className={`${css.verificationFotm} mt-6 md:mt-8`}>
                 <div className={css.inputContainer}>
                   <Field
                     type="number"
@@ -142,7 +149,7 @@ const VerificationCode = () => {
                     className={`flex justify-end items-end flex-col md:flex-row md:justify-between md:items-center ${css.note}`}
                   >
                     <p className="text-sm md:text-medium">
-                      The verification code is sent to the number 050-5050505
+                      {t("verificationCodeSent")} {businessContact}
                     </p>
                     <div className="flex">
                       {remainingTime > 0 ? (
@@ -166,7 +173,7 @@ const VerificationCode = () => {
                               : {}
                           }
                         >
-                          Resend Code
+                          {t("resendCode")}
                         </Button>
                       )}
                     </div>
@@ -175,7 +182,7 @@ const VerificationCode = () => {
 
                 <div className={css.button}>
                   <Button isLoading={isLoading} type="submit">
-                    Next
+                    {t("next")}
                   </Button>
                 </div>
               </Form>
