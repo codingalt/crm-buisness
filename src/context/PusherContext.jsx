@@ -14,15 +14,16 @@ export const PusherProvider = ({ children }) => {
       const newEcho = new Echo({
         broadcaster: "pusher",
         key: import.meta.env.VITE_PUSHER_KEY,
-        cluster: "ap1",
+        // cluster: "ap1",
+        cluster: "mt1",
         forceTLS: true,
         encrypted: true,
-        authEndpoint: import.meta.env.VITE_PUSHER_AUTH,
-        auth: {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        // authEndpoint: import.meta.env.VITE_PUSHER_AUTH,
+        // auth: {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // },
       });
 
       setEcho(newEcho);

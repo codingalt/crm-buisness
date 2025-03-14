@@ -142,12 +142,20 @@ const Chat = () => {
     if (echo && conversations) {
       // Listen to the private channels for the 'private_channel' event
       // Subscribe to Pusher channels for each communication/chat
+
+      // Testing Channel 
+      const channelName2 = `testing-soketi`;
+
+      echo.private(channelName2).listen("OrderStatusChanged", (e) => {
+        console.log("received", e);
+        alert("received", e);
+      });
+
       conversations.communications.forEach((item) => {
         const channelName = `chat.${item.id}`;
         subscribedChannels.push(channelName);
 
         echo.private(channelName).listen("NewMessage", (e) => {
-          console.log(e);
           const currentChatId = chatIdRef.current;
           if (e?.message?.sender_type !== `App\\Models\\Business`) {
             if (

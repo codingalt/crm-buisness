@@ -7,8 +7,8 @@ export const authApi = createApi({
     prepareHeaders: async (headers, query) => {
       const authToken = localStorage.getItem("crmBusinessToken");
       headers.set("authorization", `Bearer ${authToken}`);
-      headers.set("x-app-type", "Web");
       headers.set("Accept", "application/json");
+      headers.set("x-app-type", "Web");
       return headers;
     },
   }),
